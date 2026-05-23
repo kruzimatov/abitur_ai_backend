@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AbiturAI — DTM ga AI bilan tayyorlan</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#07090F;color:#E2E8F0}
+/* NAV */
+.nav{display:flex;align-items:center;justify-content:space-between;padding:16px 48px;border-bottom:1px solid #1A2233;position:sticky;top:0;background:rgba(7,9,15,0.97);z-index:100;backdrop-filter:blur(8px)}
+.logo{display:flex;align-items:center;gap:8px;font-size:17px;font-weight:600;color:#fff;text-decoration:none}
+.logo-box{width:30px;height:30px;border-radius:7px;background:#00C49A;display:flex;align-items:center;justify-content:center}
+.logo-box i{color:#07090F;font-size:15px}
+.nav-links{display:flex;gap:28px;font-size:13px;color:#64748B}
+.nav-links a{color:#64748B;text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:#E2E8F0}
+.nav-right{display:flex;gap:10px;align-items:center}
+.btn-ghost{background:transparent;border:1px solid #1A2233;border-radius:8px;padding:8px 18px;font-size:13px;color:#94A3B8;cursor:pointer;transition:all .2s}
+.btn-ghost:hover{border-color:#334155;color:#E2E8F0}
+.btn-teal{background:#00C49A;border:none;border-radius:8px;padding:8px 18px;font-size:13px;font-weight:600;color:#07090F;cursor:pointer;transition:opacity .2s}
+.btn-teal:hover{opacity:.9}
+/* SECTIONS */
+.section{padding:80px 48px;border-bottom:1px solid #1A2233}
+.section.alt{background:#0A0D14}
+.s-label{font-size:11px;color:#00C49A;text-transform:uppercase;letter-spacing:.1em;font-weight:600;margin-bottom:10px}
+.s-title{font-size:38px;font-weight:700;color:#fff;line-height:1.15;margin-bottom:14px;letter-spacing:-1px}
+.s-title .accent{color:#00C49A}
+.s-sub{font-size:15px;color:#64748B;line-height:1.75;max-width:520px}
+/* HERO */
+.hero{padding:96px 48px 80px;text-align:center;border-bottom:1px solid #1A2233;background:radial-gradient(ellipse at 50% 0%,rgba(0,196,154,.07) 0%,transparent 60%)}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:#0A1F18;border:1px solid #00C49A;border-radius:20px;padding:6px 16px;font-size:12px;color:#00C49A;margin-bottom:28px;font-weight:500}
+.hero-title{font-size:64px;font-weight:800;color:#fff;line-height:1.08;margin-bottom:20px;letter-spacing:-2.5px}
+.hero-title .g{color:#00C49A}
+.hero-sub{font-size:17px;color:#64748B;max-width:520px;margin:0 auto 36px;line-height:1.75}
+.hero-btns{display:flex;gap:12px;justify-content:center;margin-bottom:56px}
+.btn-hero{background:#00C49A;border:none;border-radius:10px;padding:14px 32px;font-size:15px;font-weight:700;color:#07090F;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:opacity .2s}
+.btn-hero:hover{opacity:.9}
+.btn-hero-ghost{background:transparent;border:1px solid #1A2233;border-radius:10px;padding:14px 32px;font-size:15px;color:#94A3B8;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .2s}
+.btn-hero-ghost:hover{border-color:#334155;color:#E2E8F0}
+.hero-stats{display:flex;justify-content:center;gap:60px}
+.hs-val{font-size:30px;font-weight:800;color:#fff;text-align:center}
+.hs-label{font-size:12px;color:#475569;margin-top:4px;text-align:center}
+/* PROBLEM */
+.prob-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px}
+.prob-card{background:#0A0D14;border:1px solid #1A2233;border-radius:16px;padding:24px;position:relative;overflow:hidden;transition:border-color .2s}
+.prob-card:hover{border-color:#334155}
+.prob-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:16px 16px 0 0}
+.prob-card.r::before{background:#EF4444}
+.prob-card.a::before{background:#F59E0B}
+.prob-card.p::before{background:#8B5CF6}
+.prob-num{font-size:42px;font-weight:800;margin-bottom:8px;letter-spacing:-1px}
+.prob-card.r .prob-num{color:#EF4444}
+.prob-card.a .prob-num{color:#F59E0B}
+.prob-card.p .prob-num{color:#8B5CF6}
+.prob-title{font-size:15px;font-weight:600;color:#E2E8F0;margin-bottom:6px}
+.prob-desc{font-size:13px;color:#475569;line-height:1.65}
+/* HOW IT WORKS */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:48px;position:relative}
+.steps::before{content:'';position:absolute;top:36px;left:12.5%;right:12.5%;height:1px;background:linear-gradient(90deg,transparent,#1A2233 20%,#1A2233 80%,transparent)}
+.step{text-align:center;padding:0 16px}
+.step-circle{width:72px;height:72px;border-radius:50%;border:1px solid #1A2233;background:#0A0D14;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;position:relative;z-index:1;transition:all .2s}
+.step-circle:hover{border-color:#00C49A;background:#0A1F18}
+.step-circle.active{border-color:#00C49A;background:#0A1F18}
+.step-circle i{font-size:26px;color:#475569}
+.step-circle.active i{color:#00C49A}
+.step-num{font-size:11px;color:#475569;margin-bottom:6px;font-weight:600;letter-spacing:.05em}
+.step-name{font-size:14px;font-weight:600;color:#E2E8F0;margin-bottom:5px}
+.step-desc{font-size:12px;color:#475569;line-height:1.55}
+/* FEATURES */
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:40px}
+.feat-card{background:#0A0D14;border:1px solid #1A2233;border-radius:16px;padding:24px;display:flex;gap:18px;transition:border-color .2s}
+.feat-card:hover{border-color:#334155}
+.feat-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.feat-icon.teal{background:#0A1F18;border:1px solid #00C49A}
+.feat-icon.teal i{color:#00C49A;font-size:22px}
+.feat-icon.purple{background:#1A0F2E;border:1px solid #8B5CF6}
+.feat-icon.purple i{color:#8B5CF6;font-size:22px}
+.feat-icon.amber{background:#1C1000;border:1px solid #F59E0B}
+.feat-icon.amber i{color:#F59E0B;font-size:22px}
+.feat-icon.blue{background:#0A1628;border:1px solid #60A5FA}
+.feat-icon.blue i{color:#60A5FA;font-size:22px}
+.feat-name{font-size:15px;font-weight:600;color:#E2E8F0;margin-bottom:6px}
+.feat-desc{font-size:13px;color:#475569;line-height:1.65}
+/* PARTNER */
+.partner-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:40px;align-items:start}
+.math-box{background:#0A1F18;border:1px solid #00C49A;border-radius:12px;padding:16px 20px;display:flex;align-items:center;gap:14px;margin-top:20px}
+.math-box i{color:#F59E0B;font-size:24px}
+.math-val{font-size:15px;font-weight:600;color:#E2E8F0}
+.math-sub{font-size:13px;color:#64748B}
+.partner-cards{display:grid;gap:12px}
+.pc{background:#0A0D14;border:1px solid #1A2233;border-radius:12px;padding:16px;display:flex;align-items:flex-start;gap:14px;transition:border-color .2s}
+.pc:hover{border-color:#334155}
+.pc-icon{width:38px;height:38px;border-radius:10px;background:#0A1F18;border:1px solid #00C49A;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pc-icon i{color:#00C49A;font-size:18px}
+.pc-title{font-size:14px;font-weight:600;color:#E2E8F0;margin-bottom:4px}
+.pc-desc{font-size:13px;color:#475569;line-height:1.55}
+/* PRICING */
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px}
+.price-card{background:#0A0D14;border:1px solid #1A2233;border-radius:16px;padding:28px;transition:border-color .2s}
+.price-card:hover{border-color:#334155}
+.price-card.featured{border-color:#00C49A;background:#0A1F18}
+.price-badge{display:inline-block;background:#00C49A;border-radius:20px;padding:3px 12px;font-size:11px;color:#07090F;font-weight:700;margin-bottom:14px}
+.price-name{font-size:15px;font-weight:600;color:#E2E8F0;margin-bottom:10px}
+.price-val{font-size:40px;font-weight:800;color:#fff;margin-bottom:5px;letter-spacing:-1px}
+.price-val span{font-size:15px;color:#475569;font-weight:400}
+.price-desc{font-size:13px;color:#475569;margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid #1A2233}
+.pf{display:flex;align-items:center;gap:8px;font-size:13px;color:#94A3B8;margin-bottom:10px}
+.pf i{font-size:15px}
+.pf .yes{color:#00C49A}
+.pf .no{color:#EF4444}
+.pf.dim{color:#334155}
+.price-btn{width:100%;background:#00C49A;border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:700;color:#07090F;cursor:pointer;margin-top:18px;transition:opacity .2s}
+.price-btn:hover{opacity:.9}
+.price-btn.ghost{background:transparent;border:1px solid #1A2233;color:#64748B}
+.price-btn.ghost:hover{border-color:#334155;color:#94A3B8}
+/* FAQ */
+.faq-grid{display:grid;gap:10px;margin-top:40px;max-width:760px;margin-left:auto;margin-right:auto}
+.faq-item{background:#0A0D14;border:1px solid #1A2233;border-radius:12px;overflow:hidden;cursor:pointer}
+.faq-item:hover .faq-q{border-color:#334155}
+.faq-q{padding:18px 22px;font-size:14px;font-weight:600;color:#E2E8F0;display:flex;justify-content:space-between;align-items:center;border:1px solid transparent;border-radius:12px}
+.faq-q i{color:#475569;font-size:18px;transition:transform .2s}
+.faq-item.open .faq-q i{transform:rotate(180deg)}
+.faq-a{display:none;padding:0 22px 18px;font-size:13px;color:#64748B;line-height:1.75}
+.faq-item.open .faq-a{display:block}
+/* CTA */
+.cta-section{padding:80px 48px}
+.cta-box{background:#0A1F18;border:1px solid #00C49A;border-radius:24px;padding:64px 48px;text-align:center}
+.cta-title{font-size:44px;font-weight:800;color:#fff;margin-bottom:14px;letter-spacing:-1.5px}
+.cta-sub{font-size:16px;color:#64748B;margin-bottom:32px}
+.cta-btns{display:flex;gap:12px;justify-content:center}
+/* FOOTER */
+.footer{padding:48px;border-top:1px solid #1A2233}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:32px}
+.footer-logo{display:flex;align-items:center;gap:8px;font-size:17px;font-weight:700;color:#fff;margin-bottom:12px}
+.footer-tagline{font-size:13px;color:#475569;line-height:1.65;max-width:240px}
+.footer-heading{font-size:11px;color:#94A3B8;font-weight:700;margin-bottom:14px;text-transform:uppercase;letter-spacing:.08em}
+.footer-link{font-size:13px;color:#475569;margin-bottom:10px;cursor:pointer;transition:color .2s}
+.footer-link:hover{color:#94A3B8}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:24px;border-top:1px solid #1A2233}
+.footer-copy{font-size:12px;color:#334155}
+</style>
+</head>
+<body>
+<!-- NAV -->
+<nav class="nav">
+  <a class="logo" href="#"><div class="logo-box"><i class="ti ti-brain"></i></div> AbiturAI</a>
+  <div class="nav-links">
+    <a href="#how">Qanday ishlaydi</a>
+    <a href="#features">Imkoniyatlar</a>
+    <a href="#partner">O'quv markazlar</a>
+    <a href="#pricing">Narxlar</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <div class="nav-right">
+    <button class="btn-ghost">Kirish</button>
+    <button class="btn-teal">Boshlash →</button>
+  </div>
+</nav>
+
+<!-- S1: HERO -->
+<section class="hero">
+  <div class="hero-badge"><i class="ti ti-sparkles"></i> O'zbekistonning #1 DTM tayyorgarlik AI platformasi</div>
+  <div class="hero-title">DTM ga <span class="g">aqlli</span><br>tayyorlan.</div>
+  <div class="hero-sub">O'quv markaz sifatida. Repetitordan 5x arzon. O'zbek tilida. AI Tutor 24/7.</div>
+  <div class="hero-btns">
+    <button class="btn-hero"><i class="ti ti-rocket"></i> Bepul boshlash — 7 kun</button>
+    <button class="btn-hero-ghost"><i class="ti ti-video"></i> Demo ko'rish</button>
+  </div>
+  <div class="hero-stats">
+    <div><div class="hs-val">1M+</div><div class="hs-label">Yillik abituriyent</div></div>
+    <div><div class="hs-val">18%</div><div class="hs-label">Qabul darajasi</div></div>
+    <div><div class="hs-val">5x</div><div class="hs-label">Repetitordan arzon</div></div>
+    <div><div class="hs-val">24/7</div><div class="hs-label">AI ishlaydi</div></div>
+  </div>
+</section>
+
+<!-- S2: MUAMMO -->
+<section class="section">
+  <div class="s-label">Muammo</div>
+  <div class="s-title">O'zbekistonda ta'lim <span class="accent">inqirozi</span></div>
+  <div class="s-sub">Har yili millionlab abituriyent orzu qilgan universitetga kira olmaydi — va buning asosiy sababi sifatli tayyorgarlik resurslarining yo'qligi.</div>
+  <div class="prob-grid">
+    <div class="prob-card r">
+      <div class="prob-num">800K+</div>
+      <div class="prob-title">Har yili universitetga kira olmaydi</div>
+      <div class="prob-desc">1M+ abituriyentdan faqat 190,000 o'tadi. 800,000+ yana bir yil kutadi, yana pul sarflaydi.</div>
+    </div>
+    <div class="prob-card a">
+      <div class="prob-num">$50–120</div>
+      <div class="prob-title">Oylik repetitor narxi</div>
+      <div class="prob-desc">Ko'p oila uchun juda qimmat. Viloyatlarda yaxshi repetitor topish yanada qiyin.</div>
+    </div>
+    <div class="prob-card p">
+      <div class="prob-num">0</div>
+      <div class="prob-title">Sifatli O'zbek tilidagi platform</div>
+      <div class="prob-desc">Mavjud platformalar DTM formatiga mos emas, AI yo'q, o'zbek tilidagi sifatli kontent yo'q.</div>
+    </div>
+  </div>
+</section>
+
+<!-- S3: QANDAY ISHLAYDI -->
+<section id="how" class="section alt">
+  <div class="s-label">Jarayon</div>
+  <div class="s-title" style="text-align:center">4 qadamda DTM ga tayyorlan</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-circle active"><i class="ti ti-user-plus"></i></div>
+      <div class="step-num">01</div>
+      <div class="step-name">Ro'yxatdan o't</div>
+      <div class="step-desc">Fan va mavzularni tanlaysiz. Shaxsiy dashboard ochiladi.</div>
+    </div>
+    <div class="step">
+      <div class="step-circle active"><i class="ti ti-book"></i></div>
+      <div class="step-num">02</div>
+      <div class="step-name">Darslik o'qi</div>
+      <div class="step-desc">Ustoz materiallarini o'rganasiz. Misollar, tushuntirishlar.</div>
+    </div>
+    <div class="step">
+      <div class="step-circle active"><i class="ti ti-clipboard-check"></i></div>
+      <div class="step-num">03</div>
+      <div class="step-name">Mock test yech</div>
+      <div class="step-desc">DTM formatida. Timer, natija, xato tahlili.</div>
+    </div>
+    <div class="step">
+      <div class="step-circle active"><i class="ti ti-brain"></i></div>
+      <div class="step-num">04</div>
+      <div class="step-name">AI ga so'ra</div>
+      <div class="step-desc">Tushunmagan joyni AI mavzu kontekstida tushuntiradi.</div>
+    </div>
+  </div>
+</section>
+
+<!-- S4: IMKONIYATLAR -->
+<section id="features" class="section">
+  <div class="s-label">Imkoniyatlar</div>
+  <div class="s-title">Hamma kerakli narsa <span class="accent">bir joyda</span></div>
+  <div class="feat-grid">
+    <div class="feat-card">
+      <div class="feat-icon teal"><i class="ti ti-clipboard-check"></i></div>
+      <div>
+        <div class="feat-name">DTM Mock testlar</div>
+        <div class="feat-desc">Haqiqiy DTM formatida savollar. 10 savol, 15 daqiqa timer, 4 variant. Test tugagach: ball, qaysi savolda xato, to'liq izoh. Leaderboard — do'stlar bilan raqobat.</div>
+      </div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon purple"><i class="ti ti-brain"></i></div>
+      <div>
+        <div class="feat-name">AI Tutor 24/7</div>
+        <div class="feat-desc">ChatGPT asosida ishlaydi. Mavzu va fan kontekstini bilgan holda javob beradi. "Bu masalani tushunmadim" deb yozsang — darhol tushuntiradi. Repetitor kabi, lekin 24/7 va 5x arzon.</div>
+      </div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon amber"><i class="ti ti-book"></i></div>
+      <div>
+        <div class="feat-name">Ustoz darsliklar</div>
+        <div class="feat-desc">O'quv markaz ustozlari AI yordamida tayyorlagan materiallar. O'zbek tilida, milliy DTM dasturiga 100% mos. Har mavzu: tushuntirish + misollar + eslatmalar.</div>
+      </div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon blue"><i class="ti ti-chart-line"></i></div>
+      <div>
+        <div class="feat-name">Progress va streak</div>
+        <div class="feat-desc">Har mavzu bo'yicha real-time statistika. Kunlik streak — Duolingo kabi. DTM gacha qancha kun qolganini ko'rsatadi. Zaif mavzularni avtomatik aniqlaydi va tavsiya qiladi.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S5: PARTNER -->
+<section id="partner" class="section alt">
+  <div class="s-label">Hamkorlik</div>
+  <div class="s-title">O'quv markazlar bilan <span class="accent">birga</span></div>
+  <div class="partner-grid">
+    <div class="partner-left">
+      <div class="s-sub" style="max-width:100%;margin-bottom:16px">Biz o'quv markazlarning raqibi emasmiz — ularning onlayn kanaliga aylanamiz. Toshkentdagi ustoz Namangan, Farg'ona, Samarqanddagi 500 talabaga yetadi.</div>
+      <div class="math-box">
+        <i class="ti ti-calculator"></i>
+        <div>
+          <div class="math-val">1 ustoz × 500 talaba × $8 ulush</div>
+          <div class="math-sub">= $4,000/oy — oddiy 1 ta sinfdan ko'p daromad</div>
+        </div>
+      </div>
+    </div>
+    <div class="partner-cards">
+      <div class="pc">
+        <div class="pc-icon"><i class="ti ti-map-pin"></i></div>
+        <div>
+          <div class="pc-title">Yangi bozor — viloyatlar</div>
+          <div class="pc-desc">Toshkentdagi markazga bormagan viloyat o'quvchilari endi online o'qiydi. Yangi talaba, yangi daromad.</div>
+        </div>
+      </div>
+      <div class="pc">
+        <div class="pc-icon"><i class="ti ti-coin"></i></div>
+        <div>
+          <div class="pc-title">40–50% ulush har to'lovdan</div>
+          <div class="pc-desc">Fizik sinf xarajatisiz. Ustoz content qo'shadi, platform sotadi, ulush avtomatik keladi.</div>
+        </div>
+      </div>
+      <div class="pc">
+        <div class="pc-icon"><i class="ti ti-trending-up"></i></div>
+        <div>
+          <div class="pc-title">Parallel kanal — zarar yo'q</div>
+          <div class="pc-desc">Offline va online bir vaqtda ishlaydi. Mavjud talabalarni olmaydi — yangi talabalar qo'shadi.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S6: NARXLAR -->
+<section id="pricing" class="section">
+  <div class="s-label">Narxlar</div>
+  <div class="s-title">Shaffof va <span class="accent">arzon</span></div>
+  <div class="s-sub">Repetitordan 5x arzon. 7 kun bepul sinab ko'ring. Karta kerak emas.</div>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-name">Bepul</div>
+      <div class="price-val">$0 <span>/oy</span></div>
+      <div class="price-desc">Sinab ko'rish uchun. Karta kerak emas.</div>
+      <div class="pf"><i class="ti ti-check yes"></i> 2 ta fan</div>
+      <div class="pf"><i class="ti ti-check yes"></i> 5 ta test/oy</div>
+      <div class="pf"><i class="ti ti-check yes"></i> Darsliklar</div>
+      <div class="pf dim"><i class="ti ti-x no"></i> AI Tutor yo'q</div>
+      <div class="pf dim"><i class="ti ti-x no"></i> To'liq tahlil yo'q</div>
+      <button class="price-btn ghost">Boshlash</button>
+    </div>
+    <div class="price-card featured">
+      <div class="price-badge">Eng mashhur ✦</div>
+      <div class="price-name">Standart</div>
+      <div class="price-val">$15 <span>/oy</span></div>
+      <div class="price-desc">Jiddiy tayyorlanish uchun. 7 kun bepul.</div>
+      <div class="pf"><i class="ti ti-check yes"></i> Barcha fanlar</div>
+      <div class="pf"><i class="ti ti-check yes"></i> Cheksiz testlar</div>
+      <div class="pf"><i class="ti ti-check yes"></i> AI Tutor 24/7</div>
+      <div class="pf"><i class="ti ti-check yes"></i> To'liq xato tahlili</div>
+      <div class="pf"><i class="ti ti-check yes"></i> Streak va progress</div>
+      <button class="price-btn">Boshlash → 7 kun bepul</button>
+    </div>
+    <div class="price-card">
+      <div class="price-name">Premium</div>
+      <div class="price-val">$25 <span>/oy</span></div>
+      <div class="price-desc">Maksimal natija uchun. Shaxsiy yondashuv.</div>
+      <div class="pf"><i class="ti ti-check yes"></i> Standartning hammasi</div>
+      <div class="pf"><i class="ti ti-check yes"></i> Ustoz bilan 1:1 session</div>
+      <div class="pf"><i class="ti ti-check yes"></i> Shaxsiy o'quv reja</div>
+      <div class="pf"><i class="ti ti-check yes"></i> Priority AI javob</div>
+      <div class="pf"><i class="ti ti-check yes"></i> Haftalik progress report</div>
+      <button class="price-btn ghost">Boshlash</button>
+    </div>
+  </div>
+</section>
+
+<!-- S7: FAQ -->
+<section id="faq" class="section alt">
+  <div class="s-label">Savollar</div>
+  <div class="s-title" style="text-align:center">Ko'p so'raladigan <span class="accent">savollar</span></div>
+  <div class="faq-grid">
+    <div class="faq-item open">
+      <div class="faq-q">Savollar haqiqiy DTM formatidami? <i class="ti ti-chevron-down"></i></div>
+      <div class="faq-a">Ha. Barcha savollar DTM uslubida — 4 variant, rasmiy dastur mavzulari bo'yicha. O'quv markaz ustozlari tayyorlagan va AI tekshirgan. Har yil yangilanib boradi.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">O'quv markazlar bilan qanday ishlaydi? <i class="ti ti-chevron-down"></i></div>
+      <div class="faq-a">Ustozlar platformaga content qo'shadi — darsliklar va test savollari. Biz ularni talabalar bilan ulashtiramiz. Har oylik to'lovdan 40-50% ustoz/markazga avtomatik qaytadi.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">AI tutor necha tilda gaplashadi? <i class="ti ti-chevron-down"></i></div>
+      <div class="faq-a">Asosan O'zbek tilida, Rus tilida ham. Eng muhimi — mavzu va fan kontekstini bilgan holda javob beradi. Oddiy ChatGPT emas, DTM ga moslashtirilgan.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Viloyatda turib foydalansa bo'ladimi? <i class="ti ti-chevron-down"></i></div>
+      <div class="faq-a">Ha, internet bo'lsa ishlaydi. Smartphone yoki kompyuter — har ikkalasida ham. Namangan, Farg'ona, Samarqand — hamma joyda bir xil sifat.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Bekor qilish qanday? <i class="ti ti-chevron-down"></i></div>
+      <div class="faq-a">Istalgan vaqt bekor qilish mumkin. Hech qanday jarima yo'q. Profile settings orqali bir tugma bilan bekor qilinadi.</div>
+    </div>
+  </div>
+</section>
+
+<!-- S8: CTA -->
+<section class="cta-section">
+  <div class="cta-box">
+    <div class="cta-title">DTM ga tayyorlanishni<br>bugun boshlang</div>
+    <div class="cta-sub">7 kun bepul. Karta kerak emas. Istalgan vaqt bekor qilish mumkin.</div>
+    <div class="cta-btns">
+      <button class="btn-hero"><i class="ti ti-rocket"></i> Bepul ro'yxatdan o'tish</button>
+      <button class="btn-hero-ghost">Demo ko'rish</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-top">
+    <div>
+      <div class="footer-logo"><div class="logo-box" style="width:24px;height:24px"><i class="ti ti-brain" style="font-size:12px"></i></div> AbiturAI</div>
+      <div class="footer-tagline">O'zbekiston abituriyentlari uchun AI-powered DTM tayyorgarlik platformasi.</div>
+    </div>
+    <div>
+      <div class="footer-heading">Mahsulot</div>
+      <div class="footer-link">Fanlar</div>
+      <div class="footer-link">Mock testlar</div>
+      <div class="footer-link">AI Tutor</div>
+      <div class="footer-link">Narxlar</div>
+    </div>
+    <div>
+      <div class="footer-heading">Hamkorlar</div>
+      <div class="footer-link">O'quv markazlar</div>
+      <div class="footer-link">Ustozlar</div>
+      <div class="footer-link">Content qo'shish</div>
+    </div>
+    <div>
+      <div class="footer-heading">Kompaniya</div>
+      <div class="footer-link">Biz haqimizda</div>
+      <div class="footer-link">Blog</div>
+      <div class="footer-link">Aloqa</div>
+      <div class="footer-link">Shartlar</div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 AbiturAI · Toshkent, O'zbekiston</div>
+    <div style="font-size:12px;color:#334155;display:flex;align-items:center;gap:4px"><i class="ti ti-heart" style="color:#EF4444"></i> Toshkentda yaratildi</div>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('.faq-item').forEach(item=>{
+  item.querySelector('.faq-q').addEventListener('click',()=>{
+    item.classList.toggle('open');
+  });
+});
+</script>
+</body>
+</html>

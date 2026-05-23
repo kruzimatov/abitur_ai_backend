@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AbiturAI — Kirish / Ro'yxatdan o'tish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+:root{
+  --bg:#07090F;--bg2:#0B0E18;--bg3:#0F1220;--bg4:#131728;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --text:#F1F5F9;--text2:#94A3B8;--text3:#475569;
+  --teal:#00C49A;--teal-dim:rgba(0,196,154,0.1);--teal-border:rgba(0,196,154,0.3);
+  --purple:#818CF8;--purple-dim:rgba(129,140,248,0.1);--purple-border:rgba(129,140,248,0.3);
+  --amber:#FBBF24;--amber-dim:rgba(251,191,36,0.1);--amber-border:rgba(251,191,36,0.3);
+  --red:#F87171;--red-dim:rgba(248,113,113,0.1);
+  --green:#34D399;
+  --r:12px;--r-sm:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+
+/* NAV */
+.nav{display:flex;align-items:center;justify-content:space-between;padding:14px 40px;border-bottom:1px solid var(--border);background:rgba(7,9,15,0.95);backdrop-filter:blur(8px)}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--text)}
+.logo-mark{width:30px;height:30px;border-radius:7px;background:var(--teal);display:flex;align-items:center;justify-content:center}
+.logo-mark i{color:#07090F;font-size:15px}
+.logo-text{font-size:15px;font-weight:600;letter-spacing:-.3px}
+.nav-back{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text3);text-decoration:none;transition:color .2s}
+.nav-back:hover{color:var(--text2)}
+
+/* MAIN WRAPPER */
+.auth-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px;background:radial-gradient(ellipse at 50% 0%,rgba(0,196,154,.05) 0%,transparent 55%)}
+
+/* CARD */
+.auth-card{width:100%;max-width:440px;background:var(--bg2);border:1px solid var(--border);border-radius:20px;overflow:hidden}
+
+/* TABS */
+.auth-tabs{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border)}
+.tab-btn{padding:16px;font-size:14px;font-weight:500;color:var(--text3);background:transparent;border:none;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;position:relative}
+.tab-btn.active{color:var(--teal)}
+.tab-btn.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--teal)}
+
+/* ROLE PICKER (step 0 of signup) */
+.role-section{padding:28px}
+.auth-heading{font-size:20px;font-weight:700;color:var(--text);margin-bottom:6px;letter-spacing:-.4px;font-family:'DM Serif Display',serif}
+.auth-sub{font-size:13px;color:var(--text3);margin-bottom:22px;line-height:1.6}
+.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
+.role-card{background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--r);padding:18px 16px;cursor:pointer;transition:all .2s;text-align:center}
+.role-card:hover{border-color:var(--border2)}
+.role-card.selected.student{border-color:var(--teal);background:var(--teal-dim)}
+.role-card.selected.teacher{border-color:var(--amber);background:var(--amber-dim)}
+.role-icon{width:44px;height:44px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;margin:0 auto 10px}
+.role-icon.student{background:var(--teal-dim);border:1px solid var(--teal-border)}
+.role-icon.student i{color:var(--teal);font-size:22px}
+.role-icon.teacher{background:var(--amber-dim);border:1px solid var(--amber-border)}
+.role-icon.teacher i{color:var(--amber);font-size:22px}
+.role-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px}
+.role-desc{font-size:11px;color:var(--text3);line-height:1.5}
+
+/* FIELD CHOOSER */
+.field-section{padding:28px;display:none}
+.back-step{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--text3);cursor:pointer;margin-bottom:18px;transition:color .2s;background:none;border:none;font-family:'DM Sans',sans-serif}
+.back-step:hover{color:var(--text2)}
+.fields-grid{display:grid;gap:8px;margin-bottom:24px}
+.field-item{display:flex;align-items:center;gap:12px;background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:13px 14px;cursor:pointer;transition:all .2s}
+.field-item:hover{border-color:var(--border2)}
+.field-item.selected{border-color:var(--teal);background:var(--teal-dim)}
+.field-icon{width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px}
+.field-name{font-size:13px;font-weight:600;color:var(--text)}
+.field-subjects{font-size:11px;color:var(--text3);margin-top:2px}
+.field-check{margin-left:auto;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
+.field-item.selected .field-check{background:var(--teal);border-color:var(--teal)}
+.field-item.selected .field-check i{color:#07090F;font-size:11px}
+.subjects-preview{background:var(--bg4);border:1px solid var(--border);border-radius:var(--r-sm);padding:14px;margin-bottom:20px;display:none}
+.sp-title{font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+.sp-tags{display:flex;flex-wrap:wrap;gap:6px}
+.sp-tag{background:var(--teal-dim);border:1px solid var(--teal-border);border-radius:20px;padding:4px 11px;font-size:11px;color:var(--teal);font-weight:500}
+.sp-tag.main{background:rgba(0,196,154,0.18);font-weight:600}
+
+/* FORM SECTION */
+.form-section{padding:28px;display:none}
+.form-group{margin-bottom:16px}
+.form-label{font-size:12px;color:var(--text2);font-weight:500;margin-bottom:7px;display:flex;align-items:center;gap:5px}
+.form-label .req{color:var(--red);margin-left:1px}
+.form-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);padding:11px 14px;font-size:14px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s}
+.form-input:focus{border-color:var(--teal)}
+.form-input::placeholder{color:var(--text3)}
+.input-wrap{position:relative}
+.input-suffix{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--text3);cursor:pointer;font-size:17px;transition:color .2s}
+.input-suffix:hover{color:var(--text2)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.role-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;margin-bottom:16px}
+.role-badge.student{background:var(--teal-dim);border:1px solid var(--teal-border);color:var(--teal)}
+.role-badge.teacher{background:var(--amber-dim);border:1px solid var(--amber-border);color:var(--amber)}
+
+/* BTN */
+.btn-primary{width:100%;padding:13px;background:var(--teal);border:none;border-radius:var(--r-sm);font-size:14px;font-weight:700;color:#07090F;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .2s;font-family:'DM Sans',sans-serif;margin-top:4px}
+.btn-primary.amber{background:var(--amber)}
+.btn-primary:hover{opacity:.88}
+.btn-primary:disabled{opacity:.45;cursor:not-allowed}
+.btn-secondary{width:100%;padding:12px;background:transparent;border:1px solid var(--border);border-radius:var(--r-sm);font-size:14px;color:var(--text2);cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;margin-top:8px}
+.btn-secondary:hover{border-color:var(--border2);color:var(--text)}
+
+/* DIVIDER */
+.divider{display:flex;align-items:center;gap:12px;margin:16px 0}
+.divider-line{flex:1;height:1px;background:var(--border)}
+.divider-text{font-size:12px;color:var(--text3)}
+
+/* SOCIAL */
+.social-btn{width:100%;padding:11px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);font-size:13px;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;font-family:'DM Sans',sans-serif}
+.social-btn:hover{border-color:var(--border2);color:var(--text)}
+.google-icon{width:16px;height:16px}
+
+/* FOOTER NOTE */
+.auth-footer{text-align:center;padding:0 28px 22px;font-size:12px;color:var(--text3)}
+.auth-footer a{color:var(--teal);text-decoration:none}
+
+/* LOGIN FORM */
+.login-section{padding:28px;display:none}
+
+/* ERROR */
+.err-msg{background:var(--red-dim);border:1px solid rgba(248,113,113,0.2);border-radius:var(--r-sm);padding:10px 14px;font-size:13px;color:var(--red);display:none;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.err-msg.hidden{display:none}
+
+/* STEPS INDICATOR */
+.steps-indicator{display:flex;align-items:center;justify-content:center;gap:6px;padding:14px;border-bottom:1px solid var(--border)}
+.step-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);transition:all .3s}
+.step-dot.active{background:var(--teal);width:20px;border-radius:3px}
+.step-dot.done{background:var(--teal)}
+
+/* SUCCESS */
+.success-section{padding:40px 28px;text-align:center;display:none}
+.success-icon{width:64px;height:64px;border-radius:50%;background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
+.success-icon i{color:var(--green);font-size:32px}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="abiturai_landing.html" class="logo">
+    <div class="logo-mark"><i class="ti ti-brain"></i></div>
+    <span class="logo-text">AbiturAI</span>
+  </a>
+  <a href="abiturai_landing.html" class="nav-back"><i class="ti ti-arrow-left"></i> Bosh sahifa</a>
+</nav>
+
+<!-- AUTH WRAP -->
+<div class="auth-wrap">
+  <div class="auth-card">
+
+    <!-- TABS -->
+    <div class="auth-tabs">
+      <button class="tab-btn active" id="tabLogin" onclick="switchTab('login')">Kirish</button>
+      <button class="tab-btn" id="tabRegister" onclick="switchTab('register')">Ro'yxatdan o'tish</button>
+    </div>
+
+    <!-- ══ LOGIN PANEL ══ -->
+    <div class="login-section" id="loginPanel" style="display:block">
+      <div class="auth-heading">Xush kelibsiz</div>
+      <div class="auth-sub">Hisobingizga kiring va o'qishni davom ettiring</div>
+
+      <div class="err-msg hidden" id="loginErr"><i class="ti ti-alert-circle"></i> Email yoki parol noto'g'ri</div>
+
+      <div class="form-group">
+        <div class="form-label">Email <span class="req">*</span></div>
+        <input type="email" class="form-input" id="loginEmail" placeholder="email@example.com">
+      </div>
+      <div class="form-group">
+        <div class="form-label">Parol <span class="req">*</span></div>
+        <div class="input-wrap">
+          <input type="password" class="form-input" id="loginPass" placeholder="Parolni kiriting" style="padding-right:42px">
+          <i class="ti ti-eye input-suffix" id="passToggle" onclick="togglePass('loginPass','passToggle')"></i>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;margin-bottom:20px">
+        <a href="#" style="font-size:12px;color:var(--teal);text-decoration:none">Parolni unutdingizmi?</a>
+      </div>
+
+      <button class="btn-primary" onclick="doLogin()">
+        <i class="ti ti-login"></i> Kirish
+      </button>
+
+      <div class="divider"><div class="divider-line"></div><span class="divider-text">yoki</span><div class="divider-line"></div></div>
+
+      <button class="social-btn">
+        <svg class="google-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Google bilan kirish
+      </button>
+    </div>
+
+    <!-- ══ REGISTER PANEL ══ -->
+
+    <!-- STEP 0: Role picker -->
+    <div class="role-section" id="roleSection" style="display:none">
+      <div class="steps-indicator">
+        <div class="step-dot active" id="dot1"></div>
+        <div class="step-dot" id="dot2"></div>
+        <div class="step-dot" id="dot3"></div>
+      </div>
+      <div style="padding:28px">
+        <div class="auth-heading">Kim siz?</div>
+        <div class="auth-sub">Rolingizni tanlang. Har bir rol uchun alohida imkoniyatlar mavjud.</div>
+        <div class="role-grid">
+          <div class="role-card student" id="roleStudent" onclick="selectRole('student')">
+            <div class="role-icon student"><i class="ti ti-school"></i></div>
+            <div class="role-name">Abituriyent</div>
+            <div class="role-desc">DTMga tayyorlanayotgan o'quvchi</div>
+          </div>
+          <div class="role-card teacher" id="roleTeacher" onclick="selectRole('teacher')">
+            <div class="role-icon teacher"><i class="ti ti-chalkboard"></i></div>
+            <div class="role-name">O'qituvchi</div>
+            <div class="role-desc">Savollar yaratuvchi va ustoz</div>
+          </div>
+        </div>
+        <button class="btn-primary" id="roleNextBtn" disabled onclick="goToFieldStep()">
+          Davom etish <i class="ti ti-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 1: Field chooser (student only) -->
+    <div class="field-section" id="fieldSection">
+      <div class="steps-indicator">
+        <div class="step-dot done" id="dot1b"></div>
+        <div class="step-dot active" id="dot2b"></div>
+        <div class="step-dot" id="dot3b"></div>
+      </div>
+      <div style="padding:28px">
+        <button class="back-step" onclick="goBack('roleSection')"><i class="ti ti-arrow-left"></i> Orqaga</button>
+        <div class="auth-heading">Yo'nalishingizni tanlang</div>
+        <div class="auth-sub">DTM dasturiga mos yo'nalish tanlang. Biz siz uchun kerakli fanlarni ko'rsatamiz.</div>
+
+        <div class="fields-grid" id="fieldsGrid">
+          <!-- Populated by JS -->
+        </div>
+
+        <div class="subjects-preview" id="subjectsPreview">
+          <div class="sp-title">Siz o'qiydigan fanlar</div>
+          <div class="sp-tags" id="subjectsTags"></div>
+        </div>
+
+        <button class="btn-primary" id="fieldNextBtn" disabled onclick="goToFormStep()">
+          Davom etish <i class="ti ti-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 1 (teacher): Direct to form -->
+
+    <!-- STEP 2: Account details form -->
+    <div class="form-section" id="formSection">
+      <div class="steps-indicator">
+        <div class="step-dot done" id="dot1c"></div>
+        <div class="step-dot done" id="dot2c"></div>
+        <div class="step-dot active" id="dot3c"></div>
+      </div>
+      <div style="padding:28px">
+        <button class="back-step" id="formBackBtn" onclick="goBackFromForm()"><i class="ti ti-arrow-left"></i> Orqaga</button>
+
+        <div id="roleBadgeWrap"></div>
+
+        <div class="auth-heading">Hisobingizni yarating</div>
+        <div class="auth-sub" id="formSubText">Shaxsiy ma'lumotlaringizni kiriting</div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <div class="form-label">Ism <span class="req">*</span></div>
+            <input type="text" class="form-input" id="regFirst" placeholder="Ism">
+          </div>
+          <div class="form-group">
+            <div class="form-label">Familiya <span class="req">*</span></div>
+            <input type="text" class="form-input" id="regLast" placeholder="Familiya">
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Email <span class="req">*</span></div>
+          <input type="email" class="form-input" id="regEmail" placeholder="email@example.com">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Telefon raqami</div>
+          <input type="tel" class="form-input" id="regPhone" placeholder="+998 90 000 00 00">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Parol <span class="req">*</span></div>
+          <div class="input-wrap">
+            <input type="password" class="form-input" id="regPass" placeholder="Kamida 8 ta belgi" style="padding-right:42px">
+            <i class="ti ti-eye input-suffix" id="regPassToggle" onclick="togglePass('regPass','regPassToggle')"></i>
+          </div>
+        </div>
+
+        <div id="teacherFields" style="display:none">
+          <div class="form-group">
+            <div class="form-label">O'quv markaz nomi</div>
+            <input type="text" class="form-input" id="regCenter" placeholder="Masalan: Najot Ta'lim">
+          </div>
+          <div class="form-group">
+            <div class="form-label">Ixtisoslik fani</div>
+            <select class="form-input" id="regSubject">
+              <option value="">Fanni tanlang</option>
+              <option>Matematika</option>
+              <option>Fizika</option>
+              <option>Kimyo</option>
+              <option>Biologiya</option>
+              <option>Ingliz tili</option>
+              <option>Tarix</option>
+              <option>Ona tili va adabiyot</option>
+              <option>Informatika</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:flex-start;gap:10px;margin:16px 0 20px">
+          <input type="checkbox" id="termsCheck" style="margin-top:3px;accent-color:var(--teal);flex-shrink:0">
+          <label for="termsCheck" style="font-size:12px;color:var(--text3);line-height:1.6;cursor:pointer">
+            <a href="#" style="color:var(--teal);text-decoration:none">Foydalanish shartlari</a> va
+            <a href="#" style="color:var(--teal);text-decoration:none">Maxfiylik siyosati</a> bilan roziman
+          </label>
+        </div>
+
+        <button class="btn-primary" id="regSubmitBtn" onclick="doRegister()">
+          <i class="ti ti-user-plus"></i> Ro'yxatdan o'tish
+        </button>
+
+        <div class="divider"><div class="divider-line"></div><span class="divider-text">yoki</span><div class="divider-line"></div></div>
+        <button class="social-btn">
+          <svg class="google-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Google bilan ro'yxatdan o'tish
+        </button>
+      </div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="success-section" id="successSection">
+      <div class="success-icon"><i class="ti ti-check"></i></div>
+      <div class="auth-heading" style="margin-bottom:8px" id="successTitle">Xush kelibsiz!</div>
+      <div class="auth-sub" style="margin-bottom:28px" id="successDesc">Hisobingiz muvaffaqiyatli yaratildi.</div>
+      <button class="btn-primary" id="successBtn" onclick="goToDashboard()">
+        <i class="ti ti-layout-dashboard"></i> Dashboardga o'tish
+      </button>
+    </div>
+
+    <!-- Footer note -->
+    <div class="auth-footer" id="authFooter">
+      Allaqachon hisobingiz bormi? <a href="#" onclick="switchTab('login');return false">Kiring</a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── DATA ──
+const FIELDS = [
+  {id:'math-phys', icon:'🔢', color:'#818CF8', name:'Matematika — Fizika', subjects:['Matematika (asosiy)', 'Fizika', 'Ona tili va adabiyot'], main:'Matematika'},
+  {id:'math-info', icon:'💻', color:'#00C49A', name:'Matematika — Informatika', subjects:['Matematika (asosiy)', 'Informatika', 'Ona tili va adabiyot'], main:'Matematika'},
+  {id:'bio-chem', icon:'🧪', color:'#34D399', name:'Biologiya — Kimyo', subjects:['Biologiya (asosiy)', 'Kimyo', 'Ona tili va adabiyot'], main:'Biologiya'},
+  {id:'eng-lang', icon:'🌍', color:'#60A5FA', name:'Ingliz tili — Adabiyot', subjects:['Ingliz tili (asosiy)', 'Ona tili va adabiyot', 'Tarix'], main:'Ingliz tili'},
+  {id:'history', icon:'📜', color:'#FBBF24', name:'Tarix — Ijtimoiy fanlar', subjects:['Tarix (asosiy)', 'Ona tili va adabiyot', 'Geografiya'], main:'Tarix'},
+  {id:'geo', icon:'🗺️', color:'#FB923C', name:'Geografiya — Iqtisodiyot', subjects:['Geografiya (asosiy)', 'Iqtisodiyot', 'Ona tili va adabiyot'], main:'Geografiya'},
+];
+
+let selectedRole = null;
+let selectedField = null;
+
+// ── TABS ──
+function switchTab(tab) {
+  document.getElementById('tabLogin').classList.toggle('active', tab==='login');
+  document.getElementById('tabRegister').classList.toggle('active', tab==='register');
+  document.getElementById('loginPanel').style.display = tab==='login' ? 'block' : 'none';
+  document.getElementById('authFooter').textContent = tab==='login'
+    ? '' : '';
+  if (tab==='register') {
+    showPanel('roleSection');
+    document.getElementById('authFooter').innerHTML = 'Allaqachon hisobingiz bormi? <a href="#" onclick="switchTab(\'login\');return false">Kiring</a>';
+  } else {
+    document.getElementById('authFooter').innerHTML = 'Hisob yo\'qmi? <a href="#" onclick="switchTab(\'register\');return false">Ro\'yxatdan o\'ting</a>';
+  }
+}
+
+function showPanel(id) {
+  ['roleSection','fieldSection','formSection','successSection'].forEach(p=>{
+    document.getElementById(p).style.display = p===id ? 'block' : 'none';
+  });
+}
+
+// ── ROLE ──
+function selectRole(role) {
+  selectedRole = role;
+  document.getElementById('roleStudent').classList.toggle('selected', role==='student');
+  document.getElementById('roleTeacher').classList.toggle('selected', role==='teacher');
+  document.getElementById('roleNextBtn').disabled = false;
+  document.getElementById('roleNextBtn').className = 'btn-primary' + (role==='teacher' ? ' amber' : '');
+}
+
+function goToFieldStep() {
+  if (!selectedRole) return;
+  if (selectedRole === 'teacher') {
+    goToFormStep();
+    return;
+  }
+  buildFieldsGrid();
+  showPanel('fieldSection');
+}
+
+function goBack(panelId) {
+  showPanel(panelId);
+}
+
+// ── FIELDS ──
+function buildFieldsGrid() {
+  const grid = document.getElementById('fieldsGrid');
+  grid.innerHTML = '';
+  FIELDS.forEach(f => {
+    const el = document.createElement('div');
+    el.className = 'field-item';
+    el.id = 'field_' + f.id;
+    el.onclick = () => selectField(f);
+    el.innerHTML = `
+      <div class="field-icon" style="background:rgba(255,255,255,0.05)">${f.icon}</div>
+      <div>
+        <div class="field-name">${f.name}</div>
+        <div class="field-subjects">${f.subjects.join(' · ')}</div>
+      </div>
+      <div class="field-check"><i class="ti ti-check"></i></div>
+    `;
+    grid.appendChild(el);
+  });
+}
+
+function selectField(f) {
+  selectedField = f;
+  document.querySelectorAll('.field-item').forEach(el => el.classList.remove('selected'));
+  document.getElementById('field_' + f.id).classList.add('selected');
+  document.getElementById('fieldNextBtn').disabled = false;
+
+  // Show subjects preview
+  const preview = document.getElementById('subjectsPreview');
+  const tags = document.getElementById('subjectsTags');
+  preview.style.display = 'block';
+  tags.innerHTML = f.subjects.map((s,i) =>
+    `<span class="sp-tag${i===0?' main':''}">${i===0?'⭐ ':''} ${s}</span>`
+  ).join('');
+}
+
+function goToFormStep() {
+  // Set role badge
+  const badgeWrap = document.getElementById('roleBadgeWrap');
+  if (selectedRole === 'teacher') {
+    badgeWrap.innerHTML = '<div class="role-badge teacher"><i class="ti ti-chalkboard"></i> O\'qituvchi</div>';
+    document.getElementById('teacherFields').style.display = 'block';
+    document.getElementById('formSubText').textContent = "O'quv markaz ma'lumotlarini kiriting";
+  } else {
+    const fieldName = selectedField ? selectedField.name : 'Tanlangan yo\'nalish';
+    badgeWrap.innerHTML = `<div class="role-badge student"><i class="ti ti-school"></i> ${fieldName}</div>`;
+    document.getElementById('teacherFields').style.display = 'none';
+    document.getElementById('formSubText').textContent = 'Shaxsiy ma\'lumotlaringizni kiriting';
+  }
+  showPanel('formSection');
+}
+
+function goBackFromForm() {
+  if (selectedRole === 'teacher') {
+    showPanel('roleSection');
+  } else {
+    showPanel('fieldSection');
+  }
+}
+
+// ── FORM ──
+function togglePass(inputId, iconId) {
+  const inp = document.getElementById(inputId);
+  const ico = document.getElementById(iconId);
+  if (inp.type === 'password') {
+    inp.type = 'text';
+    ico.className = 'ti ti-eye-off input-suffix';
+  } else {
+    inp.type = 'password';
+    ico.className = 'ti ti-eye input-suffix';
+  }
+}
+
+function doLogin() {
+  const email = document.getElementById('loginEmail').value;
+  const pass = document.getElementById('loginPass').value;
+  if (!email || !pass) {
+    document.getElementById('loginErr').classList.remove('hidden');
+    return;
+  }
+  // Demo: redirect based on mock role
+  if (email.includes('teacher')) {
+    window.location.href = 'abiturai_teacher.html';
+  } else {
+    window.location.href = 'abiturai_dashboard.html';
+  }
+}
+
+function doRegister() {
+  const first = document.getElementById('regFirst').value;
+  const email = document.getElementById('regEmail').value;
+  const pass = document.getElementById('regPass').value;
+  const terms = document.getElementById('termsCheck').checked;
+  if (!first || !email || !pass || !terms) return;
+
+  // Show success
+  showPanel('successSection');
+  document.getElementById('authFooter').style.display = 'none';
+
+  if (selectedRole === 'teacher') {
+    document.getElementById('successTitle').textContent = "Xush kelibsiz, Ustoz!";
+    document.getElementById('successDesc').textContent = "Hisobingiz yaratildi. O'qituvchi paneliga o'ting.";
+    document.getElementById('successBtn').innerHTML = '<i class="ti ti-chalkboard"></i> O\'qituvchi paneliga o\'tish';
+  } else {
+    document.getElementById('successTitle').textContent = `Xush kelibsiz, ${first}! 🎉`;
+    document.getElementById('successDesc').textContent = "Hisobingiz muvaffaqiyatli yaratildi. DTMga tayyorlanishni boshlang!";
+  }
+}
+
+function goToDashboard() {
+  if (selectedRole === 'teacher') {
+    window.location.href = 'abiturai_teacher.html';
+  } else {
+    window.location.href = 'abiturai_dashboard.html';
+  }
+}
+
+// Init
+switchTab('login');
+</script>
+</body>
+</html>

@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AbiturAI — Test Natijalari</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+:root{
+  --bg:#07090F;--bg2:#0B0E18;--bg3:#0F1220;--bg4:#131728;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --text:#F1F5F9;--text2:#94A3B8;--text3:#475569;
+  --teal:#00C49A;--teal-dim:rgba(0,196,154,0.1);--teal-border:rgba(0,196,154,0.3);
+  --purple:#818CF8;--purple-dim:rgba(129,140,248,0.1);--purple-border:rgba(129,140,248,0.3);
+  --amber:#FBBF24;--amber-dim:rgba(251,191,36,0.1);
+  --red:#F87171;--red-dim:rgba(248,113,113,0.1);--red-border:rgba(248,113,113,0.3);
+  --green:#34D399;--green-dim:rgba(52,211,153,0.1);--green-border:rgba(52,211,153,0.3);
+  --r:12px;--r-sm:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;overflow-x:hidden}
+
+/* SIDEBAR */
+.sidebar{width:220px;min-height:100vh;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh}
+.sb-logo{display:flex;align-items:center;gap:10px;padding:22px 20px 20px;border-bottom:1px solid var(--border)}
+.logo-mark{width:32px;height:32px;border-radius:8px;background:var(--teal);display:flex;align-items:center;justify-content:center}
+.logo-mark i{color:#07090F;font-size:16px}
+.logo-text{font-size:16px;font-weight:600;color:var(--text);letter-spacing:-.3px}
+.sb-section{padding:20px 12px 8px;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;font-weight:600}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--r-sm);font-size:13px;color:var(--text2);cursor:pointer;margin-bottom:2px;transition:all .15s;position:relative;text-decoration:none}
+.sb-item:hover{background:var(--bg3);color:var(--text)}
+.sb-item.active{background:var(--teal-dim);color:var(--teal)}
+.sb-item.active::before{content:'';position:absolute;left:0;top:6px;bottom:6px;width:2px;background:var(--teal);border-radius:0 2px 2px 0}
+.sb-item i{font-size:17px;flex-shrink:0}
+.sb-bottom{margin-top:auto;padding:12px;border-top:1px solid var(--border)}
+.sb-user{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--r-sm);cursor:pointer;transition:background .15s}
+.sb-user:hover{background:var(--bg3)}
+.avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--purple));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#fff;flex-shrink:0}
+
+/* MAIN */
+.main{flex:1;overflow-y:auto;min-width:0}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;border-bottom:1px solid var(--border);background:rgba(7,9,15,0.8);backdrop-filter:blur(8px);position:sticky;top:0;z-index:10}
+.back-btn{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text3);cursor:pointer;transition:color .2s;background:none;border:none;font-family:'DM Sans',sans-serif}
+.back-btn:hover{color:var(--text2)}
+.tb-right{display:flex;gap:10px}
+.btn-sm{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r-sm);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;border:none;font-family:'DM Sans',sans-serif}
+.btn-sm.outline{background:transparent;border:1px solid var(--border);color:var(--text2)}
+.btn-sm.outline:hover{border-color:var(--border2);color:var(--text)}
+.btn-sm.teal{background:var(--teal);color:#07090F;font-weight:600}
+.btn-sm.teal:hover{opacity:.88}
+.btn-sm.purple{background:var(--purple-dim);border:1px solid var(--purple-border);color:var(--purple)}
+
+.content{padding:28px}
+
+/* HERO SCORE */
+.result-hero{display:grid;grid-template-columns:auto 1fr;gap:32px;align-items:center;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:32px;margin-bottom:24px;position:relative;overflow:hidden}
+.result-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:20px 20px 0 0;background:linear-gradient(90deg,var(--teal),var(--purple))}
+.ring-wrap{position:relative;width:140px;height:140px;flex-shrink:0}
+.ring-wrap canvas{position:absolute;top:0;left:0}
+.ring-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.ring-score{font-size:34px;font-weight:800;color:var(--text);font-family:'DM Serif Display',serif;line-height:1}
+.ring-total{font-size:13px;color:var(--text3);margin-top:3px}
+.hero-info{min-width:0}
+.hero-fan{font-size:12px;color:var(--text3);margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.hero-title{font-size:26px;font-weight:700;color:var(--text);margin-bottom:10px;letter-spacing:-.5px;font-family:'DM Serif Display',serif}
+.grade-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:600;margin-bottom:14px}
+.grade-badge.excellent{background:var(--green-dim);border:1px solid var(--green-border);color:var(--green)}
+.grade-badge.good{background:var(--teal-dim);border:1px solid var(--teal-border);color:var(--teal)}
+.grade-badge.average{background:var(--amber-dim);border:1px solid rgba(251,191,36,0.3);color:var(--amber)}
+.grade-badge.poor{background:var(--red-dim);border:1px solid var(--red-border);color:var(--red)}
+.hero-meta-row{display:flex;gap:20px;flex-wrap:wrap}
+.hero-meta-item{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text3)}
+.hero-meta-item i{font-size:15px}
+.hero-meta-item strong{color:var(--text2)}
+
+/* STATS ROW */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px}
+.stat-icon{width:36px;height:36px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.stat-icon.green{background:var(--green-dim);border:1px solid var(--green-border)}
+.stat-icon.green i{color:var(--green);font-size:17px}
+.stat-icon.red{background:var(--red-dim);border:1px solid var(--red-border)}
+.stat-icon.red i{color:var(--red);font-size:17px}
+.stat-icon.amber{background:var(--amber-dim);border:1px solid rgba(251,191,36,0.3)}
+.stat-icon.amber i{color:var(--amber);font-size:17px}
+.stat-icon.purple{background:var(--purple-dim);border:1px solid var(--purple-border)}
+.stat-icon.purple i{color:var(--purple);font-size:17px}
+.stat-val{font-size:28px;font-weight:700;color:var(--text);letter-spacing:-.5px;font-family:'DM Serif Display',serif}
+.stat-label{font-size:12px;color:var(--text3);margin-top:2px}
+
+/* TWO COL */
+.two-col{display:grid;grid-template-columns:1fr 360px;gap:20px;margin-bottom:24px}
+
+/* CARD */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.card-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border)}
+.card-title{font-size:14px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:8px}
+.card-title i{font-size:16px}
+.card-body{padding:20px}
+
+/* QUESTION REVIEW */
+.q-item{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);padding:16px;margin-bottom:10px;cursor:pointer;transition:border-color .2s}
+.q-item:hover{border-color:var(--border2)}
+.q-item.correct{border-left:3px solid var(--green)}
+.q-item.wrong{border-left:3px solid var(--red)}
+.q-item.skipped{border-left:3px solid var(--text3)}
+.q-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.q-num{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em}
+.q-status{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px}
+.q-status.correct{background:var(--green-dim);color:var(--green)}
+.q-status.wrong{background:var(--red-dim);color:var(--red)}
+.q-status.skipped{background:rgba(71,85,105,0.2);color:var(--text3)}
+.q-text{font-size:13px;color:var(--text2);line-height:1.55;margin-bottom:10px}
+.q-answers{display:grid;gap:5px}
+.q-ans{display:flex;align-items:center;gap:8px;font-size:12px;padding:6px 10px;border-radius:6px;color:var(--text3)}
+.q-ans.chosen-wrong{background:var(--red-dim);color:var(--red);border:1px solid var(--red-border)}
+.q-ans.correct-ans{background:var(--green-dim);color:var(--green);border:1px solid var(--green-border)}
+.q-ans.chosen-correct{background:var(--green-dim);color:var(--green);border:1px solid var(--green-border)}
+.q-ans i{font-size:14px;flex-shrink:0}
+
+/* AI XATO TAHLILI */
+.ai-panel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.ai-head{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.ai-title-wrap{display:flex;align-items:center;gap:10px}
+.ai-icon{width:34px;height:34px;border-radius:var(--r-sm);background:var(--purple-dim);border:1px solid var(--purple-border);display:flex;align-items:center;justify-content:center}
+.ai-icon i{color:var(--purple);font-size:16px}
+.ai-title{font-size:14px;font-weight:600;color:var(--text)}
+.ai-sub{font-size:11px;color:var(--text3)}
+.ai-body{padding:16px}
+.ai-loading{text-align:center;padding:32px 20px}
+.ai-spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--purple);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ai-loading-text{font-size:13px;color:var(--text3)}
+.ai-error-item{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);padding:14px;margin-bottom:10px}
+.ai-error-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.ai-err-num{width:22px;height:22px;border-radius:50%;background:var(--red-dim);border:1px solid var(--red-border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--red);flex-shrink:0}
+.ai-err-title{font-size:13px;font-weight:600;color:var(--text)}
+.ai-field{margin-bottom:10px}
+.ai-field-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px}
+.ai-field-label.wrong{color:var(--red)}
+.ai-field-label.correct{color:var(--teal)}
+.ai-field-label.cause{color:var(--amber)}
+.ai-field-text{font-size:12px;color:var(--text2);line-height:1.6;background:var(--bg4);border-radius:6px;padding:9px 11px}
+.ai-footer{padding:14px 16px;border-top:1px solid var(--border);display:flex;gap:8px}
+.ai-tutor-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:10px;background:var(--purple-dim);border:1px solid var(--purple-border);border-radius:var(--r-sm);font-size:13px;font-weight:500;color:var(--purple);cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}
+.ai-tutor-btn:hover{background:rgba(129,140,248,.18)}
+
+/* TOPIC BREAKDOWN */
+.topic-bar{margin-bottom:12px}
+.topic-bar-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:13px}
+.topic-bar-name{color:var(--text2)}
+.topic-bar-score{font-size:12px;font-weight:600}
+.topic-bar-score.good{color:var(--green)}
+.topic-bar-score.avg{color:var(--amber)}
+.topic-bar-score.poor{color:var(--red)}
+.bar-track{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;transition:width 1s ease}
+.bar-fill.good{background:var(--green)}
+.bar-fill.avg{background:var(--amber)}
+.bar-fill.poor{background:var(--red)}
+
+/* COMPARE */
+.compare-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--border);font-size:13px}
+.compare-row:last-child{border-bottom:none}
+.compare-label{color:var(--text3)}
+.compare-vals{display:flex;gap:16px;align-items:center}
+.compare-you{color:var(--teal);font-weight:600}
+.compare-avg{color:var(--text3)}
+
+/* FILTER TABS */
+.q-filter{display:flex;gap:6px;padding:14px 20px;border-bottom:1px solid var(--border)}
+.q-filter-btn{padding:5px 13px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;border:1px solid var(--border);background:transparent;color:var(--text3);font-family:'DM Sans',sans-serif}
+.q-filter-btn.active{border-color:var(--teal);background:var(--teal-dim);color:var(--teal)}
+.q-filter-btn.wrong-tab.active{border-color:var(--red);background:var(--red-dim);color:var(--red)}
+.q-list-wrap{padding:14px 20px;max-height:480px;overflow-y:auto}
+.q-list-wrap::-webkit-scrollbar{width:3px}
+.q-list-wrap::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+/* NEXT STEPS */
+.next-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
+.ns-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:20px;display:flex;flex-direction:column;gap:12px;transition:border-color .2s;cursor:pointer}
+.ns-card:hover{border-color:var(--border2)}
+.ns-icon{width:40px;height:40px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center}
+.ns-title{font-size:14px;font-weight:600;color:var(--text)}
+.ns-desc{font-size:12px;color:var(--text3);line-height:1.55}
+.ns-action{font-size:12px;font-weight:500;display:flex;align-items:center;gap:4px;margin-top:auto}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="logo-mark"><i class="ti ti-brain"></i></div>
+    <span class="logo-text">AbiturAI</span>
+  </div>
+  <div class="sb-section">O'quvchi</div>
+  <a class="sb-item" href="abiturai_dashboard.html"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
+  <a class="sb-item" href="#"><i class="ti ti-books"></i> Fanlar</a>
+  <a class="sb-item active" href="#"><i class="ti ti-clipboard-list"></i> Testlar</a>
+  <a class="sb-item" href="abiturai_tutor.html"><i class="ti ti-message-bolt"></i> AI Tutor</a>
+  <div class="sb-section">Tahlil</div>
+  <a class="sb-item" href="#"><i class="ti ti-chart-bar"></i> Progress</a>
+  <a class="sb-item" href="#"><i class="ti ti-trophy"></i> Reyting</a>
+  <div class="sb-bottom">
+    <div class="sb-user">
+      <div class="avatar">AA</div>
+      <div>
+        <div style="font-size:13px;font-weight:500;color:var(--text)">Azizbek A.</div>
+        <div style="font-size:11px;color:var(--text3)">Mat · Fiz · O'zbek</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <button class="back-btn" onclick="history.back()"><i class="ti ti-arrow-left"></i> Testlar ro'yxati</button>
+    <div class="tb-right">
+      <button class="btn-sm outline"><i class="ti ti-download"></i> PDF</button>
+      <button class="btn-sm purple" onclick="document.getElementById('aiSection').scrollIntoView({behavior:'smooth'})">
+        <i class="ti ti-sparkles"></i> AI Tahlil
+      </button>
+      <button class="btn-sm teal" onclick="window.location.href='abiturai_test.html'">
+        <i class="ti ti-refresh"></i> Qayta yechish
+      </button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- HERO -->
+    <div class="result-hero">
+      <div class="ring-wrap">
+        <canvas id="ringCanvas" width="140" height="140"></canvas>
+        <div class="ring-center">
+          <div class="ring-score" id="ringScore">72</div>
+          <div class="ring-total">/ 100</div>
+        </div>
+      </div>
+      <div class="hero-info">
+        <div class="hero-fan"><i class="ti ti-calculator" style="color:var(--teal)"></i> Matematika · Mock Test #4</div>
+        <div class="hero-title">Test natijalari</div>
+        <div class="grade-badge good"><i class="ti ti-medal"></i> Yaxshi daraja</div>
+        <div class="hero-meta-row">
+          <div class="hero-meta-item"><i class="ti ti-calendar" style="color:var(--teal)"></i> <strong>23 May 2026</strong></div>
+          <div class="hero-meta-item"><i class="ti ti-clock" style="color:var(--amber)"></i> <strong>11 daq 42 sek</strong> sarflandi</div>
+          <div class="hero-meta-item"><i class="ti ti-users" style="color:var(--purple)"></i> Talabalardagi o'rin: <strong style="color:var(--text2)">Top 34%</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon green"><i class="ti ti-check"></i></div>
+        <div class="stat-val" style="color:var(--green)">18</div>
+        <div class="stat-label">To'g'ri javob</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon red"><i class="ti ti-x"></i></div>
+        <div class="stat-val" style="color:var(--red)">5</div>
+        <div class="stat-label">Xato javob</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon amber"><i class="ti ti-minus"></i></div>
+        <div class="stat-val" style="color:var(--amber)">2</div>
+        <div class="stat-label">O'tkazib yuborilgan</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon purple"><i class="ti ti-bolt"></i></div>
+        <div class="stat-val" style="color:var(--purple)">36 sek</div>
+        <div class="stat-label">O'rtacha vaqt / savol</div>
+      </div>
+    </div>
+
+    <!-- TWO COL: Questions + AI -->
+    <div class="two-col" id="aiSection">
+
+      <!-- LEFT: Question review -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title"><i class="ti ti-list-check" style="color:var(--teal)"></i> Savollar ko'rib chiqish</div>
+          <span style="font-size:12px;color:var(--text3)">25 ta savol</span>
+        </div>
+        <div class="q-filter">
+          <button class="q-filter-btn active" onclick="filterQ('all',this)">Hammasi</button>
+          <button class="q-filter-btn" onclick="filterQ('correct',this)">✓ To'g'ri</button>
+          <button class="q-filter-btn wrong-tab" onclick="filterQ('wrong',this)">✗ Xato</button>
+          <button class="q-filter-btn" onclick="filterQ('skipped',this)">— O'tkazilgan</button>
+        </div>
+        <div class="q-list-wrap" id="qList">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- RIGHT: AI Analysis -->
+      <div>
+        <!-- AI Xato Tahlili -->
+        <div class="ai-panel" style="margin-bottom:16px">
+          <div class="ai-head">
+            <div class="ai-title-wrap">
+              <div class="ai-icon"><i class="ti ti-sparkles"></i></div>
+              <div>
+                <div class="ai-title">AI Xato Tahlili</div>
+                <div class="ai-sub">Xatolar sabablari va yechimlar</div>
+              </div>
+            </div>
+            <button class="btn-sm purple" onclick="runAIAnalysis()" id="analyzeBtn" style="font-size:12px;padding:6px 12px">
+              <i class="ti ti-refresh"></i> Tahlil
+            </button>
+          </div>
+          <div class="ai-body" id="aiBody">
+            <div class="ai-loading" id="aiLoading" style="display:none">
+              <div class="ai-spinner"></div>
+              <div class="ai-loading-text">AI xatolarni tahlil qilmoqda...</div>
+              <div style="font-size:11px;color:var(--text3);margin-top:6px">Gemini Pro bilan</div>
+            </div>
+            <div id="aiResults" style="display:none">
+              <!-- Populated by JS -->
+            </div>
+            <div id="aiPrompt" style="text-align:center;padding:24px 16px">
+              <div style="width:48px;height:48px;border-radius:50%;background:var(--purple-dim);border:1px solid var(--purple-border);display:flex;align-items:center;justify-content:center;margin:0 auto 12px">
+                <i class="ti ti-brain" style="color:var(--purple);font-size:22px"></i>
+              </div>
+              <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px">5 ta xatoni tahlil qilish</div>
+              <div style="font-size:12px;color:var(--text3);line-height:1.6;margin-bottom:16px">Gemini AI har bir xato uchun noto'g'ri mantiq, to'g'ri mantiq va asosiy sababni ko'rsatadi</div>
+              <button class="btn-sm purple" onclick="runAIAnalysis()" style="width:100%;justify-content:center">
+                <i class="ti ti-sparkles"></i> AI bilan tahlil qilish
+              </button>
+            </div>
+          </div>
+          <div class="ai-footer">
+            <button class="ai-tutor-btn" onclick="window.location.href='abiturai_tutor.html'">
+              <i class="ti ti-message-bolt"></i> AI Tutor bilan muhokama qilish
+            </button>
+          </div>
+        </div>
+
+        <!-- Topic breakdown -->
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-head">
+            <div class="card-title"><i class="ti ti-chart-bar" style="color:var(--teal)"></i> Mavzu bo'yicha</div>
+          </div>
+          <div class="card-body">
+            <div class="topic-bar">
+              <div class="topic-bar-head"><span class="topic-bar-name">Kvadrat tenglamalar</span><span class="topic-bar-score good">90%</span></div>
+              <div class="bar-track"><div class="bar-fill good" style="width:90%"></div></div>
+            </div>
+            <div class="topic-bar">
+              <div class="topic-bar-head"><span class="topic-bar-name">Trigonometriya</span><span class="topic-bar-score avg">60%</span></div>
+              <div class="bar-track"><div class="bar-fill avg" style="width:60%"></div></div>
+            </div>
+            <div class="topic-bar">
+              <div class="topic-bar-head"><span class="topic-bar-name">Logarifm va daraja</span><span class="topic-bar-score good">80%</span></div>
+              <div class="bar-track"><div class="bar-fill good" style="width:80%"></div></div>
+            </div>
+            <div class="topic-bar">
+              <div class="topic-bar-head"><span class="topic-bar-name">Geometriya</span><span class="topic-bar-score poor">40%</span></div>
+              <div class="bar-track"><div class="bar-fill poor" style="width:40%"></div></div>
+            </div>
+            <div class="topic-bar">
+              <div class="topic-bar-head"><span class="topic-bar-name">Funktsiyalar</span><span class="topic-bar-score avg">67%</span></div>
+              <div class="bar-track"><div class="bar-fill avg" style="width:67%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Comparison -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title"><i class="ti ti-users" style="color:var(--purple)"></i> Taqqoslash</div>
+          </div>
+          <div class="card-body" style="padding:0 20px">
+            <div class="compare-row">
+              <div class="compare-label">Ball</div>
+              <div class="compare-vals"><span class="compare-you">72</span><span class="compare-avg">O'rtacha: 58</span></div>
+            </div>
+            <div class="compare-row">
+              <div class="compare-label">Vaqt</div>
+              <div class="compare-vals"><span class="compare-you">11:42</span><span class="compare-avg">O'rtacha: 13:20</span></div>
+            </div>
+            <div class="compare-row">
+              <div class="compare-label">To'g'ri</div>
+              <div class="compare-vals"><span class="compare-you">18/25</span><span class="compare-avg">O'rtacha: 14/25</span></div>
+            </div>
+            <div class="compare-row">
+              <div class="compare-label">Oldingi test</div>
+              <div class="compare-vals"><span class="compare-you" style="color:var(--green)">+8 ball ↑</span><span class="compare-avg" style="color:var(--text3)">Mock #3: 64</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- NEXT STEPS -->
+    <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:8px">
+      <i class="ti ti-arrow-right" style="color:var(--teal)"></i> Keyingi qadamlar
+    </div>
+    <div class="next-steps">
+      <div class="ns-card" onclick="window.location.href='abiturai_tutor.html'">
+        <div class="ns-icon" style="background:var(--purple-dim);border:1px solid var(--purple-border)">
+          <i class="ti ti-message-bolt" style="color:var(--purple);font-size:20px"></i>
+        </div>
+        <div class="ns-title">AI Tutor bilan o'rganish</div>
+        <div class="ns-desc">Geometriya va trigonometriya mavzularida AI bilan chuqur o'rganish</div>
+        <div class="ns-action" style="color:var(--purple)">AI Tutorga o'tish <i class="ti ti-arrow-right"></i></div>
+      </div>
+      <div class="ns-card" onclick="window.location.href='abiturai_test.html'">
+        <div class="ns-icon" style="background:var(--teal-dim);border:1px solid var(--teal-border)">
+          <i class="ti ti-refresh" style="color:var(--teal);font-size:20px"></i>
+        </div>
+        <div class="ns-title">Qayta sinash</div>
+        <div class="ns-desc">Xato yechgan mavzulardan yangi test yechib ko'ring</div>
+        <div class="ns-action" style="color:var(--teal)">Test boshlash <i class="ti ti-arrow-right"></i></div>
+      </div>
+      <div class="ns-card">
+        <div class="ns-icon" style="background:var(--amber-dim);border:1px solid rgba(251,191,36,0.3)">
+          <i class="ti ti-book" style="color:var(--amber);font-size:20px"></i>
+        </div>
+        <div class="ns-title">Darslikni o'qish</div>
+        <div class="ns-desc">Geometriya darsligini DTM material asosida o'qing</div>
+        <div class="ns-action" style="color:var(--amber)">Darslikga o'tish <i class="ti ti-arrow-right"></i></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── SAMPLE DATA ──
+const QUESTIONS = [
+  {n:1, text:'2x² - 5x + 3 = 0 tenglamaning yechimi?', status:'correct', chosen:'A. x=1 va x=1.5', correct:'A. x=1 va x=1.5'},
+  {n:2, text:'sin(30°) + cos(60°) = ?', status:'correct', chosen:'B. 1', correct:'B. 1'},
+  {n:3, text:'log₂(8) = ?', status:'correct', chosen:'C. 3', correct:'C. 3'},
+  {n:4, text:'Uchburchak tomonlari 3, 4, 5 bo\'lsa, maydoni nechaga teng?', status:'wrong', chosen:'A. 7.5', correct:'B. 6'},
+  {n:5, text:'f(x) = x³ - 3x funksiyaning ekstremal nuqtalari?', status:'wrong', chosen:'C. x=0', correct:'A. x=±1'},
+  {n:6, text:'Arifmetik progressiyada a₁=2, d=3, a₁₀=?', status:'correct', chosen:'C. 29', correct:'C. 29'},
+  {n:7, text:'tan(45°) = ?', status:'correct', chosen:'A. 1', correct:'A. 1'},
+  {n:8, text:'2³ × 2⁵ = ?', status:'correct', chosen:'B. 256', correct:'B. 256'},
+  {n:9, text:'Doira yuzasi r=5 bo\'lsa?', status:'wrong', chosen:'A. 25π', correct:'A. 25π', note:'To\'g\'ri belgilandi lekin...'},
+  {n:10, text:'Geometrik progressiyada q=2, a₁=3, S₄=?', status:'wrong', chosen:'B. 45', correct:'C. 45'},
+  {n:11, text:'cos²x + sin²x = ?', status:'correct', chosen:'A. 1', correct:'A. 1'},
+  {n:12, text:'|x - 3| < 5 tengsizligining yechimi?', status:'correct', chosen:'B. -2<x<8', correct:'B. -2<x<8'},
+  {n:13, text:'Ikki to\'g\'ri chiziq parallel bo\'lishi sharti?', status:'skipped', chosen:'—', correct:'B. Ular parallel o\'qlar bo\'yicha'},
+  {n:14, text:'x² - 9 = 0 ning yechimi?', status:'correct', chosen:'C. x=±3', correct:'C. x=±3'},
+  {n:15, text:'√144 = ?', status:'correct', chosen:'B. 12', correct:'B. 12'},
+  {n:16, text:'Ikki butun sonning EKUB va EKU ko\'paytmasi nimaga teng?', status:'wrong', chosen:'A. Ularning yig\'indisi', correct:'C. Ularning ko\'paytmasi'},
+  {n:17, text:'Kvadratning diagonali 8 bo\'lsa tomoni?', status:'skipped', chosen:'—', correct:'A. 4√2'},
+  {n:18, text:'Funksiyaning hosilasi: f(x) = 3x² - 2x + 1', status:'correct', chosen:'B. 6x-2', correct:'B. 6x-2'},
+  {n:19, text:'1 dan 10 gacha juft sonlar yig\'indisi?', status:'correct', chosen:'C. 30', correct:'C. 30'},
+  {n:20, text:'Teng yonli uchburchakda yon tomonlar 5, asosi 6, perimetri?', status:'correct', chosen:'A. 16', correct:'A. 16'},
+];
+
+const AI_ERRORS = [
+  {
+    q: 4,
+    text: "Uchburchak tomonlari 3, 4, 5 bo'lsa, maydoni?",
+    wrong_logic: "O'quvchi yaruperimetr formulasini noto'g'ri qo'llagan: s = (3+4+5)/2 = 6 → lekin Geron formulasini hisoblashda s*(s-3) o'rniga (s-a)*s ishlatgan",
+    correct_logic: "To'g'ri Geron formulasi: s=6, Maydon = √(6×3×2×1) = √36 = 6",
+    root_cause: "Geron formulasidagi ko'paytuvchilar tartibini aralashtirib yuborish — ko'p uchraydigan xato"
+  },
+  {
+    q: 5,
+    text: "f(x) = x³ - 3x funksiyaning ekstremal nuqtalari",
+    wrong_logic: "O'quvchi hosilani hisoblamay, to'g'ridan-to'g'ri x=0 deb taxmin qilgan",
+    correct_logic: "f'(x) = 3x² - 3 = 0 → x² = 1 → x = ±1. f''(1)=6>0 (minimum), f''(-1)=-6<0 (maksimum)",
+    root_cause: "Ekstremal nuqtalarni topishda hosila = 0 qo'yish kerakligini bilmaslik yoki unutish"
+  },
+  {
+    q: 10,
+    text: "Geometrik progressiyada q=2, a₁=3, S₄=?",
+    wrong_logic: "O'quvchi S₄ = a₁×q⁴ formulasini ishlatgan (bu noto'g'ri formula)",
+    correct_logic: "Sn = a₁(qⁿ-1)/(q-1) → S₄ = 3(16-1)/(2-1) = 3×15 = 45",
+    root_cause: "Geometrik progressiya yig'indisi formulasini arifmetik progressiya formulasi bilan aralashtirib yuborish"
+  },
+  {
+    q: 16,
+    text: "Ikki butun sonning EKUB va EKU ko'paytmasi?",
+    wrong_logic: "O'quvchi 'EKUB × EKU = yig'indi' deb xato biladi",
+    correct_logic: "Har qanday a, b butun sonlar uchun: EKUB(a,b) × EKU(a,b) = a × b (ya'ni ko'paytma)",
+    root_cause: "EKUB va EKU o'rtasidagi bog'liqlikni yod olmagan yoki aralashtirib yuborgan"
+  },
+  {
+    q: 9,
+    text: "Doira yuzasi r=5 bo'lsa (noto'g'ri belgilangan)",
+    wrong_logic: "Javob to'g'ri edi (25π) lekin o'quvchi belgilashda texnik xato qilgan",
+    correct_logic: "S = πr² = π×25 = 25π — to'g'ri javob A variant",
+    root_cause: "Stres ostida to'g'ri javobni noto'g'ri varianta belgilash — vaqt bosimi"
+  }
+];
+
+// ── RING CHART ──
+function drawRing(score) {
+  const canvas = document.getElementById('ringCanvas');
+  const ctx = canvas.getContext('2d');
+  const cx = 70, cy = 70, r = 58, lw = 10;
+  ctx.clearRect(0, 0, 140, 140);
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI*2);
+  ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+  ctx.lineWidth = lw;
+  ctx.stroke();
+  const pct = score / 100;
+  const color = score >= 80 ? '#34D399' : score >= 60 ? '#00C49A' : score >= 40 ? '#FBBF24' : '#F87171';
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, -Math.PI/2, -Math.PI/2 + Math.PI*2*pct);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = lw;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+}
+drawRing(72);
+
+// ── QUESTIONS LIST ──
+let currentFilter = 'all';
+function renderQuestions() {
+  const list = document.getElementById('qList');
+  const filtered = currentFilter === 'all' ? QUESTIONS
+    : QUESTIONS.filter(q => q.status === currentFilter);
+  list.innerHTML = '';
+  filtered.forEach(q => {
+    const div = document.createElement('div');
+    div.className = `q-item ${q.status}`;
+    const statusLabel = q.status === 'correct' ? '✓ To\'g\'ri' : q.status === 'wrong' ? '✗ Xato' : '— O\'tkazilgan';
+    div.innerHTML = `
+      <div class="q-header">
+        <div class="q-num">Savol ${q.n}</div>
+        <div class="q-status ${q.status}">${statusLabel}</div>
+      </div>
+      <div class="q-text">${q.text}</div>
+      <div class="q-answers">
+        ${q.status === 'wrong' ? `
+          <div class="q-ans chosen-wrong"><i class="ti ti-x"></i> ${q.chosen} (siz)</div>
+          <div class="q-ans correct-ans"><i class="ti ti-check"></i> ${q.correct} (to'g'ri)</div>
+        ` : q.status === 'correct' ? `
+          <div class="q-ans chosen-correct"><i class="ti ti-check"></i> ${q.chosen}</div>
+        ` : `
+          <div class="q-ans"><i class="ti ti-minus"></i> Belgilanmagan · To'g'ri: ${q.correct}</div>
+        `}
+      </div>
+    `;
+    list.appendChild(div);
+  });
+}
+renderQuestions();
+
+function filterQ(type, btn) {
+  currentFilter = type;
+  document.querySelectorAll('.q-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderQuestions();
+}
+
+// ── AI ANALYSIS ──
+function runAIAnalysis() {
+  const aiPrompt = document.getElementById('aiPrompt');
+  const aiLoading = document.getElementById('aiLoading');
+  const aiResults = document.getElementById('aiResults');
+  aiPrompt.style.display = 'none';
+  aiLoading.style.display = 'block';
+  aiResults.style.display = 'none';
+  setTimeout(() => {
+    aiLoading.style.display = 'none';
+    aiResults.style.display = 'block';
+    renderAIResults();
+  }, 2200);
+}
+
+function renderAIResults() {
+  const el = document.getElementById('aiResults');
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;gap:8px;padding:4px 0 14px;border-bottom:1px solid var(--border);margin-bottom:14px">
+      <div style="width:6px;height:6px;border-radius:50%;background:var(--purple);animation:pulse 2s infinite"></div>
+      <span style="font-size:12px;color:var(--purple);font-weight:500">AI tahlil tayyor · ${AI_ERRORS.length} ta xato</span>
+    </div>
+  ` + AI_ERRORS.map((e, i) => `
+    <div class="ai-error-item">
+      <div class="ai-error-header">
+        <div class="ai-err-num">${i+1}</div>
+        <div class="ai-err-title">Savol ${e.q}</div>
+      </div>
+      <div style="font-size:12px;color:var(--text3);margin-bottom:10px;font-style:italic">"${e.text}"</div>
+      <div class="ai-field">
+        <div class="ai-field-label wrong">✗ Noto'g'ri mantiq</div>
+        <div class="ai-field-text">${e.wrong_logic}</div>
+      </div>
+      <div class="ai-field">
+        <div class="ai-field-label correct">✓ To'g'ri yechim</div>
+        <div class="ai-field-text">${e.correct_logic}</div>
+      </div>
+      <div class="ai-field" style="margin-bottom:0">
+        <div class="ai-field-label cause">⚡ Asosiy sabab</div>
+        <div class="ai-field-text">${e.root_cause}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Animate bars
+setTimeout(() => {
+  document.querySelectorAll('.bar-fill').forEach(bar => {
+    const w = bar.style.width;
+    bar.style.width = '0%';
+    setTimeout(() => { bar.style.width = w; }, 100);
+  });
+}, 300);
+</script>
+</body>
+</html>
