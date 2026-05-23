@@ -125,6 +125,97 @@ Retrieve relevant chunks for a question. Optionally filter by subject.
 - `results` + `sources`: new structured format
 - `chunks` + `titles`: backward-compatible format for existing Laravel TutorController
 
+### `POST /process`
+
+Upload a file (PDF, DOCX, or TXT) and automatically extract text, chunk it, and add to the vectorstore. This is the main endpoint for when a teacher/admin uploads a full book or document.
+
+**Request:** `multipart/form-data`
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `file` | file | yes | PDF, DOCX, or TXT file |
+| `subject` | string | yes | Subject name (e.g., "Matematika") |
+| `title` | string | no | Document title (defaults to filename) |
+
+```bash
+curl -X POST http://localhost:8001/process \
+  -F "file=@algebra_textbook.pdf" \
+  -F "subject=Matematika" \
+  -F "title=Algebra — To'liq darslik"
+```
+
+**Response:**
+```json
+{
+  "status": "processed",
+  "topic_id": "doc_a1b2c3d4e5f6",
+  "title": "Algebra — To'liq darslik",
+  "subject": "Matematika",
+  "characters": 45200,
+  "chunks": 98
+}
+```
+
+### `POST /documents`
+
+Add a single topic to the vectorstore without replacing existing data.
+
+**Request:**
+```json
+{
+  "topic_id": "topic_8",
+  "title": "Trigonometriya",
+  "subject": "Matematika",
+  "content": "Full topic text..."
+}
+```
+
+**Response:**
+```json
+{
+  "status": "created",
+  "topic_id": "topic_8",
+  "chunks": 4
+}
+```
+
+### `PUT /documents/{topic_id}`
+
+Update an existing topic (removes old chunks, adds new ones).
+
+**Request:**
+```json
+{
+  "topic_id": "topic_8",
+  "title": "Trigonometriya (yangilangan)",
+  "subject": "Matematika",
+  "content": "Updated topic text..."
+}
+```
+
+**Response:**
+```json
+{
+  "status": "updated",
+  "topic_id": "topic_8",
+  "chunks_removed": 4,
+  "chunks_added": 5
+}
+```
+
+### `DELETE /documents/{topic_id}`
+
+Remove a topic and all its chunks from the vectorstore.
+
+**Response:**
+```json
+{
+  "status": "deleted",
+  "topic_id": "topic_8",
+  "chunks_removed": 4
+}
+```
+
 ### `POST /similar`
 
 Find topics similar to a given topic or text. Used for student recommendations.
