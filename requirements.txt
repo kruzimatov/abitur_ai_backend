@@ -1,0 +1,4 @@
+fastapi
+chromadb
+uvicorn
+pydantic
