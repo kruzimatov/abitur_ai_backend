@@ -3,16 +3,19 @@
     {
       "id": 1,
       "name": "Matematika",
+      "icon": "📐",
       "description": "DTM imtihoniga matematika bo'yicha tayyorgarlik"
     },
     {
       "id": 2,
       "name": "Fizika",
+      "icon": "⚛️",
       "description": "DTM imtihoniga fizika bo'yicha tayyorgarlik"
     },
     {
       "id": 3,
       "name": "Kimyo",
+      "icon": "🧪",
       "description": "DTM imtihoniga kimyo bo'yicha tayyorgarlik"
     }
   ],
