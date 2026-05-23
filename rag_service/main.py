@@ -9,6 +9,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 import chromadb
 
+from splitter import split_document
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s",
@@ -276,7 +278,16 @@ async def process_file(
     file: UploadFile = File(...),
     subject: str = Form(...),
     title: str = Form(default=""),
+    use_ai: bool = Form(default=True),
 ):
+    """
+    Upload a book/document → automatically detect chapters/sections →
+    each section becomes its own topic in ChromaDB.
+
+    - Heuristic heading detection splits the text into logical sections
+    - Optional Gemini AI generates proper titles for untitled sections
+    - Each section is chunked separately for better retrieval
+    """
     start = time.time()
     try:
         content_type = detect_content_type(file.filename or "", file.content_type)
@@ -290,23 +301,43 @@ async def process_file(
         if not text.strip():
             raise HTTPException(status_code=400, detail="No text could be extracted from the file")
 
-        topic_title = title or os.path.splitext(file.filename or "document")[0]
-        topic_id = f"doc_{uuid.uuid4().hex[:12]}"
+        # Smart split: detect chapters/sections in the document
+        doc_prefix = title or os.path.splitext(file.filename or "document")[0]
+        sections = split_document(text, subject, use_ai=use_ai)
 
-        chunks_added = add_topic_to_collection(topic_id, topic_title, subject, text)
+        # Index each section as its own topic
+        batch_id = uuid.uuid4().hex[:8]
+        total_chunks = 0
+        topics_created = []
+
+        for section in sections:
+            topic_id = f"doc_{batch_id}_{section.index}"
+            section_title = f"{doc_prefix} — {section.title}" if doc_prefix else section.title
+
+            chunks_added = add_topic_to_collection(
+                topic_id, section_title, subject, section.content,
+            )
+            total_chunks += chunks_added
+            topics_created.append({
+                "topic_id": topic_id,
+                "title": section_title,
+                "chunks": chunks_added,
+                "characters": len(section.content),
+            })
 
         elapsed = time.time() - start
         logger.info(
-            "Processed file '%s' → topic '%s' (%d chars, %d chunks) in %.2fs",
-            file.filename, topic_id, len(text), chunks_added, elapsed,
+            "Processed file '%s' → %d topics, %d chunks (%d chars) in %.2fs",
+            file.filename, len(topics_created), total_chunks, len(text), elapsed,
         )
         return {
             "status": "processed",
-            "topic_id": topic_id,
-            "title": topic_title,
+            "file": file.filename,
             "subject": subject,
-            "characters": len(text),
-            "chunks": chunks_added,
+            "total_characters": len(text),
+            "total_topics": len(topics_created),
+            "total_chunks": total_chunks,
+            "topics": topics_created,
         }
     except HTTPException:
         raise
