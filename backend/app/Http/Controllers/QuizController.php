@@ -6,7 +6,9 @@ use App\Models\Question;
 use App\Models\QuizAnswer;
 use App\Models\QuizAttempt;
 use App\Models\Topic;
+use App\Models\UserTopicProgress;
 use App\Services\DiagnosisService;
+use App\Services\StreakService;
 use Illuminate\Http\Request;
 
 class QuizController extends Controller
@@ -17,7 +19,7 @@ class QuizController extends Controller
         $questions = $topic->questions()
             ->inRandomOrder()
             ->limit(10)
-            ->get(['id', 'question_text', 'option_a', 'option_b', 'option_c', 'option_d']);
+            ->get(['id', 'question_text', 'option_a', 'option_b', 'option_c', 'option_d', 'difficulty']);
 
         return response()->json([
             'topic' => $topic->only('id', 'title'),
@@ -25,7 +27,7 @@ class QuizController extends Controller
         ]);
     }
 
-    public function submit(Request $request, DiagnosisService $diagnosisService)
+    public function submit(Request $request, DiagnosisService $diagnosisService, StreakService $streakService)
     {
         $validated = $request->validate([
             'topic_id' => 'required|exists:topics,id',
@@ -81,10 +83,39 @@ class QuizController extends Controller
             'completed_at' => now(),
         ]);
 
+        // Track topic progress
+        $total = count($validated['answers']);
+        $scoreOutOf10 = $total > 0 ? round(($score / $total) * 10) : 0;
+
+        $progress = UserTopicProgress::firstOrCreate(
+            ['user_id' => $request->user()->id, 'topic_id' => $validated['topic_id']],
+            ['best_score' => 0, 'attempts_count' => 0, 'status' => 'new']
+        );
+
+        $progress->attempts_count += 1;
+        $progress->last_attempt_at = now();
+
+        if ($scoreOutOf10 > $progress->best_score) {
+            $progress->best_score = $scoreOutOf10;
+        }
+
+        // Status: completed if scored 7+ out of 10
+        if ($scoreOutOf10 >= 7) {
+            $progress->status = 'completed';
+        } elseif ($progress->status === 'new') {
+            $progress->status = 'in_progress';
+        }
+
+        $progress->save();
+
+        // Record streak activity
+        $streakService->recordActivity($request->user()->id);
+
         return response()->json([
             'attempt_id' => $attempt->id,
             'score' => $score,
-            'total' => count($validated['answers']),
+            'total' => $total,
+            'percentage' => $total > 0 ? round(($score / $total) * 100) : 0,
             'diagnosis' => $diagnosis,
         ]);
     }
@@ -100,12 +131,14 @@ class QuizController extends Controller
 
     public function history(Request $request)
     {
+        $perPage = $request->input('per_page', 20);
+        $perPage = min($perPage, 50);
+
         $attempts = QuizAttempt::with('topic:id,title')
             ->where('user_id', $request->user()->id)
             ->whereNotNull('completed_at')
             ->orderByDesc('completed_at')
-            ->limit(20)
-            ->get(['id', 'topic_id', 'score', 'total', 'completed_at']);
+            ->paginate($perPage, ['id', 'topic_id', 'score', 'total', 'completed_at']);
 
         return response()->json($attempts);
     }

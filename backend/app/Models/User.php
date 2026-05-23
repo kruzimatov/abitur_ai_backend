@@ -6,6 +6,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
@@ -77,5 +78,25 @@ class User extends Authenticatable implements JWTSubject
     public function quizAttempts(): HasMany
     {
         return $this->hasMany(QuizAttempt::class);
+    }
+
+    public function topicProgress(): HasMany
+    {
+        return $this->hasMany(UserTopicProgress::class);
+    }
+
+    public function chatSessions(): HasMany
+    {
+        return $this->hasMany(ChatSession::class);
+    }
+
+    public function streak(): HasOne
+    {
+        return $this->hasOne(UserStreak::class);
+    }
+
+    public function streakDays(): HasMany
+    {
+        return $this->hasMany(StreakDay::class);
     }
 }

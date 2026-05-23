@@ -19,6 +19,7 @@ class Question extends Model
         'option_d',
         'correct_answer',
         'explanation',
+        'difficulty',
     ];
 
     public function topic(): BelongsTo

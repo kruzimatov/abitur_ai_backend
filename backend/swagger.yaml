@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: AbiturAI API
   description: AI-powered DTM test prep platform for Uzbek students
-  version: 2.0.0
+  version: 3.0.0
 
 servers:
   - url: http://localhost:8080/api
@@ -109,6 +109,7 @@ components:
         option_d: { type: string }
         correct_answer: { type: string, enum: [A, B, C, D] }
         explanation: { type: string, nullable: true }
+        difficulty: { type: string, enum: [easy, medium, hard], default: medium }
 
     QuestionForQuiz:
       type: object
@@ -119,6 +120,7 @@ components:
         option_b: { type: string }
         option_c: { type: string }
         option_d: { type: string }
+        difficulty: { type: string, enum: [easy, medium, hard] }
 
     QuizAttempt:
       type: object
@@ -127,6 +129,7 @@ components:
         topic_id: { type: integer }
         score: { type: integer }
         total: { type: integer }
+        percentage: { type: number }
         diagnosis: { type: array, nullable: true, items: { $ref: '#/components/schemas/DiagnosisItem' } }
         completed_at: { type: string, format: date-time, nullable: true }
         topic:
@@ -161,13 +164,149 @@ components:
         answer: { type: string }
         sources: { type: array, items: { type: string } }
 
+    # ─── NEW SCHEMAS ───
+
+    ProfileResponse:
+      type: object
+      properties:
+        user:
+          type: object
+          properties:
+            id: { type: integer }
+            firstname: { type: string }
+            lastname: { type: string }
+            email: { type: string }
+            gender: { type: string, enum: [male, female] }
+            role: { type: string, enum: [student, teacher, admin] }
+            field: { $ref: '#/components/schemas/SubjectShort' }
+            subject: { $ref: '#/components/schemas/SubjectShort' }
+        stats:
+          type: object
+          properties:
+            total_quizzes: { type: integer }
+            avg_score: { type: number }
+            current_streak: { type: integer }
+            longest_streak: { type: integer }
+
     StudentDashboard:
       type: object
       properties:
         total_quizzes: { type: integer }
         avg_score: { type: number }
-        subjects_count: { type: integer }
-        recent_attempts: { type: array, items: { $ref: '#/components/schemas/QuizAttempt' } }
+        current_streak: { type: integer }
+        longest_streak: { type: integer }
+        today_done: { type: boolean }
+        days_until_dtm: { type: integer }
+        subjects_progress:
+          type: array
+          items: { $ref: '#/components/schemas/SubjectProgress' }
+        recommendations:
+          type: array
+          items: { $ref: '#/components/schemas/Recommendation' }
+        recent_attempts:
+          type: array
+          items: { $ref: '#/components/schemas/QuizAttempt' }
+        streak_calendar:
+          type: array
+          items: { $ref: '#/components/schemas/StreakDay' }
+
+    SubjectProgress:
+      type: object
+      properties:
+        subject_id: { type: integer }
+        subject_name: { type: string }
+        total_topics: { type: integer }
+        completed_topics: { type: integer }
+        avg_score: { type: number }
+        percentage: { type: integer }
+
+    Recommendation:
+      type: object
+      properties:
+        topic_id: { type: integer }
+        topic_title: { type: string }
+        subject_name: { type: string }
+        best_score: { type: integer, nullable: true }
+        reason: { type: string }
+
+    StreakResponse:
+      type: object
+      properties:
+        current_streak: { type: integer }
+        longest_streak: { type: integer }
+        today_done: { type: boolean }
+        calendar:
+          type: array
+          items: { $ref: '#/components/schemas/StreakDay' }
+
+    StreakDay:
+      type: object
+      properties:
+        date: { type: string, format: date }
+        active: { type: boolean }
+        quizzes_done: { type: integer }
+
+    ChatSession:
+      type: object
+      properties:
+        id: { type: integer }
+        subject_id: { type: integer, nullable: true }
+        title: { type: string }
+        subject: { $ref: '#/components/schemas/SubjectShort' }
+        messages_count: { type: integer }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+
+    ChatMessage:
+      type: object
+      properties:
+        id: { type: integer }
+        chat_session_id: { type: integer }
+        role: { type: string, enum: [user, ai] }
+        content: { type: string }
+        sources: { type: array, nullable: true, items: { type: string } }
+        created_at: { type: string, format: date-time }
+
+    ChatAskResponse:
+      type: object
+      properties:
+        user_message: { $ref: '#/components/schemas/ChatMessage' }
+        ai_message: { $ref: '#/components/schemas/ChatMessage' }
+
+    TeacherDashboard:
+      type: object
+      properties:
+        subject: { $ref: '#/components/schemas/SubjectShort' }
+        active_students: { type: integer }
+        total_topics: { type: integer }
+        total_questions: { type: integer }
+        total_attempts: { type: integer }
+        avg_score: { type: number }
+
+    TeacherAnalytics:
+      type: object
+      properties:
+        topic_scores:
+          type: array
+          items:
+            type: object
+            properties:
+              topic_id: { type: integer }
+              topic_title: { type: string }
+              total_attempts: { type: integer }
+              unique_students: { type: integer }
+              avg_score: { type: number }
+        student_rankings:
+          type: array
+          items:
+            type: object
+            properties:
+              user_id: { type: integer }
+              firstname: { type: string }
+              lastname: { type: string }
+              avg_score: { type: number }
+              total_tests: { type: integer }
+              last_active: { type: string, format: date-time }
 
     AdminDashboard:
       type: object
@@ -196,29 +335,12 @@ paths:
     get:
       tags: [Public]
       summary: List all fields of study with their subjects
-      description: "Used on registration page. Student picks a field → subjects auto-display."
+      description: "Used on registration page. Student picks a field."
       responses:
         '200':
           description: Fields with subjects
           content:
             application/json:
-              example:
-                - id: 1
-                  name: "Amaliy matematika va kompyuter tahlili"
-                  subjects:
-                    - { id: 2, name: "Amaliy matematika" }
-                    - { id: 3, name: "Fizika" }
-                    - { id: 6, name: "Ona tili" }
-                    - { id: 7, name: "O'zbekiston Tarixi" }
-                    - { id: 1, name: "Matematika" }
-                - id: 3
-                  name: "Umumiy davolash"
-                  subjects:
-                    - { id: 4, name: "Kimyo" }
-                    - { id: 5, name: "Biologiya" }
-                    - { id: 6, name: "Ona tili" }
-                    - { id: 7, name: "O'zbekiston Tarixi" }
-                    - { id: 1, name: "Matematika" }
               schema:
                 type: array
                 items: { $ref: '#/components/schemas/FieldWithSubjects' }
@@ -247,9 +369,9 @@ paths:
       tags: [Auth]
       summary: Register new student or teacher
       description: |
-        **Student registration**: requires field_id (pick from GET /fields)
-        **Teacher registration**: requires subject_id (pick from GET /subjects)
-        Admin cannot be registered — only seeded.
+        **Student**: requires field_id
+        **Teacher**: requires subject_id
+        Admin cannot be registered.
       requestBody:
         required: true
         content:
@@ -265,34 +387,11 @@ paths:
                 password_confirmation: { type: string, example: "password123" }
                 gender: { type: string, enum: [male, female], example: "male" }
                 role: { type: string, enum: [student, teacher], example: "student" }
-                field_id: { type: integer, description: "Required for student (pick from GET /fields)", example: 2 }
-                subject_id: { type: integer, description: "Required for teacher (pick from GET /subjects)", example: 1 }
-            examples:
-              student:
-                summary: Student registration
-                value:
-                  firstname: "Ali"
-                  lastname: "Valiyev"
-                  email: "ali@example.com"
-                  password: "password123"
-                  password_confirmation: "password123"
-                  gender: "male"
-                  role: "student"
-                  field_id: 2
-              teacher:
-                summary: Teacher registration
-                value:
-                  firstname: "Malika"
-                  lastname: "Karimova"
-                  email: "malika@example.com"
-                  password: "password123"
-                  password_confirmation: "password123"
-                  gender: "female"
-                  role: "teacher"
-                  subject_id: 1
+                field_id: { type: integer, description: "Required for student", example: 2 }
+                subject_id: { type: integer, description: "Required for teacher", example: 1 }
       responses:
         '201':
-          description: User registered (returns user with field/subjects or subject)
+          description: User registered
           content:
             application/json:
               schema: { $ref: '#/components/schemas/AuthResponse' }
@@ -306,7 +405,7 @@ paths:
     post:
       tags: [Auth]
       summary: Login (email + password)
-      description: Returns JWT token + user with role and field/subject info
+      description: Returns JWT token + user with role info
       requestBody:
         required: true
         content:
@@ -335,9 +434,6 @@ paths:
               schema: { $ref: '#/components/schemas/AuthResponse' }
         '422':
           description: Invalid credentials
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/ValidationError' }
 
   /auth/logout:
     post:
@@ -347,12 +443,6 @@ paths:
       responses:
         '200':
           description: Logged out
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message: { type: string, example: "Successfully logged out" }
 
   /auth/refresh:
     post:
@@ -369,7 +459,7 @@ paths:
   /user:
     get:
       tags: [Auth]
-      summary: Get current user (with field/subjects or subject)
+      summary: Get current user
       security: [{ bearerAuth: [] }]
       responses:
         '200':
@@ -379,17 +469,59 @@ paths:
               schema: { $ref: '#/components/schemas/User' }
 
   # ════════════════════════════════════════
+  # PROFILE
+  # ════════════════════════════════════════
+  /profile:
+    get:
+      tags: [Profile]
+      summary: Get current user profile with stats
+      description: "Role: all authenticated. Returns user info + quiz stats + streak."
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Profile with stats
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ProfileResponse' }
+    put:
+      tags: [Profile]
+      summary: Update profile
+      description: "Role: all authenticated. Update firstname, lastname, gender, field_id."
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstname: { type: string, example: "Alisher" }
+                lastname: { type: string, example: "Valiyev" }
+                gender: { type: string, enum: [male, female] }
+                field_id: { type: integer, nullable: true }
+      responses:
+        '200':
+          description: Profile updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: { type: string }
+                  user: { $ref: '#/components/schemas/User' }
+
+  # ════════════════════════════════════════
   # DASHBOARD
   # ════════════════════════════════════════
   /dashboard/student:
     get:
       tags: [Dashboard]
-      summary: Student dashboard stats
-      description: "Role: student, teacher, admin"
+      summary: Student dashboard with full stats
+      description: "Role: student, teacher, admin. Returns quiz stats, streak, subject progress, recommendations, calendar."
       security: [{ bearerAuth: [] }]
       responses:
         '200':
-          description: Student stats
+          description: Full student dashboard
           content:
             application/json:
               schema: { $ref: '#/components/schemas/StudentDashboard' }
@@ -407,7 +539,67 @@ paths:
             application/json:
               schema: { $ref: '#/components/schemas/AdminDashboard' }
         '403':
-          description: Forbidden (not admin)
+          description: Forbidden
+
+  # ════════════════════════════════════════
+  # STREAK & PROGRESS
+  # ════════════════════════════════════════
+  /streak:
+    get:
+      tags: [Student]
+      summary: Get current streak and 30-day calendar
+      description: "Role: student, teacher, admin"
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Streak data with calendar
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StreakResponse' }
+
+  /progress/subjects:
+    get:
+      tags: [Student]
+      summary: Per-subject progress with topic breakdown
+      description: "Role: student, teacher, admin. Shows subjects for student's field with per-topic progress."
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Subject progress array
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  allOf:
+                    - $ref: '#/components/schemas/SubjectProgress'
+                    - type: object
+                      properties:
+                        topics:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              topic_id: { type: integer }
+                              topic_title: { type: string }
+                              status: { type: string, enum: [new, in_progress, completed] }
+                              best_score: { type: integer, nullable: true }
+                              attempts_count: { type: integer }
+
+  /recommendations:
+    get:
+      tags: [Student]
+      summary: AI-powered weak topic recommendations
+      description: "Role: student, teacher, admin. Returns top 5 topics to focus on (unattempted or lowest score)."
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Recommended topics
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Recommendation' }
 
   # ════════════════════════════════════════
   # SUBJECTS
@@ -416,7 +608,7 @@ paths:
     get:
       tags: [Subjects]
       summary: List all subjects with topic count
-      description: "Role: all authenticated users"
+      description: "Role: all authenticated"
       security: [{ bearerAuth: [] }]
       responses:
         '200':
@@ -447,8 +639,6 @@ paths:
           content:
             application/json:
               schema: { $ref: '#/components/schemas/Subject' }
-        '403':
-          description: Forbidden
 
   /subjects/{id}:
     put:
@@ -473,9 +663,6 @@ paths:
       responses:
         '200':
           description: Subject updated
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Subject' }
     delete:
       tags: [Subjects]
       summary: Delete subject
@@ -489,20 +676,12 @@ paths:
       responses:
         '200':
           description: Subject deleted
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message: { type: string }
-        '403':
-          description: Forbidden
 
   /subjects/{id}/topics:
     get:
       tags: [Subjects]
       summary: List topics in a subject
-      description: "Role: all authenticated users"
+      description: "Role: all authenticated"
       security: [{ bearerAuth: [] }]
       parameters:
         - name: id
@@ -537,20 +716,16 @@ paths:
               properties:
                 subject_id: { type: integer, example: 1 }
                 title: { type: string, example: "Integrallar" }
-                content: { type: string, example: "Integral - hosilaning teskari amali..." }
+                content: { type: string }
                 order_num: { type: integer, example: 4 }
       responses:
         '201':
           description: Topic created
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Topic' }
 
   /topics/{id}:
     get:
       tags: [Topics]
       summary: Get topic content (lesson page)
-      description: "Role: all authenticated users"
       security: [{ bearerAuth: [] }]
       parameters:
         - name: id
@@ -559,7 +734,7 @@ paths:
           schema: { type: integer }
       responses:
         '200':
-          description: Topic with full content
+          description: Topic with content
           content:
             application/json:
               schema: { $ref: '#/components/schemas/Topic' }
@@ -587,9 +762,6 @@ paths:
       responses:
         '200':
           description: Topic updated
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Topic' }
     delete:
       tags: [Topics]
       summary: Delete topic
@@ -603,12 +775,6 @@ paths:
       responses:
         '200':
           description: Topic deleted
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message: { type: string }
 
   # ════════════════════════════════════════
   # QUESTIONS
@@ -616,32 +782,19 @@ paths:
   /questions:
     get:
       tags: [Questions]
-      summary: List questions (paginated, filterable by topic)
+      summary: List questions (paginated, filterable)
       description: "Role: teacher, admin"
       security: [{ bearerAuth: [] }]
       parameters:
         - name: topic_id
           in: query
           schema: { type: integer }
-          description: Filter by topic
         - name: page
           in: query
           schema: { type: integer, default: 1 }
       responses:
         '200':
           description: Paginated questions
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  current_page: { type: integer }
-                  data:
-                    type: array
-                    items: { $ref: '#/components/schemas/Question' }
-                  last_page: { type: integer }
-                  per_page: { type: integer }
-                  total: { type: integer }
     post:
       tags: [Questions]
       summary: Create question
@@ -662,13 +815,11 @@ paths:
                 option_c: { type: string, example: "4" }
                 option_d: { type: string, example: "8" }
                 correct_answer: { type: string, enum: [A, B, C, D], example: "C" }
-                explanation: { type: string, example: "2^4 = 16" }
+                explanation: { type: string }
+                difficulty: { type: string, enum: [easy, medium, hard], default: medium }
       responses:
         '201':
           description: Question created
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Question' }
 
   /questions/{id}:
     get:
@@ -684,9 +835,6 @@ paths:
       responses:
         '200':
           description: Question details
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Question' }
     put:
       tags: [Questions]
       summary: Update question
@@ -704,7 +852,6 @@ paths:
             schema:
               type: object
               properties:
-                topic_id: { type: integer }
                 question_text: { type: string }
                 option_a: { type: string }
                 option_b: { type: string }
@@ -712,12 +859,10 @@ paths:
                 option_d: { type: string }
                 correct_answer: { type: string, enum: [A, B, C, D] }
                 explanation: { type: string }
+                difficulty: { type: string, enum: [easy, medium, hard] }
       responses:
         '200':
           description: Question updated
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Question' }
     delete:
       tags: [Questions]
       summary: Delete question
@@ -731,20 +876,14 @@ paths:
       responses:
         '200':
           description: Question deleted
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message: { type: string }
 
   # ════════════════════════════════════════
-  # QUIZ (Student)
+  # QUIZ
   # ════════════════════════════════════════
   /quiz/{topicId}/start:
     post:
       tags: [Quiz]
-      summary: Start quiz on a topic (10 random questions)
+      summary: Start quiz (10 random questions)
       description: "Role: student, teacher, admin. Returns questions WITHOUT correct answers."
       security: [{ bearerAuth: [] }]
       parameters:
@@ -772,8 +911,8 @@ paths:
   /quiz/submit:
     post:
       tags: [Quiz]
-      summary: Submit quiz answers + get AI diagnosis
-      description: "Role: student, teacher, admin. Calculates score + Gemini AI analyzes wrong answers."
+      summary: Submit quiz + get AI diagnosis
+      description: "Also records streak + topic progress."
       security: [{ bearerAuth: [] }]
       requestBody:
         required: true
@@ -790,17 +929,11 @@ paths:
                     type: object
                     required: [question_id, selected_answer]
                     properties:
-                      question_id: { type: integer, example: 1 }
-                      selected_answer: { type: string, enum: [A, B, C, D], example: "B" }
-            example:
-              topic_id: 1
-              answers:
-                - { question_id: 1, selected_answer: "B" }
-                - { question_id: 2, selected_answer: "A" }
-                - { question_id: 3, selected_answer: "C" }
+                      question_id: { type: integer }
+                      selected_answer: { type: string, enum: [A, B, C, D] }
       responses:
         '200':
-          description: Quiz result with AI diagnosis
+          description: Quiz result
           content:
             application/json:
               schema:
@@ -809,6 +942,7 @@ paths:
                   attempt_id: { type: integer }
                   score: { type: integer }
                   total: { type: integer }
+                  percentage: { type: number }
                   diagnosis:
                     type: array
                     nullable: true
@@ -817,8 +951,7 @@ paths:
   /quiz/result/{id}:
     get:
       tags: [Quiz]
-      summary: Get detailed quiz result with all answers
-      description: "Role: student, teacher, admin"
+      summary: Get detailed quiz result
       security: [{ bearerAuth: [] }]
       parameters:
         - name: id
@@ -835,26 +968,27 @@ paths:
   /quiz/history:
     get:
       tags: [Quiz]
-      summary: Get quiz history (last 20 attempts)
-      description: "Role: student, teacher, admin"
+      summary: Get quiz history (paginated)
       security: [{ bearerAuth: [] }]
+      parameters:
+        - name: page
+          in: query
+          schema: { type: integer, default: 1 }
+        - name: per_page
+          in: query
+          schema: { type: integer, default: 20, maximum: 50 }
       responses:
         '200':
-          description: Recent attempts
-          content:
-            application/json:
-              schema:
-                type: array
-                items: { $ref: '#/components/schemas/QuizAttempt' }
+          description: Paginated quiz attempts
 
   # ════════════════════════════════════════
-  # AI FEATURES
+  # AI FEATURES (Stateless)
   # ════════════════════════════════════════
   /tutor/ask:
     post:
       tags: [AI Features]
-      summary: Ask AI tutor a question (RAG-powered)
-      description: "Role: student, teacher, admin. Uses ChromaDB vector search + Gemini AI."
+      summary: Ask AI tutor (stateless, no chat history)
+      description: "RAG-powered. For persistent chat, use /tutor/chat endpoints."
       security: [{ bearerAuth: [] }]
       requestBody:
         required: true
@@ -876,7 +1010,6 @@ paths:
     post:
       tags: [AI Features]
       summary: Evaluate student explanation (Feynman method)
-      description: "Role: student, teacher, admin. Student writes their understanding, AI scores it."
       security: [{ bearerAuth: [] }]
       requestBody:
         required: true
@@ -887,7 +1020,7 @@ paths:
               required: [topic_id, explanation]
               properties:
                 topic_id: { type: integer, example: 1 }
-                explanation: { type: string, minLength: 20, example: "Logarifm bu darajaning teskari amali. Masalan log_2(8)=3 chunki 2 ning 3-darajasi 8 ga teng." }
+                explanation: { type: string, minLength: 20 }
       responses:
         '200':
           description: Evaluation result
@@ -898,8 +1031,8 @@ paths:
   /generator/create:
     post:
       tags: [AI Features]
-      summary: Generate DTM questions from text (teacher tool)
-      description: "Role: teacher, admin. AI generates questions. If topic_id given, saves to DB."
+      summary: Generate DTM questions from text
+      description: "Role: teacher, admin"
       security: [{ bearerAuth: [] }]
       requestBody:
         required: true
@@ -909,28 +1042,202 @@ paths:
               type: object
               required: [text]
               properties:
-                text: { type: string, minLength: 50, example: "Logarifm - bu daraja topish amali teskarisi..." }
+                text: { type: string, minLength: 50 }
                 count: { type: integer, minimum: 1, maximum: 10, default: 5 }
-                topic_id: { type: integer, nullable: true, description: "If provided, saves generated questions to this topic" }
+                topic_id: { type: integer, nullable: true }
       responses:
         '200':
-          description: Generated questions (preview only)
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  questions:
-                    type: array
-                    items: { $ref: '#/components/schemas/Question' }
+          description: Generated questions (preview)
         '201':
-          description: Generated and saved to database
+          description: Generated and saved
+
+  # ════════════════════════════════════════
+  # CHAT (Session-based AI Tutor)
+  # ════════════════════════════════════════
+  /tutor/history:
+    get:
+      tags: [Chat]
+      summary: List chat sessions
+      description: "Role: student, teacher, admin. Returns last 20 sessions with message count."
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Chat sessions list
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/ChatSession' }
+
+  /tutor/chat:
+    post:
+      tags: [Chat]
+      summary: Create new chat session
+      description: "Optionally pass subject_id for context filtering."
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subject_id: { type: integer, nullable: true, example: 1 }
+      responses:
+        '201':
+          description: Session created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ChatSession' }
+
+  /tutor/chat/{id}:
+    get:
+      tags: [Chat]
+      summary: Get chat session with all messages
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Session with messages
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ChatSession'
+                  - type: object
+                    properties:
+                      messages:
+                        type: array
+                        items: { $ref: '#/components/schemas/ChatMessage' }
+    delete:
+      tags: [Chat]
+      summary: Delete chat session
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Session deleted
+
+  /tutor/chat/{id}/ask:
+    post:
+      tags: [Chat]
+      summary: Send message in chat session
+      description: "Saves user message, calls RAG + Gemini with conversation context, returns both messages."
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [question]
+              properties:
+                question: { type: string, maxLength: 2000 }
+      responses:
+        '200':
+          description: User message + AI response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ChatAskResponse' }
+
+  # ════════════════════════════════════════
+  # TEACHER
+  # ════════════════════════════════════════
+  /teacher/dashboard:
+    get:
+      tags: [Teacher]
+      summary: Teacher dashboard stats
+      description: "Role: teacher, admin. Stats for teacher's assigned subject."
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Teacher dashboard
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/TeacherDashboard' }
+        '400':
+          description: No subject assigned
+
+  /teacher/analytics:
+    get:
+      tags: [Teacher]
+      summary: Per-topic scores and student rankings
+      description: "Role: teacher, admin"
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Analytics data
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/TeacherAnalytics' }
+
+  /teacher/students:
+    get:
+      tags: [Teacher]
+      summary: Students studying teacher's subject
+      description: "Role: teacher, admin. Students from fields that include this subject."
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Student list with stats
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  message: { type: string }
-                  questions:
+                  subject: { $ref: '#/components/schemas/SubjectShort' }
+                  total: { type: integer }
+                  students:
                     type: array
-                    items: { $ref: '#/components/schemas/Question' }
+                    items:
+                      type: object
+                      properties:
+                        id: { type: integer }
+                        firstname: { type: string }
+                        lastname: { type: string }
+                        email: { type: string }
+                        total_tests: { type: integer }
+                        avg_score: { type: number }
+                        last_active: { type: string, format: date-time, nullable: true }
+
+  /teacher/content:
+    get:
+      tags: [Teacher]
+      summary: Teacher's topics and questions
+      description: "Role: teacher, admin"
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Content overview
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  subject: { $ref: '#/components/schemas/SubjectShort' }
+                  total_topics: { type: integer }
+                  total_questions: { type: integer }
+                  topics:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id: { type: integer }
+                        title: { type: string }
+                        order_num: { type: integer }
+                        questions_count: { type: integer }
+                        total_attempts: { type: integer }
+                        has_content: { type: boolean }

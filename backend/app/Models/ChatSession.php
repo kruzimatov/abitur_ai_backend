@@ -1,0 +1,36 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class ChatSession extends Model
+{
+    protected $fillable = [
+        'user_id',
+        'subject_id',
+        'title',
+    ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function subject(): BelongsTo
+    {
+        return $this->belongsTo(Subject::class);
+    }
+
+    public function messages(): HasMany
+    {
+        return $this->hasMany(ChatMessage::class)->orderBy('created_at');
+    }
+
+    public function latestMessage()
+    {
+        return $this->hasOne(ChatMessage::class)->latestOfMany();
+    }
+}
