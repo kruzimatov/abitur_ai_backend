@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FieldController;
 use App\Http\Controllers\FeynmanController;
 use App\Http\Controllers\GeneratorController;
+use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuizController;
@@ -160,6 +161,9 @@ Route::middleware(['auth:api', 'role:student,teacher,admin'])->group(function ()
     Route::post('/tutor/ask', [TutorController::class, 'ask']);
     Route::post('/feynman/evaluate', [FeynmanController::class, 'evaluate']);
 
+    // RAG similar topics
+    Route::post('/similar', [MaterialController::class, 'similar']);
+
     // Chat (session-based tutor)
     Route::get('/tutor/history', [ChatController::class, 'history']);
     Route::post('/tutor/chat', [ChatController::class, 'create']);
@@ -175,6 +179,9 @@ Route::middleware(['auth:api', 'role:teacher,admin'])->group(function () {
     Route::get('/teacher/analytics', [TeacherController::class, 'analytics']);
     Route::get('/teacher/students', [TeacherController::class, 'students']);
     Route::get('/teacher/content', [TeacherController::class, 'content']);
+
+    // Material upload (PDF/DOCX/TXT → RAG)
+    Route::post('/materials/upload', [MaterialController::class, 'upload']);
 
     // Content management
     Route::post('/generator/create', [GeneratorController::class, 'create']);
@@ -194,6 +201,7 @@ Route::middleware(['auth:api', 'role:teacher,admin'])->group(function () {
 // ─── Admin routes ───
 Route::middleware(['auth:api', 'role:admin'])->group(function () {
     Route::get('/dashboard/admin', [DashboardController::class, 'admin']);
+    Route::get('/rag/health', [MaterialController::class, 'health']);
 
     Route::delete('/subjects/{id}', [SubjectController::class, 'destroy']);
     Route::delete('/topics/{id}', [TopicController::class, 'destroy']);

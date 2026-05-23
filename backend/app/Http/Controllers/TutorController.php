@@ -12,9 +12,11 @@ class TutorController extends Controller
     {
         $validated = $request->validate([
             'question' => 'required|string|max:1000',
+            'subject' => 'nullable|string|max:100',
         ]);
 
-        $ragResult = $ragService->query($validated['question']);
+        $subject = $validated['subject'] ?? null;
+        $ragResult = $ragService->query($validated['question'], $subject);
 
         $chunks = '';
         $sources = [];

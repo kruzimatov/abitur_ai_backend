@@ -84,7 +84,7 @@ class ChatController extends Controller
             $conversationContext .= "{$role}: {$msg->content}\n\n";
         }
 
-        // RAG query with subject context
+        // RAG query with subject filter
         $ragQuery = $validated['question'];
         $subjectFilter = null;
         if ($session->subject_id) {
@@ -92,7 +92,7 @@ class ChatController extends Controller
             $subjectFilter = $session->subject->name;
         }
 
-        $ragResult = $ragService->query($ragQuery);
+        $ragResult = $ragService->query($ragQuery, $subjectFilter);
 
         $chunks = '';
         $sources = [];
