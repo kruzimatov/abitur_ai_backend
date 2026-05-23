@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: AbiturAI API
   description: AI-powered DTM test prep platform for Uzbek students
-  version: 1.0.0
+  version: 2.0.0
 
 servers:
   - url: http://localhost:8080/api
@@ -21,7 +21,16 @@ components:
       properties:
         id: { type: integer }
         name: { type: string }
+        surname: { type: string }
         email: { type: string }
+        gender: { type: string, enum: [male, female] }
+        role: { type: string, enum: [student, teacher, admin] }
+        field_id: { type: integer, nullable: true }
+        subject_id: { type: integer, nullable: true }
+        field:
+          $ref: '#/components/schemas/FieldWithSubjects'
+        subject:
+          $ref: '#/components/schemas/SubjectShort'
         created_at: { type: string, format: date-time }
         updated_at: { type: string, format: date-time }
 
@@ -32,6 +41,30 @@ components:
         token: { type: string }
         token_type: { type: string, example: bearer }
         expires_in: { type: integer, example: 3600 }
+
+    Field:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+
+    FieldWithSubjects:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        subjects:
+          type: array
+          items: { $ref: '#/components/schemas/SubjectShort' }
+
+    SubjectShort:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        icon: { type: string, nullable: true }
 
     Subject:
       type: object
@@ -147,11 +180,6 @@ components:
         total_questions: { type: integer }
         total_quiz_attempts: { type: integer }
 
-    Error:
-      type: object
-      properties:
-        message: { type: string }
-
     ValidationError:
       type: object
       properties:
@@ -164,27 +192,109 @@ components:
 
 paths:
   # ════════════════════════════════════════
+  # PUBLIC (no auth needed)
+  # ════════════════════════════════════════
+  /fields:
+    get:
+      tags: [Public]
+      summary: List all fields of study with their subjects
+      description: "Used on registration page. Student picks a field → subjects auto-display."
+      responses:
+        '200':
+          description: Fields with subjects
+          content:
+            application/json:
+              example:
+                - id: 1
+                  name: "Amaliy matematika va kompyuter tahlili"
+                  subjects:
+                    - { id: 2, name: "Amaliy matematika", icon: "🔢" }
+                    - { id: 3, name: "Fizika", icon: "⚡" }
+                    - { id: 6, name: "Ona tili", icon: "📖" }
+                    - { id: 7, name: "O'zbekiston Tarixi", icon: "🏛️" }
+                    - { id: 1, name: "Matematika", icon: "📐" }
+                - id: 3
+                  name: "Umumiy davolash"
+                  subjects:
+                    - { id: 4, name: "Kimyo", icon: "🧪" }
+                    - { id: 5, name: "Biologiya", icon: "🧬" }
+                    - { id: 6, name: "Ona tili", icon: "📖" }
+                    - { id: 7, name: "O'zbekiston Tarixi", icon: "🏛️" }
+                    - { id: 1, name: "Matematika", icon: "📐" }
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/FieldWithSubjects' }
+
+  /fields/{id}:
+    get:
+      tags: [Public]
+      summary: Get single field with its subjects
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Field with subjects
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/FieldWithSubjects' }
+
+  # ════════════════════════════════════════
   # AUTH
   # ════════════════════════════════════════
   /auth/register:
     post:
       tags: [Auth]
-      summary: Register new user
+      summary: Register new student or teacher
+      description: |
+        **Student registration**: requires field_id (pick from GET /fields)
+        **Teacher registration**: requires subject_id (pick from GET /subjects)
+        Admin cannot be registered — only seeded.
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [name, email, password, password_confirmation]
+              required: [name, surname, email, password, password_confirmation, gender, role]
               properties:
-                name: { type: string, example: "Ali Valiyev" }
+                name: { type: string, example: "Ali" }
+                surname: { type: string, example: "Valiyev" }
                 email: { type: string, example: "ali@example.com" }
                 password: { type: string, minLength: 6, example: "password123" }
                 password_confirmation: { type: string, example: "password123" }
+                gender: { type: string, enum: [male, female], example: "male" }
+                role: { type: string, enum: [student, teacher], example: "student" }
+                field_id: { type: integer, description: "Required for student (pick from GET /fields)", example: 2 }
+                subject_id: { type: integer, description: "Required for teacher (pick from GET /subjects)", example: 1 }
+            examples:
+              student:
+                summary: Student registration
+                value:
+                  name: "Ali"
+                  surname: "Valiyev"
+                  email: "ali@example.com"
+                  password: "password123"
+                  password_confirmation: "password123"
+                  gender: "male"
+                  role: "student"
+                  field_id: 2
+              teacher:
+                summary: Teacher registration
+                value:
+                  name: "Malika"
+                  surname: "Karimova"
+                  email: "malika@example.com"
+                  password: "password123"
+                  password_confirmation: "password123"
+                  gender: "female"
+                  role: "teacher"
+                  subject_id: 1
       responses:
         '201':
-          description: User registered
+          description: User registered (returns user with field/subjects or subject)
           content:
             application/json:
               schema: { $ref: '#/components/schemas/AuthResponse' }
@@ -197,7 +307,8 @@ paths:
   /auth/login:
     post:
       tags: [Auth]
-      summary: Login user
+      summary: Login (email + password)
+      description: Returns JWT token + user with role and field/subject info
       requestBody:
         required: true
         content:
@@ -206,8 +317,18 @@ paths:
               type: object
               required: [email, password]
               properties:
-                email: { type: string, example: "ali@example.com" }
-                password: { type: string, example: "password123" }
+                email: { type: string, example: "student@abiturai.uz" }
+                password: { type: string, example: "student123" }
+            examples:
+              student:
+                summary: Login as student
+                value: { email: "student@abiturai.uz", password: "student123" }
+              teacher:
+                summary: Login as teacher
+                value: { email: "teacher@abiturai.uz", password: "teacher123" }
+              admin:
+                summary: Login as admin
+                value: { email: "admin@abiturai.uz", password: "admin123" }
       responses:
         '200':
           description: Login successful
@@ -250,7 +371,7 @@ paths:
   /user:
     get:
       tags: [Auth]
-      summary: Get current user
+      summary: Get current user (with field/subjects or subject)
       security: [{ bearerAuth: [] }]
       responses:
         '200':
@@ -266,6 +387,7 @@ paths:
     get:
       tags: [Dashboard]
       summary: Student dashboard stats
+      description: "Role: student, teacher, admin"
       security: [{ bearerAuth: [] }]
       responses:
         '200':
@@ -278,6 +400,7 @@ paths:
     get:
       tags: [Dashboard]
       summary: Admin dashboard stats
+      description: "Role: admin only"
       security: [{ bearerAuth: [] }]
       responses:
         '200':
@@ -285,6 +408,8 @@ paths:
           content:
             application/json:
               schema: { $ref: '#/components/schemas/AdminDashboard' }
+        '403':
+          description: Forbidden (not admin)
 
   # ════════════════════════════════════════
   # SUBJECTS
@@ -292,8 +417,8 @@ paths:
   /subjects:
     get:
       tags: [Subjects]
-      summary: List all subjects
-      description: "Used by: Student (subject list page), Admin (manage subjects)"
+      summary: List all subjects with topic count
+      description: "Role: all authenticated users"
       security: [{ bearerAuth: [] }]
       responses:
         '200':
@@ -305,7 +430,8 @@ paths:
                 items: { $ref: '#/components/schemas/Subject' }
     post:
       tags: [Subjects]
-      summary: Create subject (admin/teacher)
+      summary: Create subject
+      description: "Role: teacher, admin"
       security: [{ bearerAuth: [] }]
       requestBody:
         required: true
@@ -315,20 +441,23 @@ paths:
               type: object
               required: [name]
               properties:
-                name: { type: string, example: "Fizika" }
-                icon: { type: string, example: "⚡" }
-                description: { type: string, example: "DTM fizika fani" }
+                name: { type: string, example: "Informatika" }
+                icon: { type: string, example: "💻" }
+                description: { type: string, example: "DTM informatika fani" }
       responses:
         '201':
           description: Subject created
           content:
             application/json:
               schema: { $ref: '#/components/schemas/Subject' }
+        '403':
+          description: Forbidden
 
   /subjects/{id}:
     put:
       tags: [Subjects]
-      summary: Update subject (admin/teacher)
+      summary: Update subject
+      description: "Role: teacher, admin"
       security: [{ bearerAuth: [] }]
       parameters:
         - name: id
@@ -353,7 +482,8 @@ paths:
               schema: { $ref: '#/components/schemas/Subject' }
     delete:
       tags: [Subjects]
-      summary: Delete subject (admin)
+      summary: Delete subject
+      description: "Role: admin only"
       security: [{ bearerAuth: [] }]
       parameters:
         - name: id
@@ -369,12 +499,14 @@ paths:
                 type: object
                 properties:
                   message: { type: string }
+        '403':
+          description: Forbidden
 
   /subjects/{id}/topics:
     get:
       tags: [Subjects]
       summary: List topics in a subject
-      description: "Used by: Student (topic list page)"
+      description: "Role: all authenticated users"
       security: [{ bearerAuth: [] }]
       parameters:
         - name: id
@@ -393,11 +525,36 @@ paths:
   # ════════════════════════════════════════
   # TOPICS
   # ════════════════════════════════════════
+  /topics:
+    post:
+      tags: [Topics]
+      summary: Create topic
+      description: "Role: teacher, admin"
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [subject_id, title, content]
+              properties:
+                subject_id: { type: integer, example: 1 }
+                title: { type: string, example: "Integrallar" }
+                content: { type: string, example: "Integral - hosilaning teskari amali..." }
+                order_num: { type: integer, example: 4 }
+      responses:
+        '201':
+          description: Topic created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Topic' }
+
   /topics/{id}:
     get:
       tags: [Topics]
-      summary: Get topic content (darslik page)
-      description: "Used by: Student (lesson content page)"
+      summary: Get topic content (lesson page)
+      description: "Role: all authenticated users"
       security: [{ bearerAuth: [] }]
       parameters:
         - name: id
@@ -406,13 +563,14 @@ paths:
           schema: { type: integer }
       responses:
         '200':
-          description: Topic with content
+          description: Topic with full content
           content:
             application/json:
               schema: { $ref: '#/components/schemas/Topic' }
     put:
       tags: [Topics]
-      summary: Update topic (admin/teacher)
+      summary: Update topic
+      description: "Role: teacher, admin"
       security: [{ bearerAuth: [] }]
       parameters:
         - name: id
@@ -438,7 +596,8 @@ paths:
               schema: { $ref: '#/components/schemas/Topic' }
     delete:
       tags: [Topics]
-      summary: Delete topic (admin)
+      summary: Delete topic
+      description: "Role: admin only"
       security: [{ bearerAuth: [] }]
       parameters:
         - name: id
@@ -455,37 +614,14 @@ paths:
                 properties:
                   message: { type: string }
 
-  /topics:
-    post:
-      tags: [Topics]
-      summary: Create topic (admin/teacher)
-      security: [{ bearerAuth: [] }]
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [subject_id, title, content]
-              properties:
-                subject_id: { type: integer, example: 1 }
-                title: { type: string, example: "Integrallar" }
-                content: { type: string, example: "Integral - hosilaning teskari amali..." }
-                order_num: { type: integer, example: 4 }
-      responses:
-        '201':
-          description: Topic created
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Topic' }
-
   # ════════════════════════════════════════
-  # QUESTIONS (Admin/Teacher CRUD)
+  # QUESTIONS
   # ════════════════════════════════════════
   /questions:
     get:
       tags: [Questions]
-      summary: List questions (paginated, filterable)
+      summary: List questions (paginated, filterable by topic)
+      description: "Role: teacher, admin"
       security: [{ bearerAuth: [] }]
       parameters:
         - name: topic_id
@@ -512,7 +648,8 @@ paths:
                   total: { type: integer }
     post:
       tags: [Questions]
-      summary: Create question (admin/teacher)
+      summary: Create question
+      description: "Role: teacher, admin"
       security: [{ bearerAuth: [] }]
       requestBody:
         required: true
@@ -541,6 +678,7 @@ paths:
     get:
       tags: [Questions]
       summary: Get single question
+      description: "Role: teacher, admin"
       security: [{ bearerAuth: [] }]
       parameters:
         - name: id
@@ -555,7 +693,8 @@ paths:
               schema: { $ref: '#/components/schemas/Question' }
     put:
       tags: [Questions]
-      summary: Update question (admin/teacher)
+      summary: Update question
+      description: "Role: teacher, admin"
       security: [{ bearerAuth: [] }]
       parameters:
         - name: id
@@ -585,7 +724,8 @@ paths:
               schema: { $ref: '#/components/schemas/Question' }
     delete:
       tags: [Questions]
-      summary: Delete question (admin)
+      summary: Delete question
+      description: "Role: admin only"
       security: [{ bearerAuth: [] }]
       parameters:
         - name: id
@@ -608,8 +748,8 @@ paths:
   /quiz/{topicId}/start:
     post:
       tags: [Quiz]
-      summary: Start quiz on a topic
-      description: Returns 10 random questions (without correct answers)
+      summary: Start quiz on a topic (10 random questions)
+      description: "Role: student, teacher, admin. Returns questions WITHOUT correct answers."
       security: [{ bearerAuth: [] }]
       parameters:
         - name: topicId
@@ -637,7 +777,7 @@ paths:
     post:
       tags: [Quiz]
       summary: Submit quiz answers + get AI diagnosis
-      description: Submits answers, calculates score, calls Gemini AI for error diagnosis on wrong answers
+      description: "Role: student, teacher, admin. Calculates score + Gemini AI analyzes wrong answers."
       security: [{ bearerAuth: [] }]
       requestBody:
         required: true
@@ -681,7 +821,8 @@ paths:
   /quiz/result/{id}:
     get:
       tags: [Quiz]
-      summary: Get detailed quiz result
+      summary: Get detailed quiz result with all answers
+      description: "Role: student, teacher, admin"
       security: [{ bearerAuth: [] }]
       parameters:
         - name: id
@@ -699,6 +840,7 @@ paths:
     get:
       tags: [Quiz]
       summary: Get quiz history (last 20 attempts)
+      description: "Role: student, teacher, admin"
       security: [{ bearerAuth: [] }]
       responses:
         '200':
@@ -714,9 +856,9 @@ paths:
   # ════════════════════════════════════════
   /tutor/ask:
     post:
-      tags: [AI - Tutor]
+      tags: [AI Features]
       summary: Ask AI tutor a question (RAG-powered)
-      description: Uses ChromaDB vector search + Gemini AI to answer questions grounded in DTM content
+      description: "Role: student, teacher, admin. Uses ChromaDB vector search + Gemini AI."
       security: [{ bearerAuth: [] }]
       requestBody:
         required: true
@@ -736,9 +878,9 @@ paths:
 
   /feynman/evaluate:
     post:
-      tags: [AI - Feynman]
-      summary: Evaluate student explanation ("Explain It Back")
-      description: Student writes their understanding of a topic, AI scores and identifies gaps
+      tags: [AI Features]
+      summary: Evaluate student explanation (Feynman method)
+      description: "Role: student, teacher, admin. Student writes their understanding, AI scores it."
       security: [{ bearerAuth: [] }]
       requestBody:
         required: true
@@ -759,9 +901,9 @@ paths:
 
   /generator/create:
     post:
-      tags: [AI - Generator]
+      tags: [AI Features]
       summary: Generate DTM questions from text (teacher tool)
-      description: AI generates DTM-format questions from input text. Optionally saves to database.
+      description: "Role: teacher, admin. AI generates questions. If topic_id given, saves to DB."
       security: [{ bearerAuth: [] }]
       requestBody:
         required: true
