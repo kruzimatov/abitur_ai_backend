@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="220" height="56" viewBox="0 0 220 56">
+  <!-- Background -->
+  <rect width="220" height="56" rx="10" fill="#1a1a2e"/>
+
+  <!-- Icon container: rounded square, teal -->
+  <rect x="10" y="10" width="36" height="36" rx="9" fill="#00D4A0"/>
+
+  <!-- Brain / cluster icon (6 circles connected) matching original -->
+  <!-- Center -->
+  <circle cx="28" cy="28" r="3.2" fill="#0B6B52"/>
+  <!-- Top left -->
+  <circle cx="21" cy="22" r="3" fill="#0B6B52"/>
+  <!-- Top right -->
+  <circle cx="35" cy="22" r="3" fill="#0B6B52"/>
+  <!-- Left -->
+  <circle cx="19" cy="30" r="2.8" fill="#0B6B52"/>
+  <!-- Right -->
+  <circle cx="37" cy="30" r="2.8" fill="#0B6B52"/>
+  <!-- Bottom -->
+  <circle cx="28" cy="37" r="2.8" fill="#0B6B52"/>
+
+  <!-- Connecting lines between circles -->
+  <line x1="21" y1="22" x2="28" y2="28" stroke="#0B6B52" stroke-width="1.4"/>
+  <line x1="35" y1="22" x2="28" y2="28" stroke="#0B6B52" stroke-width="1.4"/>
+  <line x1="19" y1="30" x2="28" y2="28" stroke="#0B6B52" stroke-width="1.4"/>
+  <line x1="37" y1="30" x2="28" y2="28" stroke="#0B6B52" stroke-width="1.4"/>
+  <line x1="28" y1="37" x2="28" y2="28" stroke="#0B6B52" stroke-width="1.4"/>
+  <line x1="21" y1="22" x2="35" y2="22" stroke="#0B6B52" stroke-width="1.4"/>
+  <line x1="19" y1="30" x2="28" y2="37" stroke="#0B6B52" stroke-width="1.4"/>
+  <line x1="37" y1="30" x2="28" y2="37" stroke="#0B6B52" stroke-width="1.4"/>
+
+  <!-- Wordmark: AbiturAI -->
+  <text
+    x="56"
+    y="35"
+    font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif"
+    font-size="22"
+    font-weight="500"
+    fill="#FFFFFF"
+    letter-spacing="-0.3"
+  >AbiturAI</text>
+</svg>

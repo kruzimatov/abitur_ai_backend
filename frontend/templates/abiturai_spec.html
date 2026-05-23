@@ -1,0 +1,2028 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AbiturAI — UI Specification v1.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  :root {
+    --bg:     #07090F;
+    --bg2:    #0B0E18;
+    --bg3:    #0F1220;
+    --bg4:    #141828;
+    --border: rgba(255,255,255,0.07);
+    --border2:rgba(255,255,255,0.12);
+    --text:   #E8EAF0;
+    --text2:  #8B90A8;
+    --text3:  #5A5F78;
+    --teal:   #00C49A;
+    --teal2:  #00A882;
+    --teal-bg:rgba(0,196,154,0.08);
+    --purple: #818CF8;
+    --purple2:#6366F1;
+    --purple-bg:rgba(129,140,248,0.08);
+    --amber:  #FBBF24;
+    --amber-bg:rgba(251,191,36,0.08);
+    --red:    #F87171;
+    --red-bg: rgba(248,113,113,0.08);
+    --green:  #34D399;
+    --green-bg:rgba(52,211,153,0.08);
+    --sidebar-w: 260px;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* ── SIDEBAR ── */
+  #sidebar {
+    width: var(--sidebar-w);
+    min-width: var(--sidebar-w);
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    scrollbar-width: thin;
+    scrollbar-color: var(--bg4) transparent;
+  }
+
+  .sidebar-logo {
+    padding: 24px 20px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo-mark {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo-icon {
+    width: 34px; height: 34px;
+    background: linear-gradient(135deg, var(--teal), var(--purple));
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; color: white;
+  }
+
+  .logo-text {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    color: var(--text);
+  }
+
+  .logo-sub {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 2px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+
+  .sidebar-nav {
+    padding: 12px 0;
+    flex: 1;
+  }
+
+  .nav-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    padding: 10px 20px 4px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 20px;
+    color: var(--text2);
+    text-decoration: none;
+    font-size: 13.5px;
+    font-weight: 500;
+    border-left: 2px solid transparent;
+    transition: all 0.15s;
+    cursor: pointer;
+  }
+
+  .nav-item:hover {
+    color: var(--text);
+    background: var(--teal-bg);
+    border-left-color: var(--teal);
+  }
+
+  .nav-item.active {
+    color: var(--teal);
+    background: var(--teal-bg);
+    border-left-color: var(--teal);
+  }
+
+  .nav-item i { font-size: 16px; width: 18px; }
+
+  .nav-badge {
+    margin-left: auto;
+    background: var(--bg4);
+    color: var(--text3);
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 99px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .sidebar-footer {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .version-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--purple-bg);
+    border: 1px solid rgba(129,140,248,0.2);
+    color: var(--purple);
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    padding: 4px 10px;
+    border-radius: 99px;
+  }
+
+  /* ── MAIN CONTENT ── */
+  #main {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0;
+  }
+
+  .section {
+    padding: 60px 56px;
+    border-bottom: 1px solid var(--border);
+    max-width: 1060px;
+  }
+
+  .section:last-child { border-bottom: none; }
+
+  .section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .section-number {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text3);
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 6px;
+    margin-top: 6px;
+    white-space: nowrap;
+  }
+
+  .section-title-block h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .section-title-block p {
+    color: var(--text2);
+    margin-top: 6px;
+    font-size: 14.5px;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+  }
+
+  .card-sm {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px 20px;
+  }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+
+  /* ── STAT CARDS ── */
+  .stat-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent, var(--teal));
+  }
+
+  .stat-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    background: var(--accent-bg, var(--teal-bg));
+    color: var(--accent, var(--teal));
+  }
+
+  .stat-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 36px;
+    line-height: 1;
+    color: var(--text);
+  }
+
+  .stat-label {
+    font-size: 13px;
+    color: var(--text2);
+    font-weight: 500;
+  }
+
+  /* ── PROJECT TABLE ── */
+  .info-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+
+  .info-table tr {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .info-table tr:last-child { border-bottom: none; }
+
+  .info-table td {
+    padding: 14px 16px;
+    vertical-align: top;
+  }
+
+  .info-table td:first-child {
+    color: var(--text3);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-family: 'DM Mono', monospace;
+    width: 160px;
+    white-space: nowrap;
+  }
+
+  .info-table td:last-child { color: var(--text); }
+
+  /* ── ROLE CARDS ── */
+  .role-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .role-card::after {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    background: var(--role-color, var(--teal));
+    opacity: 0.04;
+  }
+
+  .role-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .role-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    background: var(--role-bg);
+    color: var(--role-color);
+    border: 1px solid var(--role-border);
+  }
+
+  .role-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+  }
+
+  .role-sub { font-size: 13px; color: var(--text2); }
+
+  .access-list { list-style: none; }
+
+  .access-list li {
+    padding: 6px 0;
+    font-size: 13.5px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .access-list li:last-child { border-bottom: none; }
+
+  .access-list li i { margin-top: 2px; font-size: 15px; }
+
+  .can i { color: var(--green); }
+  .cant i { color: var(--red); }
+
+  .section-label-sm {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 10px;
+  }
+
+  /* ── DESIGN SYSTEM ── */
+  .color-swatch {
+    width: 100%;
+    height: 56px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 8px;
+  }
+
+  .swatch-label { font-size: 12px; color: var(--text2); }
+  .swatch-hex { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text3); }
+
+  .font-sample-block {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 20px 24px;
+  }
+
+  /* ── COMPONENT DEMOS ── */
+  .demo-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    padding: 20px;
+    background: var(--bg3);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    margin-bottom: 12px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-decoration: none;
+  }
+
+  .btn-primary { background: var(--teal); color: #07090F; }
+  .btn-primary:hover { background: var(--teal2); }
+  .btn-secondary { background: var(--bg4); color: var(--text); border: 1px solid var(--border2); }
+  .btn-purple { background: var(--purple); color: white; }
+  .btn-amber { background: var(--amber); color: #07090F; }
+  .btn-ghost { background: transparent; color: var(--text2); border: 1px solid var(--border); }
+  .btn-danger { background: var(--red-bg); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
+  .btn-sm { padding: 6px 13px; font-size: 12px; }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 11px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .chip-teal { background: var(--teal-bg); color: var(--teal); border: 1px solid rgba(0,196,154,0.2); }
+  .chip-purple { background: var(--purple-bg); color: var(--purple); border: 1px solid rgba(129,140,248,0.2); }
+  .chip-amber { background: var(--amber-bg); color: var(--amber); border: 1px solid rgba(251,191,36,0.2); }
+  .chip-red { background: var(--red-bg); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
+  .chip-green { background: var(--green-bg); color: var(--green); border: 1px solid rgba(52,211,153,0.2); }
+  .chip-gray { background: var(--bg4); color: var(--text2); border: 1px solid var(--border); }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .badge-teal { background: var(--teal-bg); color: var(--teal); }
+  .badge-purple { background: var(--purple-bg); color: var(--purple); }
+  .badge-amber { background: var(--amber-bg); color: var(--amber); }
+  .badge-red { background: var(--red-bg); color: var(--red); }
+
+  .progress-track {
+    height: 6px;
+    background: var(--bg4);
+    border-radius: 99px;
+    overflow: hidden;
+    width: 200px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, var(--teal), var(--purple));
+  }
+
+  /* ── AI FEATURE CARDS ── */
+  .ai-feature-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 28px;
+  }
+
+  .ai-feature-header {
+    padding: 24px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--purple-bg);
+  }
+
+  .ai-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+
+  .ai-feature-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: var(--purple);
+  }
+
+  .ai-feature-body {
+    padding: 28px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .how-it-works h4, .example-box h4 {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 14px;
+  }
+
+  .step-list { list-style: none; counter-reset: steps; }
+
+  .step-list li {
+    counter-increment: steps;
+    display: flex;
+    gap: 12px;
+    padding: 8px 0;
+    font-size: 13.5px;
+    color: var(--text2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .step-list li:last-child { border-bottom: none; }
+
+  .step-list li::before {
+    content: counter(steps);
+    min-width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--purple-bg);
+    border: 1px solid rgba(129,140,248,0.2);
+    color: var(--purple);
+    font-size: 11px;
+    font-weight: 700;
+    font-family: 'DM Mono', monospace;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+  }
+
+  .example-box {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 20px;
+  }
+
+  .user-bubble, .ai-bubble {
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    line-height: 1.55;
+    margin-bottom: 10px;
+  }
+
+  .user-bubble {
+    background: var(--teal-bg);
+    border: 1px solid rgba(0,196,154,0.15);
+    color: var(--text);
+    border-radius: 10px 10px 2px 10px;
+  }
+
+  .ai-bubble {
+    background: var(--purple-bg);
+    border: 1px solid rgba(129,140,248,0.15);
+    color: var(--text);
+    border-radius: 10px 10px 10px 2px;
+  }
+
+  .bubble-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 5px;
+  }
+
+  .bubble-label.user { color: var(--teal); }
+  .bubble-label.ai { color: var(--purple); }
+
+  .source-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--bg4);
+    border: 1px solid var(--border2);
+    color: var(--text3);
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-top: 6px;
+  }
+
+  .score-meter {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+  }
+
+  .score-bar {
+    flex: 1;
+    height: 8px;
+    background: var(--bg4);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .score-fill {
+    height: 100%;
+    border-radius: 99px;
+  }
+
+  .ai-feature-footer {
+    padding: 14px 28px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: var(--bg3);
+  }
+
+  .footer-meta {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12.5px;
+    color: var(--text2);
+  }
+
+  .footer-meta i { font-size: 14px; }
+
+  /* ── PAGES TABLE ── */
+  .pages-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+
+  .pages-table th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text3);
+    border-bottom: 1px solid var(--border);
+    background: var(--bg3);
+  }
+
+  .pages-table td {
+    padding: 13px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    color: var(--text2);
+  }
+
+  .pages-table tr:last-child td { border-bottom: none; }
+
+  .pages-table tr:hover td { background: rgba(255,255,255,0.015); }
+
+  .page-name { color: var(--text); font-weight: 600; font-size: 14px; }
+  .page-url {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--teal);
+    background: var(--teal-bg);
+    padding: 2px 7px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-top: 3px;
+  }
+
+  .pages-group-header td {
+    background: var(--bg4);
+    color: var(--text3);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ── FLOW DIAGRAMS ── */
+  .flow-container {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 24px;
+  }
+
+  .flow-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    margin-bottom: 22px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .flow-steps {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0;
+  }
+
+  .flow-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .flow-node {
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+    border: 1px solid var(--border2);
+    background: var(--bg3);
+    color: var(--text);
+    min-width: 110px;
+  }
+
+  .flow-node.start { background: var(--teal-bg); border-color: rgba(0,196,154,0.3); color: var(--teal); }
+  .flow-node.ai { background: var(--purple-bg); border-color: rgba(129,140,248,0.3); color: var(--purple); }
+  .flow-node.end { background: var(--green-bg); border-color: rgba(52,211,153,0.3); color: var(--green); }
+  .flow-node.teacher { background: var(--amber-bg); border-color: rgba(251,191,36,0.3); color: var(--amber); }
+  .flow-node.branch {
+    background: var(--bg4);
+    border-style: dashed;
+    font-size: 11.5px;
+    color: var(--text2);
+    min-width: 90px;
+  }
+
+  .flow-arrow {
+    color: var(--text3);
+    font-size: 18px;
+    padding: 0 4px;
+    display: flex;
+    align-items: center;
+  }
+
+  .flow-note {
+    font-size: 10px;
+    color: var(--text3);
+    text-align: center;
+    max-width: 110px;
+  }
+
+  /* ── TEAM TABLE ── */
+  .team-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+
+  .team-table th {
+    text-align: left;
+    padding: 10px 16px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text3);
+    border-bottom: 1px solid var(--border);
+    background: var(--bg3);
+  }
+
+  .team-table td {
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  .team-table tr:last-child td { border-bottom: none; }
+
+  .person-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text3);
+  }
+
+  .person-role {
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+
+  .task-list { list-style: none; }
+
+  .task-list li {
+    font-size: 12.5px;
+    color: var(--text2);
+    padding: 3px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .task-list li::before {
+    content: '';
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--text3);
+    margin-top: 7px;
+    flex-shrink: 0;
+  }
+
+  .django-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--bg4);
+    border: 1px solid var(--border);
+    color: var(--text3);
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin: 2px;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 32px 0;
+  }
+
+  /* ── MISC ── */
+  .highlight-box {
+    background: var(--purple-bg);
+    border: 1px solid rgba(129,140,248,0.2);
+    border-radius: var(--radius-sm);
+    padding: 16px 20px;
+    font-size: 13.5px;
+    color: var(--text);
+    margin: 16px 0;
+  }
+
+  .code-inline {
+    font-family: 'DM Mono', monospace;
+    font-size: 12.5px;
+    background: var(--bg4);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--purple);
+  }
+
+  .pages-section-divider {
+    padding: 8px 14px;
+    background: var(--bg3);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Scroll indicator lines on section nav */
+  .nav-item[data-section="s1"] { --ind: var(--teal); }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     SIDEBAR
+══════════════════════════════════════════════ -->
+<nav id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">
+      <div class="logo-icon"><i class="ti ti-brain"></i></div>
+      <div>
+        <div class="logo-text">AbiturAI</div>
+        <div class="logo-sub">UI SPEC v1.0 · 2025</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar-nav">
+    <div class="nav-section-label">Hujjat</div>
+    <a class="nav-item" href="#s1"><i class="ti ti-layout-dashboard"></i> Overview <span class="nav-badge">§1</span></a>
+    <a class="nav-item" href="#s2"><i class="ti ti-users"></i> Roles <span class="nav-badge">§2</span></a>
+    <a class="nav-item" href="#s3"><i class="ti ti-palette"></i> Design System <span class="nav-badge">§3</span></a>
+    <a class="nav-item" href="#s4"><i class="ti ti-sparkles"></i> AI Features <span class="nav-badge">§4</span></a>
+    <a class="nav-item" href="#s5"><i class="ti ti-layout-list"></i> Pages <span class="nav-badge">§5</span></a>
+    <a class="nav-item" href="#s6"><i class="ti ti-git-fork"></i> User Flows <span class="nav-badge">§6</span></a>
+    <a class="nav-item" href="#s7"><i class="ti ti-people"></i> Team Tasks <span class="nav-badge">§7</span></a>
+
+    <div class="nav-section-label" style="margin-top:8px">Stack</div>
+    <a class="nav-item" href="#s4"><i class="ti ti-brand-python"></i> Django 5.x</a>
+    <a class="nav-item" href="#s4"><i class="ti ti-database"></i> ChromaDB (RAG)</a>
+    <a class="nav-item" href="#s4"><i class="ti ti-robot"></i> Gemini / GPT-4o</a>
+    <a class="nav-item" href="#s3"><i class="ti ti-brand-bootstrap"></i> Bootstrap 5</a>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="version-tag"><i class="ti ti-git-branch" style="font-size:12px"></i> Build with AI Hackathon</div>
+    <div style="margin-top:6px; font-size:11px; color:var(--text3)">May 23–24 · Yangi O'zbekiston Univ.</div>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════
+     MAIN
+══════════════════════════════════════════════ -->
+<main id="main">
+
+<!-- ─────────────────────────────────
+     §1 OVERVIEW
+───────────────────────────────── -->
+<section class="section" id="s1">
+  <div class="section-header">
+    <div class="section-number">§ 01</div>
+    <div class="section-title-block">
+      <h2>Overview</h2>
+      <p>AbiturAI platformasi haqida umumiy ma'lumot, maqsad va texnik asoslar</p>
+    </div>
+  </div>
+
+  <!-- Stat cards -->
+  <div class="grid-4" style="margin-bottom:32px">
+    <div class="stat-card" style="--accent:var(--teal);--accent-bg:var(--teal-bg)">
+      <div class="stat-icon"><i class="ti ti-users"></i></div>
+      <div class="stat-value">3</div>
+      <div class="stat-label">Foydalanuvchi rollari</div>
+    </div>
+    <div class="stat-card" style="--accent:var(--purple);--accent-bg:var(--purple-bg)">
+      <div class="stat-icon"><i class="ti ti-layout-list"></i></div>
+      <div class="stat-value">14</div>
+      <div class="stat-label">Sahifalar (pages)</div>
+    </div>
+    <div class="stat-card" style="--accent:var(--amber);--accent-bg:var(--amber-bg)">
+      <div class="stat-icon"><i class="ti ti-sparkles"></i></div>
+      <div class="stat-value">4</div>
+      <div class="stat-label">AI xususiyatlari</div>
+    </div>
+    <div class="stat-card" style="--accent:var(--green);--accent-bg:var(--green-bg)">
+      <div class="stat-icon"><i class="ti ti-people"></i></div>
+      <div class="stat-value">5</div>
+      <div class="stat-label">Jamoa a'zolari</div>
+    </div>
+  </div>
+
+  <!-- Project info table -->
+  <div class="card">
+    <table class="info-table">
+      <tr>
+        <td>Loyiha nomi</td>
+        <td><strong style="color:var(--teal); font-family:'DM Serif Display',serif; font-size:18px">AbiturAI</strong> — DTM tayyorgarlik platformasi</td>
+      </tr>
+      <tr>
+        <td>Muammo</td>
+        <td>O'zbek abituriyentlari DTM imtihoniga sifatsiz materiallar, individual tahlilsiz va passiv usulda tayyorlanmoqda. 80% abituriyent imtihon topshiriq turini tushunmasdan xato qiladi.</td>
+      </tr>
+      <tr>
+        <td>Yechim</td>
+        <td>AI-powered platforma: xatolarni tahlil qilish, RAG asosida DTM materiallaridan javob berish, Feynman texnikasi orqali tushunchani mustahkamlash, ustoz uchun AI savol generator.</td>
+      </tr>
+      <tr>
+        <td>Texnik stack</td>
+        <td>
+          <span class="django-tag"><i class="ti ti-brand-python"></i> Django 5.x</span>
+          <span class="django-tag"><i class="ti ti-database"></i> PostgreSQL</span>
+          <span class="django-tag"><i class="ti ti-robot"></i> Gemini Pro / GPT-4o</span>
+          <span class="django-tag"><i class="ti ti-database"></i> ChromaDB</span>
+          <span class="django-tag"><i class="ti ti-brand-bootstrap"></i> Bootstrap 5</span>
+          <span class="django-tag"><i class="ti ti-brand-javascript"></i> Vanilla JS</span>
+        </td>
+      </tr>
+      <tr>
+        <td>Narx</td>
+        <td>
+          <span class="chip chip-green">Bepul — Student</span>&nbsp;
+          <span class="chip chip-amber">Asosiy — 49,000 so'm/oy</span>&nbsp;
+          <span class="chip chip-purple">Pro — 99,000 so'm/oy</span>
+        </td>
+      </tr>
+      <tr>
+        <td>Maqsad auditoriya</td>
+        <td>O'zbekiston abituriyentlari (11-sinf o'quvchilari), o'quv markaz ustozlari, ta'lim platformasi adminlari</td>
+      </tr>
+      <tr>
+        <td>Hackathon</td>
+        <td>Build with AI EdTech Hackathon · May 23–24, 2025 · Yangi O'zbekiston Universiteti, Toshkent</td>
+      </tr>
+      <tr>
+        <td>Holati</td>
+        <td><span class="chip chip-teal"><i class="ti ti-circle-check"></i> HTML Prototype tayyor</span>&nbsp;<span class="chip chip-amber">Django MVP jarayonda</span></td>
+      </tr>
+    </table>
+  </div>
+
+</section>
+
+<!-- ─────────────────────────────────
+     §2 ROLES
+───────────────────────────────── -->
+<section class="section" id="s2">
+  <div class="section-header">
+    <div class="section-number">§ 02</div>
+    <div class="section-title-block">
+      <h2>Foydalanuvchi Rollari</h2>
+      <p>Platformada 3 ta asosiy rol mavjud — har biri alohida huquqlar va imkoniyatlarga ega</p>
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <!-- Student -->
+    <div class="role-card" style="--role-color:var(--teal);--role-bg:var(--teal-bg);--role-border:rgba(0,196,154,0.2)">
+      <div class="role-header">
+        <div class="role-icon"><i class="ti ti-school"></i></div>
+        <div>
+          <div class="role-name" style="color:var(--teal)">Student</div>
+          <div class="role-sub">Abituriyent</div>
+        </div>
+      </div>
+      <div class="section-label-sm">Kim?</div>
+      <p style="font-size:13px; color:var(--text2); margin-bottom:16px">11-sinf o'quvchilari va DTM tayyorlanayotgan abituriyentlar. Bepul ro'yxatdan o'tadi.</p>
+
+      <div class="section-label-sm">Kirishi mumkin ✓</div>
+      <ul class="access-list can" style="margin-bottom:16px">
+        <li><i class="ti ti-check"></i> Dashboard, darsliklar, testlar</li>
+        <li><i class="ti ti-check"></i> AI Xato Tahlili (test natijalari)</li>
+        <li><i class="ti ti-check"></i> RAG AI Tutor (chat)</li>
+        <li><i class="ti ti-check"></i> Explain It Back (Feynman)</li>
+        <li><i class="ti ti-check"></i> Profil, statistika, streak</li>
+      </ul>
+
+      <div class="section-label-sm">Kirishi mumkin emas ✗</div>
+      <ul class="access-list cant">
+        <li><i class="ti ti-x"></i> Teacher dashboard, analytics</li>
+        <li><i class="ti ti-x"></i> AI savol generator</li>
+        <li><i class="ti ti-x"></i> Kontent boshqaruvi</li>
+        <li><i class="ti ti-x"></i> Admin panel</li>
+      </ul>
+    </div>
+
+    <!-- Teacher -->
+    <div class="role-card" style="--role-color:var(--amber);--role-bg:var(--amber-bg);--role-border:rgba(251,191,36,0.2)">
+      <div class="role-header">
+        <div class="role-icon"><i class="ti ti-chalkboard"></i></div>
+        <div>
+          <div class="role-name" style="color:var(--amber)">Teacher</div>
+          <div class="role-sub">O'quv markaz ustozi</div>
+        </div>
+      </div>
+      <div class="section-label-sm">Kim?</div>
+      <p style="font-size:13px; color:var(--text2); margin-bottom:16px">O'quv markazlari va xususiy ustozlar. Kontent yaratadi, savollar qo'shadi, analytics ko'radi.</p>
+
+      <div class="section-label-sm">Kirishi mumkin ✓</div>
+      <ul class="access-list can" style="margin-bottom:16px">
+        <li><i class="ti ti-check"></i> Teacher dashboard</li>
+        <li><i class="ti ti-check"></i> AI Savol Generator</li>
+        <li><i class="ti ti-check"></i> Savol yaratish va tahrirlash</li>
+        <li><i class="ti ti-check"></i> Analytics: talabalar natijasi</li>
+        <li><i class="ti ti-check"></i> Daromad statistikasi</li>
+      </ul>
+
+      <div class="section-label-sm">Kirishi mumkin emas ✗</div>
+      <ul class="access-list cant">
+        <li><i class="ti ti-x"></i> Admin panel, foydalanuvchi boshqaruvi</li>
+        <li><i class="ti ti-x"></i> Boshqa ustozlar kontent</li>
+        <li><i class="ti ti-x"></i> Platforma sozlamalari</li>
+      </ul>
+    </div>
+
+    <!-- Admin -->
+    <div class="role-card" style="--role-color:var(--purple);--role-bg:var(--purple-bg);--role-border:rgba(129,140,248,0.2)">
+      <div class="role-header">
+        <div class="role-icon"><i class="ti ti-shield-check"></i></div>
+        <div>
+          <div class="role-name" style="color:var(--purple)">Admin</div>
+          <div class="role-sub">Platforma administratori</div>
+        </div>
+      </div>
+      <div class="section-label-sm">Kim?</div>
+      <p style="font-size:13px; color:var(--text2); margin-bottom:16px">AbiturAI jamoa a'zolari. Barcha kontent, foydalanuvchilar va platformani to'liq boshqaradi.</p>
+
+      <div class="section-label-sm">Kirishi mumkin ✓</div>
+      <ul class="access-list can" style="margin-bottom:16px">
+        <li><i class="ti ti-check"></i> Django Admin panel (to'liq)</li>
+        <li><i class="ti ti-check"></i> Barcha foydalanuvchilarni ko'rish/tahrirlash</li>
+        <li><i class="ti ti-check"></i> Kontent moderatsiyasi va tasdiqlash</li>
+        <li><i class="ti ti-check"></i> Barcha sahifalar va funksiyalar</li>
+        <li><i class="ti ti-check"></i> Platforma sozlamalari</li>
+      </ul>
+
+      <div class="section-label-sm">Kirishi mumkin emas ✗</div>
+      <ul class="access-list cant">
+        <li><i class="ti ti-x"></i> Cheklovlar yo'q</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────
+     §3 DESIGN SYSTEM
+───────────────────────────────── -->
+<section class="section" id="s3">
+  <div class="section-header">
+    <div class="section-number">§ 03</div>
+    <div class="section-title-block">
+      <h2>Design System</h2>
+      <p>Rang palitrasi, tipografiya va UI komponentlar kutubxonasi</p>
+    </div>
+  </div>
+
+  <!-- Colors -->
+  <div class="section-label-sm" style="margin-bottom:14px">Rang palitrasi</div>
+  <div style="display:grid; grid-template-columns:repeat(8,1fr); gap:12px; margin-bottom:32px">
+    <div>
+      <div class="color-swatch" style="background:#07090F; border:1px solid var(--border)"></div>
+      <div class="swatch-label">Background</div>
+      <div class="swatch-hex">#07090F</div>
+    </div>
+    <div>
+      <div class="color-swatch" style="background:#0B0E18"></div>
+      <div class="swatch-label">BG 2</div>
+      <div class="swatch-hex">#0B0E18</div>
+    </div>
+    <div>
+      <div class="color-swatch" style="background:#0F1220"></div>
+      <div class="swatch-label">BG 3</div>
+      <div class="swatch-hex">#0F1220</div>
+    </div>
+    <div>
+      <div class="color-swatch" style="background:#00C49A"></div>
+      <div class="swatch-label">Teal (Asosiy)</div>
+      <div class="swatch-hex">#00C49A</div>
+    </div>
+    <div>
+      <div class="color-swatch" style="background:#818CF8"></div>
+      <div class="swatch-label">Purple (AI)</div>
+      <div class="swatch-hex">#818CF8</div>
+    </div>
+    <div>
+      <div class="color-swatch" style="background:#FBBF24"></div>
+      <div class="swatch-label">Amber (Teacher)</div>
+      <div class="swatch-hex">#FBBF24</div>
+    </div>
+    <div>
+      <div class="color-swatch" style="background:#F87171"></div>
+      <div class="swatch-label">Red (Xato)</div>
+      <div class="swatch-hex">#F87171</div>
+    </div>
+    <div>
+      <div class="color-swatch" style="background:#34D399"></div>
+      <div class="swatch-label">Green (To'g'ri)</div>
+      <div class="swatch-hex">#34D399</div>
+    </div>
+  </div>
+
+  <!-- Semantic color usage -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:32px">
+    <div class="card-sm">
+      <div class="section-label-sm" style="margin-bottom:10px">Rang semantikasi</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px">
+          <span style="width:10px;height:10px;border-radius:50%;background:var(--teal);display:inline-block"></span>
+          <span style="color:var(--text2)">Teal</span>
+          <span style="color:var(--text3);font-size:12px">→ Student funksiyalari, CTA, progress</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px">
+          <span style="width:10px;height:10px;border-radius:50%;background:var(--purple);display:inline-block"></span>
+          <span style="color:var(--text2)">Purple</span>
+          <span style="color:var(--text3);font-size:12px">→ AI xususiyatlari, bot bubbles</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px">
+          <span style="width:10px;height:10px;border-radius:50%;background:var(--amber);display:inline-block"></span>
+          <span style="color:var(--text2)">Amber</span>
+          <span style="color:var(--text3);font-size:12px">→ Teacher rol, ogohlantirish</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px">
+          <span style="width:10px;height:10px;border-radius:50%;background:var(--red);display:inline-block"></span>
+          <span style="color:var(--text2)">Red</span>
+          <span style="color:var(--text3);font-size:12px">→ Xato javoblar, danger holatlar</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px">
+          <span style="width:10px;height:10px;border-radius:50%;background:var(--green);display:inline-block"></span>
+          <span style="color:var(--text2)">Green</span>
+          <span style="color:var(--text3);font-size:12px">→ To'g'ri javoblar, success holat</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-sm">
+      <div class="section-label-sm" style="margin-bottom:10px">Gradient qoidasi</div>
+      <div style="height:36px;border-radius:8px;background:linear-gradient(135deg,var(--teal),var(--purple));margin-bottom:8px"></div>
+      <div style="font-size:12px;color:var(--text3);font-family:'DM Mono',monospace">linear-gradient(135deg, #00C49A, #818CF8)</div>
+      <div style="font-size:12px;color:var(--text2);margin-top:6px">Hero seksiyalar, logotip, asosiy CTA uchun</div>
+      <hr class="divider" style="margin:12px 0">
+      <div style="height:36px;border-radius:8px;background:linear-gradient(135deg,var(--purple),var(--amber));margin-bottom:8px"></div>
+      <div style="font-size:12px;color:var(--text3);font-family:'DM Mono',monospace">linear-gradient(135deg, #818CF8, #FBBF24)</div>
+      <div style="font-size:12px;color:var(--text2);margin-top:6px">AI feature bannerlar uchun</div>
+    </div>
+  </div>
+
+  <!-- Typography -->
+  <div class="section-label-sm" style="margin-bottom:14px">Tipografiya</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:32px">
+    <div class="font-sample-block">
+      <div style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:10px;letter-spacing:0.08em">DM SERIF DISPLAY — Sarlavhalar</div>
+      <div style="font-family:'DM Serif Display',serif;font-size:28px;color:var(--text);line-height:1.2">Abituriyent<br><em style="color:var(--teal)">Muvaffaqiyat</em></div>
+      <div style="font-size:12px;color:var(--text3);margin-top:10px">h1, h2, brend elementlari<br>32px / 24px / 20px</div>
+    </div>
+    <div class="font-sample-block">
+      <div style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:10px;letter-spacing:0.08em">DM SANS — Asosiy matn</div>
+      <div style="font-family:'DM Sans',sans-serif;font-size:15px;color:var(--text);line-height:1.6">
+        <strong>Semibold 600</strong> — tugmalar, labllar<br>
+        Regular 400 — paragraflar<br>
+        <span style="color:var(--text2)">Light 300 — yordamchi matn</span>
+      </div>
+      <div style="font-size:12px;color:var(--text3);margin-top:10px">Body, navigatsiya, UI matn<br>15px / 14px / 13px</div>
+    </div>
+    <div class="font-sample-block">
+      <div style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:10px;letter-spacing:0.08em">DM MONO — Kod va formulalar</div>
+      <div style="font-family:'DM Mono',monospace;font-size:14px;color:var(--purple);line-height:1.7">
+        log₂(8) = 3<br>
+        f(x) = ax² + bx + c<br>
+        <span style="color:var(--teal)">/topics/&lt;id&gt;/quiz/</span>
+      </div>
+      <div style="font-size:12px;color:var(--text3);margin-top:10px">Matematik formulalar, URL<br>ko'rsatkichlar, version teglari</div>
+    </div>
+  </div>
+
+  <!-- Components -->
+  <div class="section-label-sm" style="margin-bottom:14px">UI Komponentlar</div>
+
+  <!-- Buttons -->
+  <div style="margin-bottom:8px; font-size:12px; color:var(--text3)">TUGMALAR (Buttons)</div>
+  <div class="demo-row">
+    <button class="btn btn-primary"><i class="ti ti-bolt"></i> Asosiy (Primary)</button>
+    <button class="btn btn-secondary"><i class="ti ti-settings"></i> Ikkinchi darajali</button>
+    <button class="btn btn-purple"><i class="ti ti-brain"></i> AI tugma</button>
+    <button class="btn btn-amber"><i class="ti ti-chalkboard"></i> Teacher</button>
+    <button class="btn btn-ghost">Ghost</button>
+    <button class="btn btn-danger"><i class="ti ti-trash"></i> Danger</button>
+    <button class="btn btn-primary btn-sm">Kichik</button>
+  </div>
+
+  <!-- Chips -->
+  <div style="margin-bottom:8px; font-size:12px; color:var(--text3)">CHIPLAR (Status / Tag)</div>
+  <div class="demo-row">
+    <span class="chip chip-teal"><i class="ti ti-check"></i> Student</span>
+    <span class="chip chip-purple"><i class="ti ti-sparkles"></i> AI</span>
+    <span class="chip chip-amber"><i class="ti ti-star"></i> Pro Plan</span>
+    <span class="chip chip-red"><i class="ti ti-x"></i> Xato</span>
+    <span class="chip chip-green"><i class="ti ti-check"></i> To'g'ri</span>
+    <span class="chip chip-gray">Matematik</span>
+    <span class="chip chip-gray">Fizika</span>
+  </div>
+
+  <!-- Badges -->
+  <div style="margin-bottom:8px; font-size:12px; color:var(--text3)">NISHONLAR (Badges)</div>
+  <div class="demo-row">
+    <span class="badge badge-teal">YANGI</span>
+    <span class="badge badge-purple">AI</span>
+    <span class="badge badge-amber">PRO</span>
+    <span class="badge badge-red">MUHIM</span>
+  </div>
+
+  <!-- Progress -->
+  <div style="margin-bottom:8px; font-size:12px; color:var(--text3)">PROGRESS BAR</div>
+  <div class="demo-row" style="flex-direction:column;align-items:flex-start;gap:14px">
+    <div style="display:flex;align-items:center;gap:14px;width:100%">
+      <span style="font-size:12px;color:var(--text2);width:80px">Algebra</span>
+      <div class="progress-track" style="width:300px"><div class="progress-fill" style="width:72%"></div></div>
+      <span style="font-size:12px;color:var(--teal);font-family:'DM Mono',monospace">72%</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;width:100%">
+      <span style="font-size:12px;color:var(--text2);width:80px">Fizika</span>
+      <div class="progress-track" style="width:300px"><div class="progress-fill" style="width:45%;background:var(--amber)"></div></div>
+      <span style="font-size:12px;color:var(--amber);font-family:'DM Mono',monospace">45%</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;width:100%">
+      <span style="font-size:12px;color:var(--text2);width:80px">Kimyo</span>
+      <div class="progress-track" style="width:300px"><div class="progress-fill" style="width:88%;background:var(--green)"></div></div>
+      <span style="font-size:12px;color:var(--green);font-family:'DM Mono',monospace">88%</span>
+    </div>
+  </div>
+
+  <!-- Card examples -->
+  <div style="margin-bottom:8px;margin-top:8px; font-size:12px; color:var(--text3)">KARTA NAMUNALARI</div>
+  <div class="grid-3">
+    <div class="card-sm" style="border-top:2px solid var(--teal)">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <i class="ti ti-math-function" style="color:var(--teal)"></i>
+        <span style="font-weight:600;font-size:13.5px">Algebra</span>
+        <span class="badge badge-teal" style="margin-left:auto">8 ta mavzu</span>
+      </div>
+      <div class="progress-track" style="width:100%"><div class="progress-fill" style="width:60%"></div></div>
+      <div style="font-size:11px;color:var(--text3);margin-top:6px">60% yakunlandi</div>
+    </div>
+    <div class="card-sm" style="border-top:2px solid var(--purple)">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <i class="ti ti-sparkles" style="color:var(--purple)"></i>
+        <span style="font-weight:600;font-size:13.5px">AI Tutor</span>
+        <span class="badge badge-purple" style="margin-left:auto">RAG</span>
+      </div>
+      <div style="font-size:12.5px;color:var(--text2)">Savolingizni yozing va DTM materiallaridan javob oling</div>
+    </div>
+    <div class="card-sm" style="border-top:2px solid var(--amber)">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <i class="ti ti-flame" style="color:var(--amber)"></i>
+        <span style="font-weight:600;font-size:13.5px">Streak</span>
+        <span class="badge badge-amber" style="margin-left:auto">7 kun</span>
+      </div>
+      <div style="font-size:12.5px;color:var(--text2)">Ketma-ket o'qish rekordingizsiz!<br>Bugun ham mashq qiling.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────
+     §4 AI FEATURES
+───────────────────────────────── -->
+<section class="section" id="s4">
+  <div class="section-header">
+    <div class="section-number">§ 04</div>
+    <div class="section-title-block">
+      <h2>AI Xususiyatlari</h2>
+      <p>Platformaning 4 ta asosiy sun'iy intellekt funksiyasi — texnik tafsilotlar va real misollar bilan</p>
+    </div>
+  </div>
+
+  <!-- Feature 1: AI Xato Tahlili -->
+  <div class="ai-feature-card">
+    <div class="ai-feature-header">
+      <span class="ai-num">AI · 01</span>
+      <i class="ti ti-analyze" style="font-size:22px;color:var(--purple)"></i>
+      <div>
+        <div class="ai-feature-title">AI Xato Tahlili</div>
+        <div style="font-size:13px;color:var(--text2)">Error Diagnosis — Test natijalarida xatolarni tushuntiradi</div>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+        <span class="chip chip-teal"><i class="ti ti-user"></i> Student</span>
+        <span class="chip chip-gray"><i class="ti ti-link"></i> /results/&lt;id&gt;/</span>
+      </div>
+    </div>
+
+    <div class="ai-feature-body">
+      <div class="how-it-works">
+        <h4>Qanday ishlaydi (texnik)</h4>
+        <ol class="step-list">
+          <li>Student testni yakunlagach <code class="code-inline">POST /results/</code> so'rov jo'natiladi</li>
+          <li>Backend noto'g'ri javoblarni filtrlab, har birini LLM promtiga qo'shadi</li>
+          <li>Prompt: <em>"Savol: {q}, To'g'ri javob: {c}, Student tanladi: {s}. O'zbek tilida tushuntir."</em></li>
+          <li>Gemini/GPT-4o har bir xato uchun: noto'g'ri mantiq + to'g'ri mantiq + formula + sabab qaytaradi</li>
+          <li>JSON response parse qilinib, results sahifasida accordion sifatida ko'rsatiladi</li>
+        </ol>
+      </div>
+
+      <div class="example-box">
+        <h4>Real misol</h4>
+        <div class="bubble-label user">Student xatosi</div>
+        <div class="user-bubble">
+          <strong>Savol:</strong> log₃(9) — log₃(3) = ?<br>
+          <strong>Tanlagan:</strong> B — log(9/3) = log(3)/log(3) = 1
+        </div>
+
+        <div class="bubble-label ai">AI tahlil</div>
+        <div class="ai-bubble">
+          <strong>Siz o'yladingiz:</strong> log(a/b) = log(a) / log(b)<br><br>
+          <strong>Aslida:</strong> log(a) − log(b) = log(a/b)<br>
+          Demak: log₃(9) − log₃(3) = log₃(9/3) = log₃(3) = <strong>1</strong><br><br>
+          <strong>Xato sababi:</strong> Logarifm va ko'rsatkich qoidalarini aralashtirish — bu 8-sinf algebra topshiriqlarida eng keng tarqalgan xato.
+          <div class="source-tag"><i class="ti ti-book"></i> DTM_Algebra_2024.pdf · §4.1</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ai-feature-footer">
+      <span class="footer-meta"><i class="ti ti-database"></i> Model: Gemini Pro / GPT-4o</span>
+      <span class="footer-meta"><i class="ti ti-clock"></i> Trigger: Test submit</span>
+      <span class="footer-meta"><i class="ti ti-file-text"></i> Output: JSON accordion</span>
+    </div>
+  </div>
+
+  <!-- Feature 2: RAG AI Tutor -->
+  <div class="ai-feature-card">
+    <div class="ai-feature-header">
+      <span class="ai-num">AI · 02</span>
+      <i class="ti ti-message-chatbot" style="font-size:22px;color:var(--purple)"></i>
+      <div>
+        <div class="ai-feature-title">RAG AI Tutor</div>
+        <div style="font-size:13px;color:var(--text2)">Retrieval-Augmented Generation — DTM materiallari asosida javob beradi</div>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+        <span class="chip chip-teal"><i class="ti ti-user"></i> Student</span>
+        <span class="chip chip-gray"><i class="ti ti-link"></i> /tutor/ + test panel</span>
+      </div>
+    </div>
+
+    <div class="ai-feature-body">
+      <div class="how-it-works">
+        <h4>Qanday ishlaydi (texnik)</h4>
+        <ol class="step-list">
+          <li>DTM PDF materiallar <span class="code-inline">ChromaDB</span> vektor bazasiga embed qilinadi (<code class="code-inline">text-embedding-ada-002</code>)</li>
+          <li>Student savol yozadi → savol ham vectorga aylantiriladi</li>
+          <li>ChromaDB cosine similarity bilan eng mos 3-5 fragment topadi</li>
+          <li>Fragmentlar LLM kontekstiga qo'shiladi: <em>"Faqat ushbu DTM materiallari asosida javob ber..."</em></li>
+          <li>LLM grounded javob + manba tegli qaytaradi</li>
+          <li>Agar DTM da ma'lumot bo'lmasa: <em>"Bu mavzu DTM materiallarida topilmadi"</em> deydi</li>
+        </ol>
+      </div>
+
+      <div class="example-box">
+        <h4>Real misol</h4>
+        <div class="bubble-label user">Student savoli</div>
+        <div class="user-bubble">
+          diskriminant nima va qachon ishlatiladi?
+        </div>
+
+        <div class="bubble-label ai">RAG AI javobi</div>
+        <div class="ai-bubble">
+          <strong>Diskriminant</strong> — kvadrat tenglama ax²+bx+c=0 ning yechimlari sonini aniqlash uchun ishlatiladigan qiymat.<br><br>
+          <strong>Formula:</strong> D = b² − 4ac<br><br>
+          • D &gt; 0 → 2 ta haqiqiy ildiz<br>
+          • D = 0 → 1 ta ildiz (qo'sh ildiz)<br>
+          • D &lt; 0 → haqiqiy ildiz yo'q
+          <div class="source-tag"><i class="ti ti-book"></i> DTM_Algebra_2024.pdf · §3.2</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ai-feature-footer">
+      <span class="footer-meta"><i class="ti ti-database"></i> Vector DB: ChromaDB</span>
+      <span class="footer-meta"><i class="ti ti-file-text"></i> Source: DTM PDF materiallar</span>
+      <span class="footer-meta"><i class="ti ti-robot"></i> LLM: Gemini Pro</span>
+    </div>
+  </div>
+
+  <!-- Feature 3: Explain It Back -->
+  <div class="ai-feature-card">
+    <div class="ai-feature-header">
+      <span class="ai-num">AI · 03</span>
+      <i class="ti ti-pencil" style="font-size:22px;color:var(--purple)"></i>
+      <div>
+        <div class="ai-feature-title">Explain It Back</div>
+        <div style="font-size:13px;color:var(--text2)">Feynman Technique — Student tushuntiradi, AI baholaydi</div>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+        <span class="chip chip-teal"><i class="ti ti-user"></i> Student</span>
+        <span class="chip chip-gray"><i class="ti ti-link"></i> Test panel tab</span>
+      </div>
+    </div>
+
+    <div class="ai-feature-body">
+      <div class="how-it-works">
+        <h4>Qanday ishlaydi (texnik)</h4>
+        <ol class="step-list">
+          <li>Test yonidagi panelda "Explain It Back" tab ochiladi</li>
+          <li>Student tanlangan mavzuni o'z so'zlari bilan yozadi (textarea)</li>
+          <li>POST so'rovda matn va mavzu nomi Gemini ga yuboriladi</li>
+          <li>Prompt: <em>"Ushbu tushuntirish {topic} mavzusini qanchalik to'g'ri qamrab olgan? 0-100 ball ber, nima yetishmayapti, qo'shimcha savol ber."</em></li>
+          <li>JSON qaytadi: score (0-100), missing_concepts[], follow_up_question</li>
+          <li>UI da score meter (yashil/sariq/qizil) va tushuntirishlar ko'rsatiladi</li>
+        </ol>
+      </div>
+
+      <div class="example-box">
+        <h4>Real misol</h4>
+        <div class="bubble-label user">Student tushuntiradi</div>
+        <div class="user-bubble">
+          logarifm — bu darajaning teskarisi. log₂(8) = 3, chunki 2³ = 8. Ya'ni qaysi darajaga ko'tarilishini topamiz.
+        </div>
+
+        <div class="bubble-label ai">AI bahosi</div>
+        <div class="ai-bubble">
+          Asosiy tushunchani to'g'ri aytdingiz — yaxshi boshlash! Lekin ikki muhim shartni eslatmadingiz:<br><br>
+          • <strong>Argument musbat bo'lishi:</strong> log(x) faqat x&gt;0 da aniqlanadi<br>
+          • <strong>Asos 0 va 1 orasida:</strong> 0&lt;a&lt;1 bo'lganda funksiya kamayuvchi bo'ladi
+
+          <div class="score-meter" style="margin-top:12px">
+            <span style="font-size:12px;color:var(--text2)">Tushunish:</span>
+            <div class="score-bar">
+              <div class="score-fill" style="width:68%;background:var(--amber)"></div>
+            </div>
+            <span style="font-family:'DM Mono',monospace;font-size:13px;color:var(--amber);font-weight:700">68%</span>
+          </div>
+
+          <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(129,140,248,0.15)">
+            <strong style="color:var(--purple);font-size:12px">Savol:</strong>
+            <span style="font-size:13px"> log₀.₅(4) qanday qiymatga teng va nima uchun?</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ai-feature-footer">
+      <span class="footer-meta"><i class="ti ti-star"></i> Score: 0-100%</span>
+      <span class="footer-meta"><i class="ti ti-alert-triangle" style="color:var(--amber)"></i> Yetishmayotgan tushunchalar</span>
+      <span class="footer-meta"><i class="ti ti-help" style="color:var(--purple)"></i> Follow-up savol</span>
+    </div>
+  </div>
+
+  <!-- Feature 4: AI Savol Generatori -->
+  <div class="ai-feature-card">
+    <div class="ai-feature-header">
+      <span class="ai-num">AI · 04</span>
+      <i class="ti ti-wand" style="font-size:22px;color:var(--amber)"></i>
+      <div>
+        <div class="ai-feature-title">AI Savol Generatori</div>
+        <div style="font-size:13px;color:var(--text2)">Teacher Tool — Matndan DTM formatidagi savollar yaratadi</div>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+        <span class="chip chip-amber"><i class="ti ti-chalkboard"></i> Teacher</span>
+        <span class="chip chip-gray"><i class="ti ti-link"></i> /teacher/questions/add/</span>
+      </div>
+    </div>
+
+    <div class="ai-feature-body">
+      <div class="how-it-works">
+        <h4>Qanday ishlaydi (texnik)</h4>
+        <ol class="step-list">
+          <li>Teacher mavzu matnini textarea ga joylaydi (minimum 200 belgi)</li>
+          <li>"AI bilan yaratish" tugmasi bosiladi → <code class="code-inline">POST /api/generate-questions/</code></li>
+          <li>Prompt: <em>"Ushbu matndan 5-10 ta DTM formatidagi test savol yarat. Har birida 4 variant (A/B/C/D), to'g'ri javob va tushuntirish bo'lsin."</em></li>
+          <li>Structured JSON qaytadi: questions[] har birida question, options, answer, explanation</li>
+          <li>Teacher har savolni ko'rib chiqadi, tahrirlaydi yoki o'chiradi</li>
+          <li>"Nashr qilish" tugmasi bilan savollar bazaga qo'shiladi</li>
+        </ol>
+      </div>
+
+      <div class="example-box">
+        <h4>Real misol</h4>
+        <div class="bubble-label user">Teacher input</div>
+        <div class="user-bubble" style="font-size:12px">
+          <em>Kvadrat tenglama ax²+bx+c=0 ildizlari Viyeta teoremasi orqali x₁+x₂=−b/a va x₁·x₂=c/a formulalari bilan topiladi. Agar tenglama ildizlari 3 va −5 bo'lsa...</em>
+        </div>
+
+        <div class="bubble-label ai">AI natijasi</div>
+        <div class="ai-bubble" style="font-size:12.5px">
+          <strong style="color:var(--amber)">Savol 1:</strong> Ildizlari 3 va −5 bo'lgan kvadrat tenglama yozing.<br>
+          <span style="color:var(--text3)">A) x²+2x−15=0 &nbsp; <strong style="color:var(--green)">B) x²−2x−15=0</strong> &nbsp; C) x²+8x+15=0 &nbsp; D) x²−8x+15=0</span><br>
+          <span style="color:var(--purple);font-size:11px">⚡ Tushuntirish: x₁+x₂=3+(−5)=−2, demak −b/a=−2 → b=2. Shuning uchun B to'g'ri.</span>
+        </div>
+        <div style="text-align:center;margin-top:8px">
+          <button class="btn btn-amber btn-sm"><i class="ti ti-check"></i> Saqlash</button>&nbsp;
+          <button class="btn btn-ghost btn-sm"><i class="ti ti-edit"></i> Tahrirlash</button>&nbsp;
+          <button class="btn btn-danger btn-sm"><i class="ti ti-trash"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="ai-feature-footer">
+      <span class="footer-meta"><i class="ti ti-list-numbers"></i> 5-10 savol generatsiya</span>
+      <span class="footer-meta"><i class="ti ti-pencil"></i> Review + edit bosqichi</span>
+      <span class="footer-meta"><i class="ti ti-send"></i> Nashr va bazaga qo'shish</span>
+    </div>
+  </div>
+
+</section>
+
+<!-- ─────────────────────────────────
+     §5 PAGES
+───────────────────────────────── -->
+<section class="section" id="s5">
+  <div class="section-header">
+    <div class="section-number">§ 05</div>
+    <div class="section-title-block">
+      <h2>Barcha Sahifalar</h2>
+      <p>14 ta sahifa — rol, URL, komponentlar va AI xususiyatlari bilan</p>
+    </div>
+  </div>
+
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
+    <table class="pages-table">
+      <thead>
+        <tr>
+          <th style="width:220px">Sahifa nomi</th>
+          <th style="width:170px">URL</th>
+          <th style="width:110px">Rol</th>
+          <th>Komponentlar</th>
+          <th style="width:130px">AI Funksiya</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- PUBLIC -->
+        <tr class="pages-group-header"><td colspan="5">📖 PUBLIC — Login talab qilinmaydi</td></tr>
+        <tr>
+          <td><div class="page-name">Landing Page</div><div style="font-size:12px;color:var(--text3);margin-top:3px">Asosiy kirish sahifasi</div></td>
+          <td><span class="page-url">/</span></td>
+          <td><span class="chip chip-gray" style="font-size:11px">Hammaga</span></td>
+          <td style="font-size:12.5px;color:var(--text2)">Hero, Features sektsiya, Pricing cards, Testimonials, FAQ accordion, CTA banner, Footer</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td><div class="page-name">Login</div><div style="font-size:12px;color:var(--text3);margin-top:3px">Tizimga kirish</div></td>
+          <td><span class="page-url">/login/</span></td>
+          <td><span class="chip chip-gray" style="font-size:11px">Hammaga</span></td>
+          <td style="font-size:12.5px;color:var(--text2)">Email/parol form, "Eslab qolish" checkbox, Parolni unutdim link, Ro'yxatdan o'tish link</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td><div class="page-name">Register</div><div style="font-size:12px;color:var(--text3);margin-top:3px">Ro'yxatdan o'tish</div></td>
+          <td><span class="page-url">/register/</span></td>
+          <td><span class="chip chip-gray" style="font-size:11px">Hammaga</span></td>
+          <td style="font-size:12.5px;color:var(--text2)">To'liq ism, email, parol, rol tanlash (Student/Teacher radio), shartlar checkboxi</td>
+          <td>—</td>
+        </tr>
+
+        <!-- STUDENT -->
+        <tr class="pages-group-header"><td colspan="5">🎓 STUDENT — Login talab qilinadi (role=student)</td></tr>
+        <tr>
+          <td><div class="page-name">Dashboard</div><div style="font-size:12px;color:var(--text3);margin-top:3px">Asosiy boshqaruv paneli</div></td>
+          <td><span class="page-url">/dashboard/</span></td>
+          <td><span class="chip chip-teal" style="font-size:11px">Student</span></td>
+          <td style="font-size:12.5px;color:var(--text2)">Stat kartalar (streak, testlar, o'rtacha ball), fanlar progress, streak kalendar, tavsiya qilingan mavzular, oxirgi testlar jadval, AI tutor widget</td>
+          <td><span class="badge badge-purple">RAG Tutor</span></td>
+        </tr>
+        <tr>
+          <td><div class="page-name">Subjects List</div><div style="font-size:12px;color:var(--text3);margin-top:3px">Barcha fanlar ro'yxati</div></td>
+          <td><span class="page-url">/subjects/</span></td>
+          <td><span class="chip chip-teal" style="font-size:11px">Student</span></td>
+          <td style="font-size:12.5px;color:var(--text2)">Fan kartalar grid (nomi, icon, progress bar, mavzular soni), filter chips, qidiruv</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td><div class="page-name">Topic List</div><div style="font-size:12px;color:var(--text3);margin-top:3px">Fan ichidagi mavzular</div></td>
+          <td><span class="page-url">/subjects/&lt;id&gt;/</span></td>
+          <td><span class="chip chip-teal" style="font-size:11px">Student</span></td>
+          <td style="font-size:12.5px;color:var(--text2)">Fan header, mavzular ro'yxati (progress, tugma), yakunlangan/yangi belgilari</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td><div class="page-name">Darslik (Lesson)</div><div style="font-size:12px;color:var(--text3);margin-top:3px">Dars kontenti</div></td>
+          <td><span class="page-url">/topics/&lt;id&gt;/</span></td>
+          <td><span class="chip chip-teal" style="font-size:11px">Student</span></td>
+          <td style="font-size:12.5px;color:var(--text2)">Mavzu sarlavhasi, ustoz ism, o'qish vaqti, dars matn/formulas, "Test boshlash" tugmasi, breadcrumb</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td><div class="page-name">Mock Test</div><div style="font-size:12px;color:var(--text3);margin-top:3px">10 ta savol, 15 daqiqa</div></td>
+          <td><span class="page-url">/topics/&lt;id&gt;/quiz/</span></td>
+          <td><span class="chip chip-teal" style="font-size:11px">Student</span></td>
+          <td style="font-size:12.5px;color:var(--text2)">Savol matni, A/B/C/D variantlar, progress nuqtalari (1..10), sanaq taymer, yonbosh panel (RAG Tutor + Explain It Back tab), "Yakunlash" tugma</td>
+          <td>
+            <span class="badge badge-purple">RAG Tutor</span><br>
+            <span class="badge badge-purple" style="margin-top:3px;display:inline-block">Explain It Back</span>
+          </td>
+        </tr>
+        <tr>
+          <td><div class="page-name">Test Result</div><div style="font-size:12px;color:var(--text3);margin-top:3px">Test natijasi + AI tahlil</div></td>
+          <td><span class="page-url">/results/&lt;id&gt;/</span></td>
+          <td><span class="chip chip-teal" style="font-size:11px">Student</span></td>
+          <td style="font-size:12.5px;color:var(--text2)">Natija halqa (ring chart), xato/to'g'ri/o'tkazib yuborilgan stat, AI Xato Tahlili accordion, javoblar ko'rish filtri (hammasi/xato/to'g'ri)</td>
+          <td><span class="badge badge-purple">AI Xato Tahlili</span></td>
+        </tr>
+        <tr>
+          <td><div class="page-name">AI Tutor</div><div style="font-size:12px;color:var(--text3);margin-top:3px">RAG chat sahifasi</div></td>
+          <td><span class="page-url">/tutor/</span></td>
+          <td><span class="chip chip-teal" style="font-size:11px">Student</span></td>
+          <td style="font-size:12.5px;color:var(--text2)">Suhbat tarixi sidebar, fan kontekst chips, chat oynasi (user/AI bubbles + source teglari), tez tavsiyalar, qidiruv savol</td>
+          <td><span class="badge badge-purple">RAG Tutor</span></td>
+        </tr>
+        <tr>
+          <td><div class="page-name">Profile</div><div style="font-size:12px;color:var(--text3);margin-top:3px">Shaxsiy profil</div></td>
+          <td><span class="page-url">/profile/</span></td>
+          <td><span class="chip chip-teal" style="font-size:11px">Student</span></td>
+          <td style="font-size:12.5px;color:var(--text2)">Avatar, streak rekord, umumiy testlar, o'rtacha ball, fan bo'yicha progress, test tarixi jadvali</td>
+          <td>—</td>
+        </tr>
+
+        <!-- TEACHER -->
+        <tr class="pages-group-header"><td colspan="5">👨‍🏫 TEACHER — Login talab qilinadi (role=teacher)</td></tr>
+        <tr>
+          <td><div class="page-name">Teacher Dashboard</div><div style="font-size:12px;color:var(--text3);margin-top:3px">Ustoz bosh paneli</div></td>
+          <td><span class="page-url">/teacher/</span></td>
+          <td><span class="chip chip-amber" style="font-size:11px">Teacher</span></td>
+          <td style="font-size:12.5px;color:var(--text2)">Daromad karta, kontent ro'yxati (savollar soni, holati), AI yordamchi panel, bildirishnomalar, tezkor havolalar</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td><div class="page-name">Add Question</div><div style="font-size:12px;color:var(--text3);margin-top:3px">Savol qo'shish</div></td>
+          <td><span class="page-url">/teacher/questions/add/</span></td>
+          <td><span class="chip chip-amber" style="font-size:11px">Teacher</span></td>
+          <td style="font-size:12.5px;color:var(--text2)">Qo'lda savol forma (savol, 4 variant, to'g'ri javob, qiyinlik), YOKI AI Savol Generatori panel (textarea → generate → review kartalar → nashr)</td>
+          <td><span class="badge badge-amber">AI Savol Gen.</span></td>
+        </tr>
+        <tr>
+          <td><div class="page-name">Analytics</div><div style="font-size:12px;color:var(--text3);margin-top:3px">O'quvchilar statistikasi</div></td>
+          <td><span class="page-url">/teacher/analytics/</span></td>
+          <td><span class="chip chip-amber" style="font-size:11px">Teacher</span></td>
+          <td style="font-size:12.5px;color:var(--text2)">Bar chart (mavzu bo'yicha natijalar), talabalar reytingi jadvali, mavzu qiyinligi ko'rsatkichi, vaqt filtri</td>
+          <td>—</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────
+     §6 USER FLOWS
+───────────────────────────────── -->
+<section class="section" id="s6">
+  <div class="section-header">
+    <div class="section-number">§ 06</div>
+    <div class="section-title-block">
+      <h2>Foydalanuvchi Oqimlari</h2>
+      <p>3 ta asosiy stsenariy — qadamli diagrammalar bilan</p>
+    </div>
+  </div>
+
+  <!-- Flow 1 -->
+  <div class="flow-container">
+    <div class="flow-title">
+      <span class="chip chip-teal"><i class="ti ti-user"></i></span>
+      Flow 1 — Student O'qish Oqimi
+    </div>
+    <div class="flow-steps" style="gap:2px;flex-wrap:wrap;row-gap:12px">
+      <div class="flow-step"><div class="flow-node start">Ro'yxatdan o'tish</div><div class="flow-note">/register/</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-node">Dashboard</div><div class="flow-note">/dashboard/</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-node">Fan tanlash</div><div class="flow-note">/subjects/</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-node">Mavzu tanlash</div><div class="flow-note">/subjects/&lt;id&gt;/</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-node">Darslikni o'qish</div><div class="flow-note">/topics/&lt;id&gt;/</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-node">Test boshlash</div><div class="flow-note">/topics/&lt;id&gt;/quiz/</div></div>
+    </div>
+
+    <div style="margin:16px 0 8px; display:flex;align-items:center;gap:8px">
+      <span style="font-size:12px;color:var(--text3)">Test jarayonida (ixtiyoriy):</span>
+      <div class="flow-node branch" style="font-size:11.5px">RAG Tutor</div>
+      <span style="color:var(--text3);font-size:14px">|</span>
+      <div class="flow-node branch" style="font-size:11.5px">Explain It Back</div>
+    </div>
+
+    <div class="flow-steps" style="gap:2px;margin-top:12px">
+      <div class="flow-step"><div class="flow-node">Test yakunlash</div><div class="flow-note">Submit</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-node ai">AI Xato Tahlili</div><div class="flow-note">Gemini API</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-node">Natijalar</div><div class="flow-note">/results/&lt;id&gt;/</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-node end">Profil yangilandi</div><div class="flow-note">/profile/</div></div>
+    </div>
+  </div>
+
+  <!-- Flow 2 -->
+  <div class="flow-container">
+    <div class="flow-title">
+      <span class="chip chip-amber"><i class="ti ti-chalkboard"></i></span>
+      Flow 2 — Teacher Kontent Oqimi
+    </div>
+    <div class="flow-steps" style="gap:2px;flex-wrap:wrap;row-gap:12px">
+      <div class="flow-step"><div class="flow-node teacher" style="--role-color:var(--amber)">Teacher Register</div><div class="flow-note">/register/</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-node">Teacher Dashboard</div><div class="flow-note">/teacher/</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-node">Savol qo'shish</div><div class="flow-note">/teacher/questions/add/</div></div>
+    </div>
+
+    <div style="margin:14px 0;padding:14px 18px;background:var(--amber-bg);border:1px solid rgba(251,191,36,0.2);border-radius:8px;font-size:13px">
+      <strong style="color:var(--amber)">AI Savol Generator jarayoni:</strong>
+      <div class="flow-steps" style="margin-top:10px;gap:4px;flex-wrap:wrap">
+        <div class="flow-node" style="font-size:11.5px;min-width:90px">Matn joylashtirish</div>
+        <div class="flow-arrow" style="font-size:14px">→</div>
+        <div class="flow-node ai" style="font-size:11.5px;min-width:90px">AI generatsiya</div>
+        <div class="flow-arrow" style="font-size:14px">→</div>
+        <div class="flow-node" style="font-size:11.5px;min-width:90px">Ko'rib chiqish</div>
+        <div class="flow-arrow" style="font-size:14px">→</div>
+        <div class="flow-node" style="font-size:11.5px;min-width:90px">Tahrirlash</div>
+        <div class="flow-arrow" style="font-size:14px">→</div>
+        <div class="flow-node end" style="font-size:11.5px;min-width:90px">Nashr qilish</div>
+      </div>
+    </div>
+
+    <div class="flow-steps" style="gap:2px;flex-wrap:wrap">
+      <div class="flow-step"><div class="flow-node">Kontent jonlandi</div><div class="flow-note">DB da saqlanadi</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-node">Studentlar ko'radi</div><div class="flow-note">/subjects/</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-node end">Analytics yangilandi</div><div class="flow-note">/teacher/analytics/</div></div>
+    </div>
+  </div>
+
+  <!-- Flow 3 -->
+  <div class="flow-container">
+    <div class="flow-title">
+      <span class="chip chip-purple"><i class="ti ti-brain"></i></span>
+      Flow 3 — AI Tutor (RAG) Oqimi
+    </div>
+    <div class="flow-steps" style="gap:2px;flex-wrap:wrap;row-gap:12px">
+      <div class="flow-step"><div class="flow-node start">Student /tutor/ ochadi</div><div class="flow-note">Chat sahifasi</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-node">Fan kontekst tanlaydi</div><div class="flow-note">Chips (Algebra...)</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-node">Savol yozadi</div><div class="flow-note">Textarea</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-node ai">RAG ChromaDB</div><div class="flow-note">Cosine similarity</div></div>
+    </div>
+    <div class="flow-steps" style="gap:2px;margin-top:12px;flex-wrap:wrap">
+      <div class="flow-step"><div class="flow-node ai">DTM matl. topildi</div><div class="flow-note">Top-3 fragment</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-node ai">Gemini javob beradi</div><div class="flow-note">Grounded</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-node">Manba tegi ko'rinadi</div><div class="flow-note">PDF·§ raqam</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-node branch">Explain It Back?</div><div class="flow-note">Ixtiyoriy</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-node end">Tushunish mustahkamlandi</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────
+     §7 TEAM TASKS
+───────────────────────────────── -->
+<section class="section" id="s7">
+  <div class="section-header">
+    <div class="section-number">§ 07</div>
+    <div class="section-title-block">
+      <h2>Jamoa Vazifa Taqsimoti</h2>
+      <p>5 ta ishtirokchi — Django app, model va sahifalar bo'yicha aniq javobgarlik</p>
+    </div>
+  </div>
+
+  <div class="highlight-box" style="margin-bottom:28px">
+    <strong style="color:var(--purple)">Ishga tushurish tartibi:</strong> Person 1 avval GitHub, settings.py, urls.py ni sozlaydi. Qolganlar fork qilib o'z branch larida ishlaydi. Har kuni kech 22:00 da merge session.
+  </div>
+
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
+    <table class="team-table">
+      <thead>
+        <tr>
+          <th style="width:50px">#</th>
+          <th style="width:180px">Rol</th>
+          <th>Django App / Fayllar</th>
+          <th>Asosiy vazifalar</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="person-num">01</div></td>
+          <td><div class="person-role">Team Lead</div><div style="font-size:12px;color:var(--text3)">Backend Lead, DevOps</div></td>
+          <td style="vertical-align:top">
+            <span class="django-tag">settings.py</span>
+            <span class="django-tag">urls.py</span>
+            <span class="django-tag">requirements.txt</span>
+            <span class="django-tag">README.md</span>
+            <span class="django-tag">Render/Railway deploy</span>
+          </td>
+          <td>
+            <ul class="task-list">
+              <li>Django loyihasi structurasi: <code class="code-inline">abiturai/</code> project, <code class="code-inline">config/settings.py</code></li>
+              <li>GitHub repo yaratish, .gitignore, branch strategiyasi</li>
+              <li>PostgreSQL ulanish, .env, SECRET_KEY</li>
+              <li>Barcha app URLlarni asosiy <code class="code-inline">urls.py</code> ga ulash</li>
+              <li>Render yoki Railway deploy pipeline sozlash</li>
+              <li>PR review va merge session olib borish</li>
+              <li>Hackathon demo uchun seed data tayyorlash</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td><div class="person-num">02</div></td>
+          <td><div class="person-role">Auth + UI</div><div style="font-size:12px;color:var(--text3)">Frontend + Auth</div></td>
+          <td style="vertical-align:top">
+            <span class="django-tag">users/ app</span>
+            <span class="django-tag">base.html</span>
+            <span class="django-tag">navbar</span>
+            <span class="django-tag">Bootstrap 5</span>
+          </td>
+          <td>
+            <ul class="task-list">
+              <li><code class="code-inline">CustomUser</code> modeli: email, role (student/teacher), avatar</li>
+              <li>Login, Register, Logout views (Django auth)</li>
+              <li><code class="code-inline">base.html</code> template: Bootstrap 5, DM Sans, Tabler icons CDN</li>
+              <li>Responsive navbar: rol ga qarab conditional menu (student/teacher)</li>
+              <li>Role-based redirect: login → /dashboard/ yoki /teacher/</li>
+              <li><code class="code-inline">@login_required</code> va role decorator yozish</li>
+              <li>Flash messages uchun toast component</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td><div class="person-num">03</div></td>
+          <td><div class="person-role">Subjects App</div><div style="font-size:12px;color:var(--text3)">Kontent tizimi</div></td>
+          <td style="vertical-align:top">
+            <span class="django-tag">subjects/ app</span>
+            <span class="django-tag">Subject model</span>
+            <span class="django-tag">Topic model</span>
+            <span class="django-tag">Lesson model</span>
+          </td>
+          <td>
+            <ul class="task-list">
+              <li><code class="code-inline">Subject</code>: name, icon, color, slug</li>
+              <li><code class="code-inline">Topic</code>: subject FK, title, order, estimated_minutes</li>
+              <li><code class="code-inline">Lesson</code>: topic FK, content (RichTextField), author FK</li>
+              <li>Subjects list view (<code class="code-inline">/subjects/</code>) — card grid, progress</li>
+              <li>Topic list view (<code class="code-inline">/subjects/&lt;slug&gt;/</code>)</li>
+              <li>Lesson detail view (<code class="code-inline">/topics/&lt;id&gt;/</code>)</li>
+              <li>UserTopicProgress model: student, topic, completed, score</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td><div class="person-num">04</div></td>
+          <td><div class="person-role">Quiz App</div><div style="font-size:12px;color:var(--text3)">Test tizimi</div></td>
+          <td style="vertical-align:top">
+            <span class="django-tag">quiz/ app</span>
+            <span class="django-tag">Question model</span>
+            <span class="django-tag">TestResult model</span>
+            <span class="django-tag">Timer JS</span>
+          </td>
+          <td>
+            <ul class="task-list">
+              <li><code class="code-inline">Question</code>: topic FK, text, A/B/C/D options, correct_answer, difficulty</li>
+              <li><code class="code-inline">TestResult</code>: student FK, topic FK, score, answers JSON, timestamp</li>
+              <li>Quiz view (<code class="code-inline">/topics/&lt;id&gt;/quiz/</code>): 10 savol random, AJAX submit</li>
+              <li>15 daqiqalik countdown timer (JS localStorage bilan)</li>
+              <li>Progress nuqtalari (1..10) dinamik ko'rsatish</li>
+              <li>Result view (<code class="code-inline">/results/&lt;id&gt;/</code>): ring chart, javoblar filtri</li>
+              <li>AI Xato Tahlili response ni template da ko'rsatish (Person 5 API qismini chaqiradi)</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td><div class="person-num">05</div></td>
+          <td><div class="person-role">AI / Tutor</div><div style="font-size:12px;color:var(--text3)">AI integratsiya</div></td>
+          <td style="vertical-align:top">
+            <span class="django-tag">tutor/ app</span>
+            <span class="django-tag">ChromaDB</span>
+            <span class="django-tag">Gemini API</span>
+            <span class="django-tag">RAG pipeline</span>
+          </td>
+          <td>
+            <ul class="task-list">
+              <li>Gemini Pro / OpenAI API wrapper funksiyasi</li>
+              <li>ChromaDB setup: DTM PDF materiallar → chunking → embedding → vector store</li>
+              <li>RAG query funksiyasi: savol → cosine search → top-3 chunks → LLM prompt</li>
+              <li>AI Tutor view (<code class="code-inline">/tutor/</code>): AJAX chat, source teglari</li>
+              <li>Explain It Back API (<code class="code-inline">POST /api/explain/</code>): score + missing + follow-up</li>
+              <li>AI Xato Tahlili API (<code class="code-inline">POST /api/analyze-errors/</code>): result ID → xatolar tahlili</li>
+              <li>AI Savol Generator (<code class="code-inline">POST /api/generate-questions/</code>): matn → 5-10 savol JSON</li>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Tech dependency note -->
+  <div style="margin-top:24px;display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <div class="card-sm">
+      <div class="section-label-sm" style="margin-bottom:10px">Muhim bog'liqliklar</div>
+      <ul style="list-style:none;font-size:13px;color:var(--text2)">
+        <li style="padding:5px 0;border-bottom:1px solid var(--border)">Person 04 → Person 05 AI API endpointni kutadi</li>
+        <li style="padding:5px 0;border-bottom:1px solid var(--border)">Person 03 → Person 02 <code class="code-inline">@login_required</code> decorator ni kutadi</li>
+        <li style="padding:5px 0;border-bottom:1px solid var(--border)">Person 04 → Person 03 <code class="code-inline">Topic</code> modelni kutadi</li>
+        <li style="padding:5px 0">Barcha → Person 01 base settings + URLconf ni kutadi</li>
+      </ul>
+    </div>
+    <div class="card-sm">
+      <div class="section-label-sm" style="margin-bottom:10px">Hackathon vaqt jadvali</div>
+      <ul style="list-style:none;font-size:13px;color:var(--text2)">
+        <li style="padding:5px 0;border-bottom:1px solid var(--border)"><span style="color:var(--teal);font-family:'DM Mono',monospace;font-size:12px">Kun 1 · 10:00</span> — Repo, settings, base.html tayyor</li>
+        <li style="padding:5px 0;border-bottom:1px solid var(--border)"><span style="color:var(--teal);font-family:'DM Mono',monospace;font-size:12px">Kun 1 · 18:00</span> — Auth + Subjects + Quiz modellar ready</li>
+        <li style="padding:5px 0;border-bottom:1px solid var(--border)"><span style="color:var(--teal);font-family:'DM Mono',monospace;font-size:12px">Kun 2 · 10:00</span> — AI API endpoints ishlaydi</li>
+        <li style="padding:5px 0"><span style="color:var(--amber);font-family:'DM Mono',monospace;font-size:12px">Kun 2 · 15:00</span> — Deploy + demo tayyor</li>
+      </ul>
+    </div>
+  </div>
+
+</section>
+
+<!-- Footer spacer -->
+<div style="height:60px"></div>
+
+</main>
+
+<script>
+  // Active nav highlighting on scroll
+  const sections = document.querySelectorAll('.section[id]');
+  const navItems = document.querySelectorAll('.nav-item[href^="#"]');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navItems.forEach(n => n.classList.remove('active'));
+        const active = document.querySelector(`.nav-item[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { threshold: 0.2, rootMargin: '-80px 0px -60% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
