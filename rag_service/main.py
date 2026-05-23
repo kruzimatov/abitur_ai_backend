@@ -26,9 +26,9 @@ class Query(BaseModel):
 
 @app.post("/seed")
 def seed(data: SeedData):
-    existing = collection.count()
-    if existing > 0:
-        collection.delete(ids=[f"topic_{i}" for i in range(existing)])
+    existing_ids = collection.get()["ids"]
+    if existing_ids:
+        collection.delete(ids=existing_ids)
 
     collection.add(
         documents=[t["content"] for t in data.topics],
@@ -40,12 +40,13 @@ def seed(data: SeedData):
 
 @app.post("/query")
 def query(q: Query):
-    if collection.count() == 0:
+    count = collection.count()
+    if count == 0:
         return {"chunks": [], "titles": []}
 
     results = collection.query(
         query_texts=[q.question],
-        n_results=min(q.n_results, collection.count()),
+        n_results=min(q.n_results, count),
     )
     return {
         "chunks": results["documents"][0],
