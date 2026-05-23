@@ -24,8 +24,8 @@ class DatabaseSeeder extends Seeder
         $subject = \App\Models\Subject::where('name', 'Matematika')->first();
 
         User::create([
-            'name' => 'Admin',
-            'surname' => 'Adminov',
+            'firstname' => 'Admin',
+            'lastname' => 'Adminov',
             'email' => 'admin@abiturai.uz',
             'password' => Hash::make('admin123'),
             'gender' => 'male',
@@ -33,8 +33,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::create([
-            'name' => 'Malika',
-            'surname' => 'Karimova',
+            'firstname' => 'Malika',
+            'lastname' => 'Karimova',
             'email' => 'teacher@abiturai.uz',
             'password' => Hash::make('teacher123'),
             'gender' => 'female',
@@ -43,8 +43,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::create([
-            'name' => 'Ali',
-            'surname' => 'Valiyev',
+            'firstname' => 'Ali',
+            'lastname' => 'Valiyev',
             'email' => 'student@abiturai.uz',
             'password' => Hash::make('student123'),
             'gender' => 'male',

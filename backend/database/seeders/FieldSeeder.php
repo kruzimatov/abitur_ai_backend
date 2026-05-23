@@ -13,19 +13,19 @@ class FieldSeeder extends Seeder
         // Create all subjects
         $subjects = [];
         $subjectNames = [
-            'Matematika' => '📐',
-            'Amaliy matematika' => '🔢',
-            'Fizika' => '⚡',
-            'Kimyo' => '🧪',
-            'Biologiya' => '🧬',
-            'Ona tili' => '📖',
-            "O'zbekiston Tarixi" => '🏛️',
+            'Matematika',
+            'Amaliy matematika',
+            'Fizika',
+            'Kimyo',
+            'Biologiya',
+            'Ona tili',
+            "O'zbekiston Tarixi",
         ];
 
-        foreach ($subjectNames as $name => $icon) {
+        foreach ($subjectNames as $name) {
             $subjects[$name] = Subject::firstOrCreate(
                 ['name' => $name],
-                ['icon' => $icon, 'description' => "$name fani bo'yicha DTM tayyorgarlik"]
+                ['description' => "$name fani bo'yicha DTM tayyorgarlik"]
             );
         }
 

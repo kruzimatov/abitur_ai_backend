@@ -25,7 +25,6 @@ class SubjectController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'icon' => 'nullable|string|max:10',
             'description' => 'nullable|string',
         ]);
 
@@ -40,7 +39,6 @@ class SubjectController extends Controller
 
         $validated = $request->validate([
             'name' => 'sometimes|string|max:255',
-            'icon' => 'nullable|string|max:10',
             'description' => 'nullable|string',
         ]);
 

@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AbiturAI — Mock Test</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+:root{
+  --bg:#07090F;--bg2:#0B0E18;--bg3:#0F1220;--bg4:#131728;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --text:#F1F5F9;--text2:#94A3B8;--text3:#475569;
+  --teal:#00C49A;--teal-dim:rgba(0,196,154,0.1);--teal-border:rgba(0,196,154,0.3);
+  --purple:#818CF8;--purple-dim:rgba(129,140,248,0.1);
+  --amber:#FBBF24;--amber-dim:rgba(251,191,36,0.1);
+  --red:#F87171;--red-dim:rgba(248,113,113,0.1);
+  --green:#34D399;--green-dim:rgba(52,211,153,0.1);
+  --r:12px;--r-sm:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* ── SCREENS ── */
+.screen{display:none;min-height:100vh}
+.screen.active{display:flex;flex-direction:column}
+
+/* ══════════════════════════════════════
+   SCREEN 1 — TEST START
+══════════════════════════════════════ */
+#startScreen{align-items:center;justify-content:center;padding:40px 20px;background:radial-gradient(ellipse at 50% 0%,rgba(0,196,154,.06) 0%,transparent 60%)}
+.start-wrap{width:100%;max-width:560px}
+.back-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--text3);cursor:pointer;margin-bottom:28px;transition:color .2s}
+.back-link:hover{color:var(--text2)}
+.start-card{background:var(--bg2);border:1px solid var(--border);border-radius:20px;overflow:hidden}
+.start-header{padding:28px 28px 24px;border-bottom:1px solid var(--border)}
+.start-fan{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.fan-icon{width:44px;height:44px;border-radius:var(--r);background:var(--teal-dim);border:1px solid var(--teal-border);display:flex;align-items:center;justify-content:center}
+.fan-icon i{color:var(--teal);font-size:22px}
+.fan-label{font-size:12px;color:var(--text3);margin-bottom:2px}
+.fan-name{font-size:16px;font-weight:600;color:var(--text)}
+.start-title{font-size:26px;font-weight:700;color:var(--text);margin-bottom:6px;letter-spacing:-.5px;font-family:'DM Serif Display',serif}
+.start-sub{font-size:14px;color:var(--text2);line-height:1.6}
+.start-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:20px 28px;border-bottom:1px solid var(--border)}
+.meta-item{display:flex;flex-direction:column;align-items:center;gap:4px}
+.meta-icon{width:36px;height:36px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center}
+.meta-val{font-size:16px;font-weight:700;color:var(--text);font-family:'DM Serif Display',serif}
+.meta-label{font-size:11px;color:var(--text3)}
+.start-rules{padding:20px 28px;border-bottom:1px solid var(--border)}
+.rules-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px}
+.rule{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;font-size:13px;color:var(--text2);line-height:1.5}
+.rule i{color:var(--teal);font-size:16px;margin-top:1px;flex-shrink:0}
+.start-actions{padding:20px 28px;display:flex;gap:10px}
+.btn-start{flex:1;background:var(--teal);border:none;border-radius:var(--r);padding:14px;font-size:15px;font-weight:700;color:#07090F;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .2s;font-family:'DM Sans',sans-serif}
+.btn-start:hover{opacity:.9}
+.btn-cancel{background:transparent;border:1px solid var(--border2);border-radius:var(--r);padding:14px 20px;font-size:14px;color:var(--text2);cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}
+.btn-cancel:hover{border-color:var(--border2);background:var(--bg3)}
+
+/* ══════════════════════════════════════
+   SCREEN 2 — TEST IN PROGRESS
+══════════════════════════════════════ */
+#testScreen{background:var(--bg)}
+.test-topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;border-bottom:1px solid var(--border);background:rgba(7,9,15,0.9);backdrop-filter:blur(8px);position:sticky;top:0;z-index:10}
+.test-info{display:flex;align-items:center;gap:12px}
+.test-fan-badge{display:flex;align-items:center;gap:7px;background:var(--teal-dim);border:1px solid var(--teal-border);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--teal);font-weight:500}
+.test-progress-text{font-size:13px;color:var(--text2)}
+.test-progress-text span{color:var(--text);font-weight:600}
+.timer-wrap{display:flex;align-items:center;gap:8px}
+.timer-display{display:flex;align-items:center;gap:7px;padding:7px 16px;border-radius:20px;font-size:14px;font-weight:700;font-family:'DM Mono',monospace;transition:all .3s}
+.timer-display.normal{background:var(--bg3);border:1px solid var(--border);color:var(--text)}
+.timer-display.warning{background:var(--amber-dim);border:1px solid rgba(251,191,36,.3);color:var(--amber)}
+.timer-display.danger{background:var(--red-dim);border:1px solid rgba(248,113,113,.3);color:var(--red);animation:timerPulse 1s infinite}
+@keyframes timerPulse{0%,100%{opacity:1}50%{opacity:.7}}
+.quit-btn{background:transparent;border:1px solid var(--border);border-radius:var(--r-sm);padding:6px 14px;font-size:12px;color:var(--text3);cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}
+.quit-btn:hover{border-color:var(--red);color:var(--red)}
+
+/* progress dots */
+.dots-wrap{padding:16px 28px 0;display:flex;gap:6px;align-items:center}
+.dot{width:32px;height:6px;border-radius:3px;background:rgba(255,255,255,.06);cursor:pointer;transition:all .2s;flex-shrink:0}
+.dot.answered{background:var(--teal)}
+.dot.current{background:var(--purple)}
+.dot.skipped{background:var(--amber)}
+.dot.wrong{background:var(--red)}
+
+.test-body{display:flex;gap:0;flex:1}
+.question-area{flex:1;padding:24px 28px}
+.q-num-label{font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.q-num-label span{background:var(--purple-dim);border:1px solid rgba(129,140,248,.3);border-radius:20px;padding:3px 12px;font-size:11px;color:var(--purple)}
+.q-text{font-size:18px;color:var(--text);line-height:1.65;margin-bottom:28px;font-weight:500;letter-spacing:-.2px}
+.q-image{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:24px;text-align:center;color:var(--text3);font-size:13px}
+.options{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+.option{display:flex;align-items:flex-start;gap:14px;padding:15px 18px;border-radius:var(--r);border:1.5px solid var(--border);background:var(--bg2);cursor:pointer;transition:all .18s;position:relative}
+.option:hover{border-color:var(--border2);background:var(--bg3)}
+.option.selected{border-color:var(--purple);background:var(--purple-dim)}
+.option.correct{border-color:var(--green);background:var(--green-dim)}
+.option.wrong{border-color:var(--red);background:var(--red-dim)}
+.option.correct-highlight{border-color:var(--green);background:var(--green-dim)}
+.opt-letter{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;transition:all .18s;font-family:'DM Mono',monospace}
+.option.selected .opt-letter{background:var(--purple);border-color:var(--purple);color:#fff}
+.option.correct .opt-letter{background:var(--green);border-color:var(--green);color:#07090F}
+.option.wrong .opt-letter{background:var(--red);border-color:var(--red);color:#fff}
+.option.correct-highlight .opt-letter{background:var(--green);border-color:var(--green);color:#07090F}
+.opt-text{font-size:14px;color:var(--text);line-height:1.55;padding-top:5px}
+.opt-icon{margin-left:auto;font-size:18px;padding-top:7px;flex-shrink:0;opacity:0;transition:opacity .2s}
+.option.correct .opt-icon,.option.correct-highlight .opt-icon{opacity:1;color:var(--green)}
+.option.wrong .opt-icon{opacity:1;color:var(--red)}
+
+.q-actions{display:flex;justify-content:space-between;align-items:center}
+.btn-skip{background:transparent;border:1px solid var(--border);border-radius:var(--r-sm);padding:10px 20px;font-size:13px;color:var(--text3);cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}
+.btn-skip:hover{border-color:var(--border2);color:var(--text2)}
+.btn-next{background:var(--teal);border:none;border-radius:var(--r-sm);padding:10px 28px;font-size:14px;font-weight:700;color:#07090F;cursor:pointer;display:flex;align-items:center;gap:8px;transition:opacity .2s;font-family:'DM Sans',sans-serif}
+.btn-next:hover{opacity:.9}
+.btn-next:disabled{opacity:.4;cursor:not-allowed}
+.btn-finish{background:var(--amber);border:none;border-radius:var(--r-sm);padding:10px 28px;font-size:14px;font-weight:700;color:#07090F;cursor:pointer;display:flex;align-items:center;gap:8px;font-family:'DM Sans',sans-serif;transition:opacity .2s}
+.btn-finish:hover{opacity:.9}
+
+/* AI hint panel */
+.ai-hint-panel{width:280px;border-left:1px solid var(--border);display:flex;flex-direction:column;background:var(--bg2)}
+.ai-hint-head{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.ai-hint-av{width:30px;height:30px;border-radius:50%;background:var(--purple-dim);border:1px solid rgba(129,140,248,.3);display:flex;align-items:center;justify-content:center}
+.ai-hint-av i{color:var(--purple);font-size:14px}
+.ai-hint-title{font-size:13px;font-weight:600;color:var(--text)}
+.ai-hint-sub{font-size:11px;color:var(--text3)}
+.hint-toggle{margin-left:auto;background:var(--purple-dim);border:1px solid rgba(129,140,248,.3);border-radius:20px;padding:3px 10px;font-size:10px;color:var(--purple);cursor:pointer;font-weight:500}
+.hint-body{flex:1;padding:16px;overflow-y:auto}
+.hint-msg{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px;font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:10px}
+.hint-msg.ai-msg{border-left:2px solid var(--purple)}
+.hint-ask{padding:12px;border-top:1px solid var(--border);display:flex;gap:8px}
+.hint-inp{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);padding:8px 10px;font-size:12px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none}
+.hint-inp:focus{border-color:rgba(129,140,248,.3)}
+.hint-inp::placeholder{color:var(--text3)}
+.hint-send{width:32px;height:32px;border-radius:var(--r-sm);background:var(--purple);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+.hint-send i{color:#fff;font-size:14px}
+
+/* ══════════════════════════════════════
+   SCREEN 3 — RESULTS
+══════════════════════════════════════ */
+#resultScreen{background:var(--bg);padding:40px 20px;align-items:center}
+.result-wrap{width:100%;max-width:680px}
+.result-header{text-align:center;margin-bottom:32px}
+.result-emoji{font-size:48px;margin-bottom:12px}
+.result-title{font-size:32px;font-weight:700;color:var(--text);margin-bottom:6px;font-family:'DM Serif Display',serif;letter-spacing:-.5px}
+.result-sub{font-size:15px;color:var(--text2)}
+
+.score-ring{display:flex;justify-content:center;margin-bottom:28px}
+.ring-wrap{position:relative;width:160px;height:160px}
+.ring-wrap svg{transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:rgba(255,255,255,.06);stroke-width:10}
+.ring-fill{fill:none;stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset 1.5s cubic-bezier(.4,0,.2,1)}
+.ring-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-val{font-size:36px;font-weight:800;color:var(--text);font-family:'DM Serif Display',serif;line-height:1}
+.ring-label{font-size:12px;color:var(--text3);margin-top:3px}
+
+.result-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.rs-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px;text-align:center}
+.rs-icon{width:36px;height:36px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;margin:0 auto 10px}
+.rs-val{font-size:22px;font-weight:700;color:var(--text);font-family:'DM Serif Display',serif}
+.rs-label{font-size:11px;color:var(--text3);margin-top:3px}
+
+/* answers review */
+.answers-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:20px}
+.answers-head{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.answers-title{font-size:14px;font-weight:600;color:var(--text)}
+.filter-tabs{display:flex;gap:4px}
+.ftab{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;border:1px solid transparent}
+.ftab.all{color:var(--text2);border-color:var(--border)}
+.ftab.all.active{background:var(--bg3);color:var(--text);border-color:var(--border2)}
+.ftab.correct-tab{color:var(--green);border-color:rgba(52,211,153,.2)}
+.ftab.correct-tab.active{background:var(--green-dim)}
+.ftab.wrong-tab{color:var(--red);border-color:rgba(248,113,113,.2)}
+.ftab.wrong-tab.active{background:var(--red-dim)}
+
+.answer-item{border-bottom:1px solid var(--border);overflow:hidden}
+.answer-item:last-child{border-bottom:none}
+.answer-row{display:flex;align-items:center;gap:14px;padding:14px 20px;cursor:pointer;transition:background .15s}
+.answer-row:hover{background:var(--bg3)}
+.ans-num{font-size:12px;font-family:'DM Mono',monospace;color:var(--text3);width:20px;flex-shrink:0}
+.ans-q{flex:1;font-size:13px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ans-badge{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;flex-shrink:0}
+.ans-badge.c{background:var(--green-dim);color:var(--green)}
+.ans-badge.w{background:var(--red-dim);color:var(--red)}
+.ans-badge.s{background:var(--amber-dim);color:var(--amber)}
+.ans-expand{font-size:16px;color:var(--text3);transition:transform .2s;flex-shrink:0}
+.answer-detail{display:none;padding:14px 20px 20px;background:var(--bg3);border-top:1px solid var(--border)}
+.answer-detail.open{display:block}
+.detail-q{font-size:14px;color:var(--text);line-height:1.6;margin-bottom:16px;font-weight:500}
+.detail-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.d-opt{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--r-sm);border:1px solid var(--border);font-size:13px}
+.d-opt.correct{border-color:var(--green);background:var(--green-dim);color:var(--text)}
+.d-opt.wrong-pick{border-color:var(--red);background:var(--red-dim);color:var(--text)}
+.d-opt.normal{color:var(--text2)}
+.d-opt-letter{font-size:12px;font-weight:700;width:24px;font-family:'DM Mono',monospace}
+.d-opt-icon{margin-left:auto;font-size:16px}
+.explanation{background:var(--bg4);border:1px solid var(--border);border-radius:var(--r-sm);padding:14px;display:flex;gap:10px}
+.explanation i{color:var(--purple);font-size:18px;flex-shrink:0;margin-top:1px}
+.explanation-text{font-size:13px;color:var(--text2);line-height:1.65}
+
+.result-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-retry{background:var(--teal);border:none;border-radius:var(--r);padding:12px 28px;font-size:14px;font-weight:700;color:#07090F;cursor:pointer;display:inline-flex;align-items:center;gap:8px;font-family:'DM Sans',sans-serif;transition:opacity .2s}
+.btn-retry:hover{opacity:.9}
+.btn-dashboard{background:transparent;border:1px solid var(--border2);border-radius:var(--r);padding:12px 28px;font-size:14px;color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
+.btn-dashboard:hover{border-color:var(--border2);background:var(--bg2)}
+.btn-ai-review{background:var(--purple-dim);border:1px solid rgba(129,140,248,.3);border-radius:var(--r);padding:12px 28px;font-size:14px;color:var(--purple);cursor:pointer;display:inline-flex;align-items:center;gap:8px;font-family:'DM Sans',sans-serif;transition:all .2s;font-weight:600}
+.btn-ai-review:hover{background:rgba(129,140,248,.18)}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════
+     SCREEN 1: START
+══════════════════════════════ -->
+<div class="screen active" id="startScreen">
+  <div class="start-wrap">
+    <div class="back-link" onclick="goBack()">
+      <i class="ti ti-arrow-left"></i> Mavzularga qaytish
+    </div>
+    <div class="start-card">
+      <div class="start-header">
+        <div class="start-fan">
+          <div class="fan-icon"><i class="ti ti-math-function"></i></div>
+          <div>
+            <div class="fan-label">Fan · Mavzu</div>
+            <div class="fan-name">Matematika — Algebra · Tenglamalar</div>
+          </div>
+        </div>
+        <div class="start-title">Mock Test #7</div>
+        <div class="start-sub">Bu test DTM formatida tuzilgan. Har bir savol uchun 4 variant beriladi — faqat bittasi to'g'ri. Vaqt tugashidan oldin barcha savollarga javob bering.</div>
+      </div>
+
+      <div class="start-meta">
+        <div class="meta-item">
+          <div class="meta-icon" style="background:var(--teal-dim);border:1px solid var(--teal-border)"><i class="ti ti-list-numbers" style="color:var(--teal);font-size:18px"></i></div>
+          <div class="meta-val">10</div>
+          <div class="meta-label">Savol</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-icon" style="background:var(--amber-dim);border:1px solid rgba(251,191,36,.3)"><i class="ti ti-clock" style="color:var(--amber);font-size:18px"></i></div>
+          <div class="meta-val">15:00</div>
+          <div class="meta-label">Vaqt</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-icon" style="background:var(--purple-dim);border:1px solid rgba(129,140,248,.3)"><i class="ti ti-star" style="color:var(--purple);font-size:18px"></i></div>
+          <div class="meta-val">O'rta</div>
+          <div class="meta-label">Qiyinlik</div>
+        </div>
+      </div>
+
+      <div class="start-rules">
+        <div class="rules-title">Qoidalar</div>
+        <div class="rule"><i class="ti ti-check"></i>Har bir savolga faqat bitta javob belgilash mumkin</div>
+        <div class="rule"><i class="ti ti-check"></i>Savollarni o'tkazib yuborish mumkin — oxirida qaytib kelasiz</div>
+        <div class="rule"><i class="ti ti-check"></i>Vaqt tugasa test avtomatik yakunlanadi</div>
+        <div class="rule"><i class="ti ti-check"></i>AI tutor yordamida maslahat so'rash mumkin</div>
+        <div class="rule"><i class="ti ti-check"></i>Test natijasi va xato tahlili darhol ko'rsatiladi</div>
+      </div>
+
+      <div class="start-actions">
+        <button class="btn-cancel" onclick="goBack()">Bekor qilish</button>
+        <button class="btn-start" onclick="startTest()">
+          <i class="ti ti-player-play"></i> Testni boshlash
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     SCREEN 2: TEST
+══════════════════════════════ -->
+<div class="screen" id="testScreen">
+  <div class="test-topbar">
+    <div class="test-info">
+      <div class="test-fan-badge">
+        <i class="ti ti-math-function" style="font-size:14px"></i>
+        Matematika · Algebra
+      </div>
+      <div class="test-progress-text">
+        Savol <span id="qNum">1</span> / <span>10</span>
+      </div>
+    </div>
+    <div class="timer-wrap">
+      <div class="timer-display normal" id="timerDisplay">
+        <i class="ti ti-clock" style="font-size:15px"></i>
+        <span id="timerText">15:00</span>
+      </div>
+      <button class="quit-btn" onclick="confirmQuit()">Chiqish</button>
+    </div>
+  </div>
+
+  <!-- Progress dots -->
+  <div class="dots-wrap" id="dotsWrap"></div>
+
+  <div class="test-body">
+    <!-- Question area -->
+    <div class="question-area">
+      <div class="q-num-label">
+        Savol <span id="qNumBadge">1 / 10</span>
+      </div>
+      <div class="q-text" id="qText"></div>
+      <div class="options" id="optionsArea"></div>
+      <div class="q-actions">
+        <button class="btn-skip" onclick="skipQuestion()">
+          <i class="ti ti-corner-down-right" style="font-size:14px;margin-right:4px"></i>O'tkazib yuborish
+        </button>
+        <div style="display:flex;gap:10px">
+          <button class="btn-next" id="nextBtn" onclick="nextQuestion()" disabled>
+            Keyingisi <i class="ti ti-arrow-right"></i>
+          </button>
+          <button class="btn-finish" id="finishBtn" onclick="finishTest()" style="display:none">
+            <i class="ti ti-flag-check"></i> Yakunlash
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI hint panel -->
+    <div class="ai-hint-panel">
+      <div class="ai-hint-head">
+        <div class="ai-hint-av"><i class="ti ti-brain"></i></div>
+        <div>
+          <div class="ai-hint-title">AI Tutor</div>
+          <div class="ai-hint-sub">Yordam so'rang</div>
+        </div>
+        <div class="hint-toggle" id="hintToggle" onclick="toggleHint()">Ko'rsat</div>
+      </div>
+      <div class="hint-body" id="hintBody">
+        <div class="hint-msg ai-msg">Salom! Savolda qiyinchilik bo'lsa yordam beraman. Tushuntirib berishimni xohlaysizmi?</div>
+        <div class="hint-msg" id="hintContent" style="display:none"></div>
+      </div>
+      <div class="hint-ask">
+        <input class="hint-inp" id="hintInp" placeholder="Savol bering..." onkeydown="if(event.key==='Enter')askHint()">
+        <button class="hint-send" onclick="askHint()"><i class="ti ti-send"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     SCREEN 3: RESULT
+══════════════════════════════ -->
+<div class="screen" id="resultScreen">
+  <div class="result-wrap">
+
+    <div class="result-header">
+      <div class="result-emoji" id="resultEmoji">🎉</div>
+      <div class="result-title" id="resultTitle">Ajoyib natija!</div>
+      <div class="result-sub" id="resultSub">Matematika — Algebra testini yakunladingiz</div>
+    </div>
+
+    <!-- Score ring -->
+    <div class="score-ring">
+      <div class="ring-wrap">
+        <svg width="160" height="160" viewBox="0 0 160 160">
+          <circle class="ring-bg" cx="80" cy="80" r="65"></circle>
+          <circle class="ring-fill" id="ringFill" cx="80" cy="80" r="65"
+            stroke-dasharray="408.4" stroke-dashoffset="408.4"></circle>
+        </svg>
+        <div class="ring-text">
+          <div class="ring-val" id="ringScore">0/10</div>
+          <div class="ring-label" id="ringPct">0%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Result stats -->
+    <div class="result-stats">
+      <div class="rs-card">
+        <div class="rs-icon" style="background:var(--green-dim);border:1px solid rgba(52,211,153,.3)"><i class="ti ti-check" style="color:var(--green);font-size:18px"></i></div>
+        <div class="rs-val" id="rsCorrect" style="color:var(--green)">0</div>
+        <div class="rs-label">To'g'ri</div>
+      </div>
+      <div class="rs-card">
+        <div class="rs-icon" style="background:var(--red-dim);border:1px solid rgba(248,113,113,.3)"><i class="ti ti-x" style="color:var(--red);font-size:18px"></i></div>
+        <div class="rs-val" id="rsWrong" style="color:var(--red)">0</div>
+        <div class="rs-label">Noto'g'ri</div>
+      </div>
+      <div class="rs-card">
+        <div class="rs-icon" style="background:var(--amber-dim);border:1px solid rgba(251,191,36,.3)"><i class="ti ti-minus" style="color:var(--amber);font-size:18px"></i></div>
+        <div class="rs-val" id="rsSkipped" style="color:var(--amber)">0</div>
+        <div class="rs-label">O'tkazilgan</div>
+      </div>
+      <div class="rs-card">
+        <div class="rs-icon" style="background:var(--teal-dim);border:1px solid var(--teal-border)"><i class="ti ti-clock" style="color:var(--teal);font-size:18px"></i></div>
+        <div class="rs-val" id="rsTime" style="color:var(--teal)">0:00</div>
+        <div class="rs-label">Sarflangan vaqt</div>
+      </div>
+    </div>
+
+    <!-- Answers review -->
+    <div class="answers-card">
+      <div class="answers-head">
+        <div class="answers-title">Javoblar tahlili</div>
+        <div class="filter-tabs">
+          <div class="ftab all active" onclick="filterAnswers('all',this)">Barchasi</div>
+          <div class="ftab correct-tab" onclick="filterAnswers('correct',this)">To'g'ri</div>
+          <div class="ftab wrong-tab" onclick="filterAnswers('wrong',this)">Noto'g'ri</div>
+        </div>
+      </div>
+      <div id="answersBody"></div>
+    </div>
+
+    <div class="result-actions">
+      <button class="btn-retry" onclick="retryTest()">
+        <i class="ti ti-refresh"></i> Qayta urinish
+      </button>
+      <button class="btn-ai-review" onclick="aiReview()">
+        <i class="ti ti-brain"></i> AI tahlil
+      </button>
+      <button class="btn-dashboard" onclick="toDashboard()">
+        <i class="ti ti-layout-dashboard"></i> Dashboard
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────
+const questions = [
+  {
+    q: "Agar x² − 5x + 6 = 0 bo'lsa, x ning qiymatlari nechaga teng?",
+    opts: ["x = 1 va x = 6","x = −2 va x = −3","x = 2 va x = 3","x = 0 va x = 5"],
+    correct: 2,
+    explanation: "Tenglamani ko'paytmalarga ajratamiz: x² − 5x + 6 = (x−2)(x−3) = 0. Demak x = 2 yoki x = 3. DTM da bu usul — ko'paytmalarga ajratish — eng tez yechim."
+  },
+  {
+    q: "3x + 7 = 22 tenglamasining yechimi qaysi?",
+    opts: ["x = 3","x = 4","x = 5","x = 6"],
+    correct: 2,
+    explanation: "3x = 22 − 7 = 15, x = 15 ÷ 3 = 5. Chiziqli tenglamada: birinchi erkin hadni o'ng tomonga o'tkazamiz, keyin x koeffitsientiga bo'lamiz."
+  },
+  {
+    q: "Ikki sonning EKUB si 12, EKUK si 60 bo'lsa, bu sonlarning ko'paytmasi qancha?",
+    opts: ["480","720","360","960"],
+    correct: 1,
+    explanation: "Formuladan foydalanamiz: a × b = EKUB(a,b) × EKUK(a,b) = 12 × 60 = 720. Bu formula DTM da tez-tez qo'llaniladi — yodlab oling!"
+  },
+  {
+    q: "Arifmetik progressiyada a₁ = 3, d = 4 bo'lsa, a₅ nechaga teng?",
+    opts: ["15","17","19","21"],
+    correct: 2,
+    explanation: "aₙ = a₁ + (n−1)·d formulasidan: a₅ = 3 + (5−1)·4 = 3 + 16 = 19."
+  },
+  {
+    q: "f(x) = 2x² − 3x + 1 funksiyasining x = 2 dagi qiymati qancha?",
+    opts: ["2","3","4","5"],
+    correct: 1,
+    explanation: "f(2) = 2(2)² − 3(2) + 1 = 2·4 − 6 + 1 = 8 − 6 + 1 = 3. Funksiya qiymatini topish uchun x o'rniga berilgan sonni qo'yamiz."
+  },
+  {
+    q: "|2x − 6| = 8 tenglamasining yechimlar yig'indisi nechaga teng?",
+    opts: ["6","8","10","12"],
+    correct: 0,
+    explanation: "Modul tenglamasi: 2x−6 = 8 → x = 7 yoki 2x−6 = −8 → x = −1. Yig'indi: 7 + (−1) = 6."
+  },
+  {
+    q: "Geometric progressiyada b₁ = 2, q = 3 bo'lsa, b₄ nechaga teng?",
+    opts: ["18","36","54","162"],
+    correct: 2,
+    explanation: "bₙ = b₁ · q^(n−1) formulasidan: b₄ = 2 · 3³ = 2 · 27 = 54."
+  },
+  {
+    q: "Agar log₂(x) = 5 bo'lsa, x nechaga teng?",
+    opts: ["10","16","32","64"],
+    correct: 2,
+    explanation: "log₂(x) = 5 degani 2⁵ = x demakdir. 2⁵ = 32. Logarifm ta'rifi: logₐ(b) = c ↔ aᶜ = b."
+  },
+  {
+    q: "Kvadrat tenglamaning diskriminanti D = 0 bo'lsa, bu nima anglatadi?",
+    opts: ["Yechimi yo'q","Bitta yechim bor","Ikkita yechim bor","Uchta yechim bor"],
+    correct: 1,
+    explanation: "D = b² − 4ac. D = 0 → bitta (ikki marta takrorlanuvchi) yechim: x = −b/(2a). D > 0 → 2 ta yechim. D < 0 → haqiqiy yechim yo'q."
+  },
+  {
+    q: "sin(30°) + cos(60°) + tan(45°) = ?",
+    opts: ["1","1.5","2","2.5"],
+    correct: 2,
+    explanation: "sin(30°) = 0.5, cos(60°) = 0.5, tan(45°) = 1. Yig'indi: 0.5 + 0.5 + 1 = 2. Bu qiymatlarni yodlab oling — DTM da har doim keladi!"
+  }
+];
+
+const hintReplies = [
+  "Bu savolda diskriminant formulasini qo'llang: D = b² − 4ac.",
+  "Avval tengsizlikni sodda ko'rinishga keltiring, keyin yechim toping.",
+  "DTM da bu turdagi savollarni ko'paytmalarga ajratish usuli bilan tez yeching.",
+  "Formulani yodlashdan ko'ra — uning nima uchun ishlashini tushuning.",
+  "Javob variantlaridan birini sinovdan o'tkazing — ba'zan bu tezroq.",
+];
+
+// ── STATE ─────────────────────────────────────────────────────────────
+let current = 0;
+let answers = new Array(questions.length).fill(null); // null=unanswered, -1=skipped
+let timerInterval = null;
+let secondsLeft = 900;
+let startTime = null;
+let hintVisible = false;
+let hintIdx = 0;
+
+// ── SCREEN TRANSITIONS ────────────────────────────────────────────────
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function goBack(){ history.back(); }
+function toDashboard(){ showScreen('startScreen'); }
+
+// ── START TEST ────────────────────────────────────────────────────────
+function startTest(){
+  current = 0;
+  answers = new Array(questions.length).fill(null);
+  secondsLeft = 900;
+  startTime = Date.now();
+  buildDots();
+  renderQuestion();
+  startTimer();
+  showScreen('testScreen');
+}
+
+// ── DOTS ──────────────────────────────────────────────────────────────
+function buildDots(){
+  const wrap = document.getElementById('dotsWrap');
+  wrap.innerHTML = '';
+  questions.forEach((_,i)=>{
+    const d = document.createElement('div');
+    d.className = 'dot';
+    d.id = 'dot'+i;
+    d.onclick = ()=>jumpTo(i);
+    wrap.appendChild(d);
+  });
+  updateDots();
+}
+function updateDots(){
+  questions.forEach((_,i)=>{
+    const d = document.getElementById('dot'+i);
+    d.className = 'dot';
+    if(i === current) d.classList.add('current');
+    else if(answers[i] === null) {}
+    else if(answers[i] === -1) d.classList.add('skipped');
+    else d.classList.add('answered');
+  });
+}
+function jumpTo(i){
+  current = i;
+  renderQuestion();
+  updateDots();
+}
+
+// ── RENDER QUESTION ───────────────────────────────────────────────────
+function renderQuestion(){
+  const q = questions[current];
+  document.getElementById('qNum').textContent = current+1;
+  document.getElementById('qNumBadge').textContent = (current+1)+' / '+questions.length;
+  document.getElementById('qText').textContent = q.q;
+  document.getElementById('nextBtn').disabled = answers[current] === null;
+  document.getElementById('nextBtn').style.display = current < questions.length-1 ? 'flex' : 'none';
+  document.getElementById('finishBtn').style.display = current === questions.length-1 ? 'flex' : 'none';
+
+  const area = document.getElementById('optionsArea');
+  area.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.opts.forEach((opt,i)=>{
+    const el = document.createElement('div');
+    el.className = 'option';
+    if(answers[current] === i) el.classList.add('selected');
+    el.innerHTML = `<div class="opt-letter">${letters[i]}</div><div class="opt-text">${opt}</div><i class="ti ti-check opt-icon"></i>`;
+    el.onclick = ()=>selectOption(i);
+    area.appendChild(el);
+  });
+
+  // reset hint
+  document.getElementById('hintContent').style.display = 'none';
+  document.getElementById('hintToggle').textContent = 'Ko\'rsat';
+  hintVisible = false;
+}
+
+// ── SELECT OPTION ─────────────────────────────────────────────────────
+function selectOption(i){
+  answers[current] = i;
+  document.getElementById('nextBtn').disabled = false;
+  renderQuestion();
+  updateDots();
+}
+
+// ── NAVIGATION ────────────────────────────────────────────────────────
+function skipQuestion(){
+  answers[current] = -1;
+  if(current < questions.length-1){
+    current++;
+    renderQuestion();
+    updateDots();
+  }
+}
+function nextQuestion(){
+  if(current < questions.length-1){
+    current++;
+    renderQuestion();
+    updateDots();
+  }
+}
+
+// ── TIMER ─────────────────────────────────────────────────────────────
+function startTimer(){
+  clearInterval(timerInterval);
+  timerInterval = setInterval(()=>{
+    secondsLeft--;
+    updateTimerDisplay();
+    if(secondsLeft <= 0){
+      clearInterval(timerInterval);
+      finishTest();
+    }
+  },1000);
+}
+function updateTimerDisplay(){
+  const m = Math.floor(secondsLeft/60);
+  const s = secondsLeft%60;
+  document.getElementById('timerText').textContent = m+':'+(s<10?'0':'')+s;
+  const td = document.getElementById('timerDisplay');
+  td.className = 'timer-display';
+  if(secondsLeft <= 60) td.classList.add('danger');
+  else if(secondsLeft <= 180) td.classList.add('warning');
+  else td.classList.add('normal');
+}
+function confirmQuit(){
+  if(confirm('Testni yakunlashni xohlaysizmi?')) finishTest();
+}
+
+// ── FINISH TEST ───────────────────────────────────────────────────────
+function finishTest(){
+  clearInterval(timerInterval);
+  const elapsed = Math.floor((Date.now()-startTime)/1000);
+  buildResult(elapsed);
+  showScreen('resultScreen');
+}
+
+// ── BUILD RESULT ──────────────────────────────────────────────────────
+function buildResult(elapsed){
+  let correct=0, wrong=0, skipped=0;
+  questions.forEach((q,i)=>{
+    if(answers[i]===-1||answers[i]===null) skipped++;
+    else if(answers[i]===q.correct) correct++;
+    else wrong++;
+  });
+
+  const pct = Math.round(correct/questions.length*100);
+  const em = pct>=80?'🏆':pct>=60?'😊':pct>=40?'💪':'📚';
+  const title = pct>=80?'Ajoyib natija!':pct>=60?'Yaxshi natija!':pct>=40?'Davom eting!':'Ko\'proq mashq qiling!';
+
+  document.getElementById('resultEmoji').textContent = em;
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('rsCorrect').textContent = correct;
+  document.getElementById('rsWrong').textContent = wrong;
+  document.getElementById('rsSkipped').textContent = skipped;
+  const em2 = Math.floor(elapsed/60);
+  const es = elapsed%60;
+  document.getElementById('rsTime').textContent = em2+':'+(es<10?'0':'')+es;
+
+  // Ring animation
+  document.getElementById('ringScore').textContent = correct+'/10';
+  document.getElementById('ringPct').textContent = pct+'%';
+  const ring = document.getElementById('ringFill');
+  const circumference = 408.4;
+  const color = pct>=80?'#34D399':pct>=60?'#FBBF24':'#F87171';
+  ring.style.stroke = color;
+  setTimeout(()=>{
+    ring.style.strokeDashoffset = circumference*(1-pct/100);
+  },100);
+
+  buildAnswersBody('all');
+}
+
+function buildAnswersBody(filter){
+  const body = document.getElementById('answersBody');
+  body.innerHTML='';
+  const letters=['A','B','C','D'];
+  questions.forEach((q,i)=>{
+    const isCorrect = answers[i]===q.correct;
+    const isSkipped = answers[i]===-1||answers[i]===null;
+    if(filter==='correct'&&!isCorrect) return;
+    if(filter==='wrong'&&(isCorrect||isSkipped)) return;
+
+    const status = isSkipped?'s':isCorrect?'c':'w';
+    const label = isSkipped?'O\'tkazildi':isCorrect?'To\'g\'ri':'Noto\'g\'ri';
+
+    const item = document.createElement('div');
+    item.className='answer-item';
+    item.innerHTML=`
+      <div class="answer-row" onclick="toggleDetail(this)">
+        <div class="ans-num">${i+1}</div>
+        <div class="ans-q">${q.q}</div>
+        <div class="ans-badge ${status}">
+          <i class="ti ti-${status==='c'?'check':status==='w'?'x':'minus'}"></i> ${label}
+        </div>
+        <i class="ti ti-chevron-down ans-expand"></i>
+      </div>
+      <div class="answer-detail">
+        <div class="detail-q">${q.q}</div>
+        <div class="detail-opts">
+          ${q.opts.map((opt,j)=>{
+            let cls='normal';
+            if(j===q.correct) cls='correct';
+            else if(j===answers[i]&&answers[i]!==q.correct) cls='wrong-pick';
+            const icon = j===q.correct?'<i class="ti ti-check d-opt-icon" style="color:var(--green)"></i>':
+              (j===answers[i]&&answers[i]!==q.correct)?'<i class="ti ti-x d-opt-icon" style="color:var(--red)"></i>':'';
+            return `<div class="d-opt ${cls}"><div class="d-opt-letter">${letters[j]}</div>${opt}${icon}</div>`;
+          }).join('')}
+        </div>
+        <div class="explanation">
+          <i class="ti ti-bulb"></i>
+          <div class="explanation-text"><strong>Izoh:</strong> ${q.explanation}</div>
+        </div>
+      </div>
+    `;
+    body.appendChild(item);
+  });
+}
+
+function toggleDetail(row){
+  const detail = row.nextElementSibling;
+  const icon = row.querySelector('.ans-expand');
+  detail.classList.toggle('open');
+  icon.style.transform = detail.classList.contains('open')?'rotate(180deg)':'';
+}
+
+function filterAnswers(type, el){
+  document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  buildAnswersBody(type);
+}
+
+// ── AI HINT ───────────────────────────────────────────────────────────
+function toggleHint(){
+  const content = document.getElementById('hintContent');
+  const toggle = document.getElementById('hintToggle');
+  hintVisible = !hintVisible;
+  if(hintVisible){
+    const q = questions[current];
+    content.textContent = q.explanation.replace('DTM da','💡 DTM da');
+    content.style.display='block';
+    toggle.textContent='Yashirish';
+  } else {
+    content.style.display='none';
+    toggle.textContent='Ko\'rsat';
+  }
+}
+
+function askHint(){
+  const inp = document.getElementById('hintInp');
+  const val = inp.value.trim();
+  if(!val) return;
+  const body = document.getElementById('hintBody');
+  const userMsg = document.createElement('div');
+  userMsg.className='hint-msg';
+  userMsg.textContent=val;
+  body.appendChild(userMsg);
+  inp.value='';
+  setTimeout(()=>{
+    const aiMsg = document.createElement('div');
+    aiMsg.className='hint-msg ai-msg';
+    aiMsg.textContent = hintReplies[hintIdx%hintReplies.length];
+    hintIdx++;
+    body.appendChild(aiMsg);
+    body.scrollTop=body.scrollHeight;
+  },600);
+}
+
+// ── RESULT ACTIONS ────────────────────────────────────────────────────
+function retryTest(){ startTest(); }
+function aiReview(){ alert('AI tahlil: Eng ko\'p xato — Trigonometriya va Logarifm mavzularida. Bu mavzularni takrorlashni tavsiya qilaman.'); }
+</script>
+</body>
+</html>

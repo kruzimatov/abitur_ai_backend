@@ -10,7 +10,7 @@ class Subject extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'icon', 'description'];
+    protected $fillable = ['name', 'description'];
 
     public function topics(): HasMany
     {

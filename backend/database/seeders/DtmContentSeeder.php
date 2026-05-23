@@ -16,7 +16,7 @@ class DtmContentSeeder extends Seeder
         foreach ($data['subjects'] as $subjectData) {
             $subject = Subject::firstOrCreate(
                 ['name' => $subjectData['name']],
-                ['icon' => $subjectData['icon'], 'description' => $subjectData['description']]
+                ['description' => $subjectData['description']]
             );
 
             foreach ($subjectData['topics'] as $topicData) {

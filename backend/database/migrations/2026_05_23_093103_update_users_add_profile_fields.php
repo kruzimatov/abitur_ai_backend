@@ -9,8 +9,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('surname')->nullable()->after('name');
-            $table->enum('gender', ['male', 'female'])->nullable()->after('surname');
+            $table->string('lastname')->nullable()->after('firstname');
+            $table->enum('gender', ['male', 'female'])->nullable()->after('lastname');
             $table->foreignId('field_id')->nullable()->constrained()->nullOnDelete()->after('role');
             $table->foreignId('subject_id')->nullable()->constrained()->nullOnDelete()->after('field_id');
         });
@@ -21,7 +21,7 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->dropForeign(['field_id']);
             $table->dropForeign(['subject_id']);
-            $table->dropColumn(['surname', 'gender', 'field_id', 'subject_id']);
+            $table->dropColumn(['lastname', 'gender', 'field_id', 'subject_id']);
         });
     }
 };

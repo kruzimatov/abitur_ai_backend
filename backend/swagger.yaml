@@ -20,8 +20,8 @@ components:
       type: object
       properties:
         id: { type: integer }
-        name: { type: string }
-        surname: { type: string }
+        firstname: { type: string }
+        lastname: { type: string }
         email: { type: string }
         gender: { type: string, enum: [male, female] }
         role: { type: string, enum: [student, teacher, admin] }
@@ -64,14 +64,12 @@ components:
       properties:
         id: { type: integer }
         name: { type: string }
-        icon: { type: string, nullable: true }
 
     Subject:
       type: object
       properties:
         id: { type: integer }
         name: { type: string }
-        icon: { type: string, nullable: true }
         description: { type: string, nullable: true }
         topics_count: { type: integer }
         created_at: { type: string, format: date-time }
@@ -208,19 +206,19 @@ paths:
                 - id: 1
                   name: "Amaliy matematika va kompyuter tahlili"
                   subjects:
-                    - { id: 2, name: "Amaliy matematika", icon: "🔢" }
-                    - { id: 3, name: "Fizika", icon: "⚡" }
-                    - { id: 6, name: "Ona tili", icon: "📖" }
-                    - { id: 7, name: "O'zbekiston Tarixi", icon: "🏛️" }
-                    - { id: 1, name: "Matematika", icon: "📐" }
+                    - { id: 2, name: "Amaliy matematika" }
+                    - { id: 3, name: "Fizika" }
+                    - { id: 6, name: "Ona tili" }
+                    - { id: 7, name: "O'zbekiston Tarixi" }
+                    - { id: 1, name: "Matematika" }
                 - id: 3
                   name: "Umumiy davolash"
                   subjects:
-                    - { id: 4, name: "Kimyo", icon: "🧪" }
-                    - { id: 5, name: "Biologiya", icon: "🧬" }
-                    - { id: 6, name: "Ona tili", icon: "📖" }
-                    - { id: 7, name: "O'zbekiston Tarixi", icon: "🏛️" }
-                    - { id: 1, name: "Matematika", icon: "📐" }
+                    - { id: 4, name: "Kimyo" }
+                    - { id: 5, name: "Biologiya" }
+                    - { id: 6, name: "Ona tili" }
+                    - { id: 7, name: "O'zbekiston Tarixi" }
+                    - { id: 1, name: "Matematika" }
               schema:
                 type: array
                 items: { $ref: '#/components/schemas/FieldWithSubjects' }
@@ -258,10 +256,10 @@ paths:
           application/json:
             schema:
               type: object
-              required: [name, surname, email, password, password_confirmation, gender, role]
+              required: [firstname, lastname, email, password, password_confirmation, gender, role]
               properties:
-                name: { type: string, example: "Ali" }
-                surname: { type: string, example: "Valiyev" }
+                firstname: { type: string, example: "Ali" }
+                lastname: { type: string, example: "Valiyev" }
                 email: { type: string, example: "ali@example.com" }
                 password: { type: string, minLength: 6, example: "password123" }
                 password_confirmation: { type: string, example: "password123" }
@@ -273,8 +271,8 @@ paths:
               student:
                 summary: Student registration
                 value:
-                  name: "Ali"
-                  surname: "Valiyev"
+                  firstname: "Ali"
+                  lastname: "Valiyev"
                   email: "ali@example.com"
                   password: "password123"
                   password_confirmation: "password123"
@@ -284,8 +282,8 @@ paths:
               teacher:
                 summary: Teacher registration
                 value:
-                  name: "Malika"
-                  surname: "Karimova"
+                  firstname: "Malika"
+                  lastname: "Karimova"
                   email: "malika@example.com"
                   password: "password123"
                   password_confirmation: "password123"
@@ -442,7 +440,6 @@ paths:
               required: [name]
               properties:
                 name: { type: string, example: "Informatika" }
-                icon: { type: string, example: "💻" }
                 description: { type: string, example: "DTM informatika fani" }
       responses:
         '201':
@@ -472,7 +469,6 @@ paths:
               type: object
               properties:
                 name: { type: string }
-                icon: { type: string }
                 description: { type: string }
       responses:
         '200':

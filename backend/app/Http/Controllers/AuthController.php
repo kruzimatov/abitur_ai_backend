@@ -13,8 +13,8 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $rules = [
-            'name' => 'required|string|max:255',
-            'surname' => 'required|string|max:255',
+            'firstname' => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
             'gender' => 'required|in:male,female',
@@ -32,8 +32,8 @@ class AuthController extends Controller
         $validated = $request->validate($rules);
 
         $user = User::create([
-            'name' => $validated['name'],
-            'surname' => $validated['surname'],
+            'firstname' => $validated['firstname'],
+            'lastname' => $validated['lastname'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'gender' => $validated['gender'],
