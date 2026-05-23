@@ -1,0 +1,302 @@
+{
+  "subjects": [
+    {
+      "name": "Matematika",
+      "icon": "📐",
+      "description": "DTM matematika fani bo'yicha tayyorgarlik materiallari",
+      "topics": [
+        {
+          "title": "Logarifmlar",
+          "order_num": 1,
+          "content": "Logarifm — bu daraja topish amali teskarisi. Agar a^x = b bo'lsa, x = log_a(b) deyiladi. Bu yerda a — asos (a > 0, a ≠ 1), b — argument (b > 0).\n\nLogarifmning asosiy xossalari:\n1. log_a(1) = 0, chunki a^0 = 1\n2. log_a(a) = 1, chunki a^1 = a\n3. log_a(b·c) = log_a(b) + log_a(c) — ko'paytmaning logarifmi\n4. log_a(b/c) = log_a(b) - log_a(c) — bo'linmaning logarifmi\n5. log_a(b^n) = n·log_a(b) — darajaning logarifmi\n6. log_a(b) = log_c(b) / log_c(a) — asosni almashtirish formulasi\n7. log_a(b) = 1 / log_b(a) — teskari logarifm\n\nNatural logarifm ln(x) = log_e(x) bo'lib, e ≈ 2.718.\nO'nlik logarifm lg(x) = log_10(x).\n\nLogarifmik tenglamalar va tengsizliklarni yechishda asosiy usullar:\n- Bir xil asosga keltirish\n- O'rniga qo'yish usuli\n- Logarifmning ta'rifi orqali yechish",
+          "questions": [
+            {
+              "question_text": "log_2(8) ning qiymati nechaga teng?",
+              "option_a": "2",
+              "option_b": "3",
+              "option_c": "4",
+              "option_d": "8",
+              "correct_answer": "B",
+              "explanation": "2^3 = 8, shuning uchun log_2(8) = 3"
+            },
+            {
+              "question_text": "log_5(1) ning qiymati qancha?",
+              "option_a": "0",
+              "option_b": "1",
+              "option_c": "5",
+              "option_d": "Aniqlanmagan",
+              "correct_answer": "A",
+              "explanation": "Har qanday a > 0, a ≠ 1 uchun log_a(1) = 0, chunki a^0 = 1"
+            },
+            {
+              "question_text": "log_3(9) + log_3(3) = ?",
+              "option_a": "2",
+              "option_b": "3",
+              "option_c": "4",
+              "option_d": "5",
+              "correct_answer": "B",
+              "explanation": "log_3(9) = 2, log_3(3) = 1, demak 2 + 1 = 3"
+            },
+            {
+              "question_text": "log_2(16) - log_2(4) = ?",
+              "option_a": "1",
+              "option_b": "2",
+              "option_c": "3",
+              "option_d": "4",
+              "correct_answer": "B",
+              "explanation": "log_2(16/4) = log_2(4) = 2"
+            },
+            {
+              "question_text": "Agar log_a(x) = 3 va a = 2 bo'lsa, x = ?",
+              "option_a": "6",
+              "option_b": "8",
+              "option_c": "9",
+              "option_d": "12",
+              "correct_answer": "B",
+              "explanation": "log_2(x) = 3, demak x = 2^3 = 8"
+            },
+            {
+              "question_text": "log_4(64) ning qiymati nechaga teng?",
+              "option_a": "2",
+              "option_b": "3",
+              "option_c": "4",
+              "option_d": "16",
+              "correct_answer": "B",
+              "explanation": "4^3 = 64, shuning uchun log_4(64) = 3"
+            },
+            {
+              "question_text": "lg(100) ning qiymati qancha? (lg = log_10)",
+              "option_a": "1",
+              "option_b": "2",
+              "option_c": "10",
+              "option_d": "100",
+              "correct_answer": "B",
+              "explanation": "10^2 = 100, shuning uchun lg(100) = 2"
+            },
+            {
+              "question_text": "log_2(32) = ?",
+              "option_a": "4",
+              "option_b": "5",
+              "option_c": "6",
+              "option_d": "16",
+              "correct_answer": "B",
+              "explanation": "2^5 = 32, shuning uchun log_2(32) = 5"
+            },
+            {
+              "question_text": "log_3(27) · log_27(3) = ?",
+              "option_a": "0",
+              "option_b": "1",
+              "option_c": "3",
+              "option_d": "9",
+              "correct_answer": "B",
+              "explanation": "log_a(b) · log_b(a) = 1 formulasi bo'yicha javob 1"
+            },
+            {
+              "question_text": "log_2(x) = 5 tenglamaning yechimi?",
+              "option_a": "10",
+              "option_b": "25",
+              "option_c": "32",
+              "option_d": "64",
+              "correct_answer": "C",
+              "explanation": "x = 2^5 = 32"
+            }
+          ]
+        },
+        {
+          "title": "Trigonometriya",
+          "order_num": 2,
+          "content": "Trigonometriya — burchaklar va ularning funksiyalarini o'rganuvchi matematika bo'limi.\n\nAsosiy trigonometrik funksiyalar:\n- sin(α) — sinus, qarshi katet / gipotenusa\n- cos(α) — kosinus, yondosh katet / gipotenusa\n- tg(α) — tangens, sin(α)/cos(α)\n- ctg(α) — kotangens, cos(α)/sin(α)\n\nAsosiy trigonometrik ayniyatlar:\n1. sin²(α) + cos²(α) = 1\n2. tg(α) = sin(α)/cos(α)\n3. ctg(α) = cos(α)/sin(α)\n4. 1 + tg²(α) = 1/cos²(α)\n5. 1 + ctg²(α) = 1/sin²(α)\n\nQo'shish formulalari:\n- sin(α ± β) = sin(α)·cos(β) ± cos(α)·sin(β)\n- cos(α ± β) = cos(α)·cos(β) ∓ sin(α)·sin(β)\n\nIkkilangan burchak formulalari:\n- sin(2α) = 2·sin(α)·cos(α)\n- cos(2α) = cos²(α) - sin²(α) = 2cos²(α) - 1 = 1 - 2sin²(α)\n\nKeltirish formulalari yordamida istalgan burchakni birinchi chorakdagi burchakka keltirish mumkin.\n\nTrigonometrik tenglamalar:\n- sin(x) = a → x = (-1)^n · arcsin(a) + πn\n- cos(x) = a → x = ± arccos(a) + 2πn\n- tg(x) = a → x = arctg(a) + πn",
+          "questions": [
+            {
+              "question_text": "sin(30°) ning qiymati qancha?",
+              "option_a": "0",
+              "option_b": "1/2",
+              "option_c": "√2/2",
+              "option_d": "√3/2",
+              "correct_answer": "B",
+              "explanation": "sin(30°) = 1/2 — bu asosiy trigonometrik qiymatlardan biri"
+            },
+            {
+              "question_text": "cos(60°) ning qiymati qancha?",
+              "option_a": "0",
+              "option_b": "1/2",
+              "option_c": "√2/2",
+              "option_d": "√3/2",
+              "correct_answer": "B",
+              "explanation": "cos(60°) = 1/2. Eslatma: cos(60°) = sin(30°)"
+            },
+            {
+              "question_text": "sin²(α) + cos²(α) = ?",
+              "option_a": "0",
+              "option_b": "1",
+              "option_c": "2",
+              "option_d": "α ga bog'liq",
+              "correct_answer": "B",
+              "explanation": "Bu asosiy trigonometrik ayniyat — har doim 1 ga teng"
+            },
+            {
+              "question_text": "tg(45°) ning qiymati nechaga teng?",
+              "option_a": "0",
+              "option_b": "1/2",
+              "option_c": "1",
+              "option_d": "√3",
+              "correct_answer": "C",
+              "explanation": "tg(45°) = sin(45°)/cos(45°) = (√2/2)/(√2/2) = 1"
+            },
+            {
+              "question_text": "sin(2α) quyidagilardan qaysi biriga teng?",
+              "option_a": "2·sin(α)",
+              "option_b": "2·sin(α)·cos(α)",
+              "option_c": "sin²(α) + cos²(α)",
+              "option_d": "sin(α) + cos(α)",
+              "correct_answer": "B",
+              "explanation": "Ikkilangan burchak formulasi: sin(2α) = 2·sin(α)·cos(α)"
+            },
+            {
+              "question_text": "cos(90°) ning qiymati qancha?",
+              "option_a": "0",
+              "option_b": "1/2",
+              "option_c": "1",
+              "option_d": "-1",
+              "correct_answer": "A",
+              "explanation": "cos(90°) = 0 — birlik aylana bo'yicha 90° da x koordinata 0 ga teng"
+            },
+            {
+              "question_text": "sin(x) = 0 tenglamaning umumiy yechimi?",
+              "option_a": "x = πn, n ∈ Z",
+              "option_b": "x = π/2 + πn, n ∈ Z",
+              "option_c": "x = 2πn, n ∈ Z",
+              "option_d": "x = π/4 + πn, n ∈ Z",
+              "correct_answer": "A",
+              "explanation": "sin(x) = 0 bo'lganda x = 0, ±π, ±2π, ... ya'ni x = πn"
+            },
+            {
+              "question_text": "cos(2α) = 1 - 2sin²(α) formulasi to'g'rimi?",
+              "option_a": "Ha, har doim to'g'ri",
+              "option_b": "Faqat α > 0 bo'lganda",
+              "option_c": "Faqat α < 90° bo'lganda",
+              "option_d": "Yo'q, noto'g'ri",
+              "correct_answer": "A",
+              "explanation": "Bu ikkilangan burchakning kosinus formulasining bir ko'rinishi, har doim o'rinli"
+            },
+            {
+              "question_text": "sin(150°) ning qiymati qancha?",
+              "option_a": "-1/2",
+              "option_b": "1/2",
+              "option_c": "√3/2",
+              "option_d": "-√3/2",
+              "correct_answer": "B",
+              "explanation": "sin(150°) = sin(180° - 30°) = sin(30°) = 1/2"
+            },
+            {
+              "question_text": "tg(α) · ctg(α) = ?",
+              "option_a": "0",
+              "option_b": "1",
+              "option_c": "2",
+              "option_d": "tg²(α)",
+              "correct_answer": "B",
+              "explanation": "tg(α) · ctg(α) = (sin/cos) · (cos/sin) = 1"
+            }
+          ]
+        },
+        {
+          "title": "Hosilalar",
+          "order_num": 3,
+          "content": "Hosila — funksiyaning o'zgarish tezligini ifodalovchi tushuncha. f(x) funksiyaning x nuqtadagi hosilasi:\n\nf'(x) = lim(Δx→0) [f(x+Δx) - f(x)] / Δx\n\nAsosiy hosilalar jadvali:\n1. (c)' = 0 — konstanta hosilasi\n2. (x^n)' = n·x^(n-1) — daraja funksiyasi\n3. (sin x)' = cos x\n4. (cos x)' = -sin x\n5. (tg x)' = 1/cos²(x)\n6. (e^x)' = e^x\n7. (a^x)' = a^x · ln(a)\n8. (ln x)' = 1/x\n9. (log_a x)' = 1/(x·ln a)\n10. (√x)' = 1/(2√x)\n\nHosila olish qoidalari:\n- (f ± g)' = f' ± g' — yig'indi/ayirma\n- (f · g)' = f'·g + f·g' — ko'paytma (Leybnits qoidasi)\n- (f/g)' = (f'·g - f·g') / g² — bo'linma\n- (f(g(x)))' = f'(g(x)) · g'(x) — murakkab funksiya (zanjir qoidasi)\n\nHosilaning geometrik ma'nosi: f'(a) — bu f(x) funksiya grafigiga x = a nuqtada o'tkazilgan urinma burchak koeffitsiyenti.\n\nHosilaning fizik ma'nosi: agar s(t) — yo'l, u holda s'(t) = v(t) — tezlik.\n\nFunksiyani tekshirish:\n- f'(x) > 0 — funksiya o'suvchi\n- f'(x) < 0 — funksiya kamayuvchi\n- f'(x) = 0 — kritik nuqtalar (ekstremum bo'lishi mumkin)",
+          "questions": [
+            {
+              "question_text": "(x³)' ning qiymati qancha?",
+              "option_a": "x²",
+              "option_b": "3x",
+              "option_c": "3x²",
+              "option_d": "x³",
+              "correct_answer": "C",
+              "explanation": "(x^n)' = n·x^(n-1) formulasi bo'yicha: (x³)' = 3x²"
+            },
+            {
+              "question_text": "(sin x)' = ?",
+              "option_a": "sin x",
+              "option_b": "-sin x",
+              "option_c": "cos x",
+              "option_d": "-cos x",
+              "correct_answer": "C",
+              "explanation": "Sinusning hosilasi kosinusga teng: (sin x)' = cos x"
+            },
+            {
+              "question_text": "f(x) = 5 bo'lsa, f'(x) = ?",
+              "option_a": "0",
+              "option_b": "1",
+              "option_c": "5",
+              "option_d": "x",
+              "correct_answer": "A",
+              "explanation": "Konstanta funksiyaning hosilasi har doim 0 ga teng"
+            },
+            {
+              "question_text": "(e^x)' = ?",
+              "option_a": "x·e^(x-1)",
+              "option_b": "e^x",
+              "option_c": "e^(x-1)",
+              "option_d": "x·e^x",
+              "correct_answer": "B",
+              "explanation": "e^x funksiyaning o'ziga teng hosilasi bor: (e^x)' = e^x"
+            },
+            {
+              "question_text": "(ln x)' = ?",
+              "option_a": "ln x",
+              "option_b": "1/x²",
+              "option_c": "1/x",
+              "option_d": "x",
+              "correct_answer": "C",
+              "explanation": "Natural logarifmning hosilasi: (ln x)' = 1/x"
+            },
+            {
+              "question_text": "f(x) = 2x⁴ + 3x bo'lsa, f'(x) = ?",
+              "option_a": "8x³ + 3",
+              "option_b": "2x³ + 3",
+              "option_c": "8x³ + 3x",
+              "option_d": "4x³ + 3",
+              "correct_answer": "A",
+              "explanation": "f'(x) = 2·4x³ + 3·1 = 8x³ + 3"
+            },
+            {
+              "question_text": "(cos x)' = ?",
+              "option_a": "cos x",
+              "option_b": "sin x",
+              "option_c": "-cos x",
+              "option_d": "-sin x",
+              "correct_answer": "D",
+              "explanation": "Kosinusning hosilasi minus sinusga teng: (cos x)' = -sin x"
+            },
+            {
+              "question_text": "Agar f'(x₀) = 0 bo'lsa, x₀ nuqta nima deyiladi?",
+              "option_a": "Burilish nuqtasi",
+              "option_b": "Kritik nuqta",
+              "option_c": "Uzilish nuqtasi",
+              "option_d": "Chegaraviy nuqta",
+              "correct_answer": "B",
+              "explanation": "Hosila 0 ga teng bo'lgan nuqtalar kritik nuqtalar deb ataladi"
+            },
+            {
+              "question_text": "(x² · sin x)' = ?",
+              "option_a": "2x · cos x",
+              "option_b": "2x · sin x + x² · cos x",
+              "option_c": "x² · cos x",
+              "option_d": "2x · sin x - x² · cos x",
+              "correct_answer": "B",
+              "explanation": "Ko'paytma hosilasi: (f·g)' = f'·g + f·g' = 2x·sin x + x²·cos x"
+            },
+            {
+              "question_text": "(√x)' = ?",
+              "option_a": "1/√x",
+              "option_b": "√x/2",
+              "option_c": "1/(2√x)",
+              "option_d": "2√x",
+              "correct_answer": "C",
+              "explanation": "(x^(1/2))' = (1/2)·x^(-1/2) = 1/(2√x)"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

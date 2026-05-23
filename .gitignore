@@ -1,0 +1,25 @@
+# Laravel
+backend/vendor/
+backend/node_modules/
+backend/.env
+backend/storage/*.key
+backend/storage/logs/
+backend/bootstrap/cache/
+backend/database/database.sqlite
+
+# Python RAG
+rag_service/__pycache__/
+rag_service/vectorstore/
+rag_service/.venv/
+__pycache__/
+vectorstore/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Claude
+.claude/
