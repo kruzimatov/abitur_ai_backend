@@ -7,6 +7,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY main.py .
 COPY seed.py .
+COPY splitter.py .
 
 ENV CHROMA_PATH=/app/vectorstore
 
