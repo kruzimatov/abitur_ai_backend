@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -16,9 +17,13 @@ class User extends Authenticatable implements JWTSubject
 
     protected $fillable = [
         'name',
+        'surname',
         'email',
         'password',
+        'gender',
         'role',
+        'field_id',
+        'subject_id',
     ];
 
     protected $hidden = [
@@ -57,6 +62,16 @@ class User extends Authenticatable implements JWTSubject
     public function isStudent(): bool
     {
         return $this->role === 'student';
+    }
+
+    public function field(): BelongsTo
+    {
+        return $this->belongsTo(Field::class);
+    }
+
+    public function subject(): BelongsTo
+    {
+        return $this->belongsTo(Subject::class);
     }
 
     public function quizAttempts(): HasMany

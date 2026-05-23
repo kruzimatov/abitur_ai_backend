@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FieldController;
 use App\Http\Controllers\FeynmanController;
 use App\Http\Controllers\GeneratorController;
 use App\Http\Controllers\QuestionController;
@@ -10,6 +11,10 @@ use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TopicController;
 use App\Http\Controllers\TutorController;
 use Illuminate\Support\Facades\Route;
+
+// ─── Public (no auth needed) ───
+Route::get('/fields', [FieldController::class, 'index']);
+Route::get('/fields/{id}', [FieldController::class, 'show']);
 
 // ─── Auth (public) ───
 Route::prefix('auth')->group(function () {

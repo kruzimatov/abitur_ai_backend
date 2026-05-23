@@ -14,11 +14,10 @@ class DtmContentSeeder extends Seeder
         $data = json_decode(file_get_contents(base_path('seed_data.json')), true);
 
         foreach ($data['subjects'] as $subjectData) {
-            $subject = Subject::create([
-                'name' => $subjectData['name'],
-                'icon' => $subjectData['icon'],
-                'description' => $subjectData['description'],
-            ]);
+            $subject = Subject::firstOrCreate(
+                ['name' => $subjectData['name']],
+                ['icon' => $subjectData['icon'], 'description' => $subjectData['description']]
+            );
 
             foreach ($subjectData['topics'] as $topicData) {
                 $topic = Topic::create([
