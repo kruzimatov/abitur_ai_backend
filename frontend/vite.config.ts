@@ -8,4 +8,12 @@ export default defineConfig({
     react(), 
     tailwindcss() // 2. Plaginni shu yerga qo'shamiz
   ],
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+      },
+    },
+  },
 });

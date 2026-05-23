@@ -1,10 +1,14 @@
 import { Navigate } from 'react-router-dom';
+import { useAuth } from '../../../hooks/useAuth';
 
-const PublicRoute = ({children}: any) => {
+const PublicRoute = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated, isLoading } = useAuth();
 
-  const isAuth = localStorage.getItem("is_auth") === "true";
+  if (isLoading) {
+    return <div style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', color: 'var(--text2)' }}>Yuklanmoqda...</div>;
+  }
 
-  if (isAuth) {
+  if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
   }
 
