@@ -1,7 +1,8 @@
-import { createBrowserRouter } from "react-router-dom";
+import { Navigate, createBrowserRouter } from "react-router-dom";
 import PublicRoute from "../../pages/Auth/Public/PublicRoute";
 import PrivateRoute from "../../pages/Auth/Private/PrivateRoute";
 import MainLayout from "../../layouts/MainLayout";
+import Landing from "../../pages/Landing";
 import Dashboard from "../../pages/Dashboard";
 import TeacherDashboard from "../../pages/TeacherDashboard";
 import AdminDashboard from "../../pages/AdminDashboard";
@@ -15,42 +16,63 @@ import Progress from "../../pages/Progress";
 import Leaderboard from "../../pages/LeaderBoard";
 import History from "../../pages/History";
 import Auth from "../../pages/Auth";
-import RoleDashboardRedirect from "../../components/RoleDashboardRedirect";
-import RoleRoute from "../../components/RoleRoute";
+import { useAuth } from "../../hooks/useAuth";
+
+function HomeRoute() {
+  const { isAuthenticated, isLoading, user } = useAuth();
+
+  if (isLoading) {
+    return <div style={{ minHeight: '100vh', background: 'var(--bg)', display: 'grid', placeItems: 'center', color: 'var(--text2)' }}>Yuklanmoqda...</div>;
+  }
+
+  if (!isAuthenticated) {
+    return <Landing />;
+  }
+
+  switch (user?.role) {
+    case 'teacher': return <Navigate to="/teacher-dashboard" replace />;
+    case 'admin': return <Navigate to="/admin-dashboard" replace />;
+    default: return <Navigate to="/dashboard" replace />;
+  }
+}
 
 export const router = createBrowserRouter([
   {
-    path: '/login',
-    element: (
-      <PublicRoute>
-        <Auth />
-      </PublicRoute>
-    )
-  },
-  {
-    path: "/",
-    element: (
-      <PrivateRoute>
-        <MainLayout />
-      </PrivateRoute>
-    ),
+    path: '/',
     children: [
-      { index: true, element: <RoleDashboardRedirect /> },
-      { path: "dashboard", element: <RoleRoute roles={['student']}><Dashboard /></RoleRoute> },
-      { path: "teacher-dashboard", element: <RoleRoute roles={['teacher']}><TeacherDashboard /></RoleRoute> },
-      { path: "admin-dashboard", element: <RoleRoute roles={['admin']}><AdminDashboard /></RoleRoute> },
-      { path: "subjects", element: <RoleRoute roles={['student', 'teacher', 'admin']}><Subjects /></RoleRoute> },
-      { path: "topics", element: <RoleRoute roles={['student', 'teacher', 'admin']}><Topics /></RoleRoute> },
-      { path: "mock-testlar", element: <RoleRoute roles={['student']}><MockTests /></RoleRoute> },
-      { path: "ai-tutor", element: <AITutor /> },
-      { path: "darsliklar", element: <RoleRoute roles={['student']}><Lessons /></RoleRoute> },
-      { path: "progress", element: <RoleRoute roles={['student']}><Progress /></RoleRoute> },
-      { path: "leaderboard", element: <RoleRoute roles={['student']}><Leaderboard /></RoleRoute> },
-      { path: "history", element: <RoleRoute roles={['student']}><History /></RoleRoute> }
+      { index: true, element: <HomeRoute /> },
+      {
+        path: 'login',
+        element: (
+          <PublicRoute>
+            <Auth />
+          </PublicRoute>
+        ),
+      },
+      {
+        element: (
+          <PrivateRoute>
+            <MainLayout />
+          </PrivateRoute>
+        ),
+        children: [
+          { path: "dashboard", element: <Dashboard /> },
+          { path: "teacher-dashboard", element: <TeacherDashboard /> },
+          { path: "admin-dashboard", element: <AdminDashboard /> },
+          { path: "subjects", element: <Subjects /> },
+          { path: "topics", element: <Topics /> },
+          { path: "mock-testlar", element: <MockTests /> },
+          { path: "ai-tutor", element: <AITutor /> },
+          { path: "darsliklar", element: <Lessons /> },
+          { path: "progress", element: <Progress /> },
+          { path: "leaderboard", element: <Leaderboard /> },
+          { path: "history", element: <History /> },
+        ],
+      },
     ],
   },
   {
     path: "*",
     element: <NotFound />,
   },
-])
+]);
