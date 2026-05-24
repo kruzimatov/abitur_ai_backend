@@ -17,7 +17,7 @@ import {
 import { chatService } from '../../services/chat';
 import { quizService } from '../../services/quiz';
 import { subjectService } from '../../services/subjects';
-import type { DiagnosisItem, Question, QuizSubmitResponse, Topic } from '../../types';
+import type { DiagnosisItem, Question, QuizAnswerReview, QuizSubmitResponse, Topic } from '../../types';
 
 type Screen = 'start' | 'test' | 'result';
 type AnswerState = Record<number, 'A' | 'B' | 'C' | 'D' | null>;
@@ -77,7 +77,13 @@ const MockTests = () => {
     setIsLoading(true);
     try {
       const data = await quizService.startQuiz(topicId);
-      setTopic((prev) => prev ?? ({ id: data.topic.id, subject_id: 0, title: data.topic.title, order_num: 0 } as Topic));
+      setTopic((prev) => prev ?? ({
+        id: data.topic.id,
+        subject_id: data.topic.subject_id ?? 0,
+        title: data.topic.title,
+        order_num: 0,
+        subject: data.topic.subject,
+      } as Topic));
       setQuestions(data.questions);
       setAnswers(Object.fromEntries(data.questions.map((question) => [question.id, null])));
       setCurrent(0);
@@ -107,7 +113,7 @@ const MockTests = () => {
 
     setIsSubmitting(true);
     try {
-      const response = await quizService.submitQuiz({ topic_id: topicId, answers: selectedAnswers });
+      const response = await quizService.submitQuiz({ topic_id: topicId, answers: selectedAnswers, with_diagnosis: false });
       setResult(response);
       setElapsed(startedAt ? Math.floor((Date.now() - startedAt) / 1000) : 0);
       setScreen('result');
@@ -143,6 +149,7 @@ const MockTests = () => {
   const minutes = Math.floor(secondsLeft / 60);
   const secs = secondsLeft % 60;
   const timerColor = secondsLeft <= 60 ? 'var(--red)' : secondsLeft <= 180 ? 'var(--amber)' : 'var(--text)';
+  const backToTopicsUrl = topic?.subject_id ? `/topics?subject=${topic.subject_id}` : '/topics';
 
   if (!topicId) {
     return (
@@ -178,7 +185,7 @@ const MockTests = () => {
             <Metric icon={<IconBrain size={18} />} value="AI" label="Tahlil" color="var(--purple)" />
           </div>
           <div style={{ padding: '20px 28px', display: 'flex', gap: 10 }}>
-            <Link to="/topics" style={{ background: 'transparent', border: '1px solid var(--border)', borderRadius: 'var(--r)', padding: '14px 20px', fontSize: 14, color: 'var(--text2)', textDecoration: 'none' }}>Bekor qilish</Link>
+            <Link to={backToTopicsUrl} style={{ background: 'transparent', border: '1px solid var(--border)', borderRadius: 'var(--r)', padding: '14px 20px', fontSize: 14, color: 'var(--text2)', textDecoration: 'none' }}>Bekor qilish</Link>
             <button onClick={startTest} disabled={isLoading} style={{ flex: 1, background: 'var(--teal)', border: 'none', borderRadius: 'var(--r)', padding: 14, fontSize: 15, fontWeight: 800, color: '#07090F', cursor: isLoading ? 'wait' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
               <IconPlayerPlay size={18} /> {isLoading ? 'Yuklanmoqda...' : 'Testni boshlash'}
             </button>
@@ -305,12 +312,13 @@ const MockTests = () => {
             <div style={{ height: '100%', width: `${percentage}%`, background: scoreColor }} />
           </div>
         </div>
-        <DiagnosisList diagnosis={result?.diagnosis ?? []} />
+        {(result?.diagnosis?.length ?? 0) > 0 && <DiagnosisList diagnosis={result?.diagnosis ?? []} />}
+        <AnswerReviewList answers={result?.answers_review ?? []} />
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginTop: 20 }}>
           <button onClick={startTest} style={{ background: 'var(--teal)', border: 'none', borderRadius: 'var(--r)', padding: '12px 24px', fontSize: 14, fontWeight: 800, color: '#07090F', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }}>
             <IconRefresh size={16} /> Qayta urinish
           </button>
-          <Link to="/topics" style={{ background: 'var(--bg2)', border: '1px solid var(--border)', borderRadius: 'var(--r)', padding: '12px 24px', fontSize: 14, color: 'var(--text2)', textDecoration: 'none', fontWeight: 700 }}>
+          <Link to={backToTopicsUrl} style={{ background: 'var(--bg2)', border: '1px solid var(--border)', borderRadius: 'var(--r)', padding: '12px 24px', fontSize: 14, color: 'var(--text2)', textDecoration: 'none', fontWeight: 700 }}>
             Mavzularga qaytish
           </Link>
         </div>
@@ -325,6 +333,39 @@ function Metric({ icon, value, label, color }: { icon: React.ReactNode; value: s
       <div style={{ width: 36, height: 36, borderRadius: 'var(--r-sm)', background: 'var(--bg3)', display: 'grid', placeItems: 'center', color, margin: '0 auto 10px' }}>{icon}</div>
       <div style={{ fontSize: 22, fontWeight: 800, color, fontFamily: "'DM Serif Display', serif" }}>{value}</div>
       <div style={{ fontSize: 11, color: 'var(--text3)', marginTop: 3 }}>{label}</div>
+    </div>
+  );
+}
+
+function AnswerReviewList({ answers }: { answers: QuizAnswerReview[] }) {
+  if (answers.length === 0) {
+    return null;
+  }
+
+  return (
+    <div style={{ background: 'var(--bg2)', border: '1px solid var(--border)', borderRadius: 'var(--r)', overflow: 'hidden', marginTop: 18 }}>
+      <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border)', fontWeight: 800, color: 'var(--text)' }}>
+        Savollar va javoblar
+      </div>
+      {answers.map((item, index) => {
+        const selectedText = item.options[item.selected_answer];
+        const correctText = item.options[item.correct_answer];
+        return (
+          <div key={item.question_id} style={{ padding: 18, borderBottom: '1px solid var(--border)' }}>
+            <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginBottom: 10 }}>
+              <div style={{ width: 24, height: 24, borderRadius: '50%', background: item.is_correct ? 'var(--green-dim)' : 'var(--red-dim)', color: item.is_correct ? 'var(--green)' : 'var(--red)', display: 'grid', placeItems: 'center', fontSize: 12, fontWeight: 800, flexShrink: 0 }}>
+                {index + 1}
+              </div>
+              <div style={{ color: 'var(--text)', fontWeight: 700, lineHeight: 1.55 }}>{item.question_text}</div>
+            </div>
+            <div style={{ color: 'var(--text2)', fontSize: 13, lineHeight: 1.7, paddingLeft: 34 }}>
+              <div><strong style={{ color: item.is_correct ? 'var(--green)' : 'var(--red)' }}>Sizning javobingiz:</strong> {item.selected_answer}) {selectedText}</div>
+              {!item.is_correct && <div><strong style={{ color: 'var(--green)' }}>To'g'ri javob:</strong> {item.correct_answer}) {correctText}</div>}
+              {item.explanation && <div><strong style={{ color: 'var(--amber)' }}>Izoh:</strong> {item.explanation}</div>}
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }

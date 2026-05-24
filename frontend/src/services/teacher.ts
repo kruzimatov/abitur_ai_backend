@@ -1,4 +1,5 @@
 import api from './api';
+import type { UploadResult } from './admin';
 
 export interface TeacherDashboardData {
   subject: { id: number; name: string };
@@ -73,6 +74,19 @@ export const teacherService = {
 
   async getContent(): Promise<TeacherContent> {
     const { data } = await api.get<TeacherContent>('/teacher/content');
+    return data;
+  },
+
+  async uploadMaterial(file: File, subjectId: number, title?: string): Promise<UploadResult> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('subject_id', String(subjectId));
+    if (title) formData.append('title', title);
+
+    const { data } = await api.post<UploadResult>('/materials/upload', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      timeout: 60000,
+    });
     return data;
   },
 };

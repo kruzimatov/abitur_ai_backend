@@ -62,8 +62,8 @@ const AITutor = () => {
         subjectService.getSubjects(),
         chatService.getChatHistory(),
       ]);
-      setSubjects(subjectData);
-      setSessions(sessionData);
+      setSubjects(Array.isArray(subjectData) ? subjectData : []);
+      setSessions(Array.isArray(sessionData) ? sessionData : []);
       setSelectedSubjectId((prev) => prev ?? subjectData[0]?.id);
 
       const firstSession = sessionData[0];

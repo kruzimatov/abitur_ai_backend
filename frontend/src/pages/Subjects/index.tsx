@@ -26,8 +26,8 @@ const Subjects = () => {
         subjectService.getSubjects(),
         progressService.getSubjectProgress(),
       ]);
-      setSubjects(subjectData);
-      setProgress(progressData);
+      setSubjects(Array.isArray(subjectData) ? subjectData : []);
+      setProgress(Array.isArray(progressData) ? progressData : []);
     } catch {
       message.error("Fanlar ro'yxati yuklanmadi");
     } finally {

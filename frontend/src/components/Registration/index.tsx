@@ -45,7 +45,11 @@ const Registration = () => {
 
   const subjects = useMemo(() => {
     const map = new Map<number, SubjectShort>();
-    fields.forEach((field) => field.subjects?.forEach((subject) => map.set(subject.id, subject)));
+    const safeFields = Array.isArray(fields) ? fields : [];
+    safeFields.forEach((field) => {
+      const subs = Array.isArray(field.subjects) ? field.subjects : [];
+      subs.forEach((subject) => map.set(subject.id, subject));
+    });
     return Array.from(map.values());
   }, [fields]);
 

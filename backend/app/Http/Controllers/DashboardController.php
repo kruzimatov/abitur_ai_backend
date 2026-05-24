@@ -40,7 +40,7 @@ class DashboardController extends Controller
         // Subject progress — get subjects for student's field, or all subjects
         $subjects = $user->field_id
             ? $user->field->subjects()->with('topics')->get()
-            : Subject::with('topics')->get();
+            : collect();
 
         $subjectsProgress = $subjects->map(function ($subject) use ($userId) {
             $topicIds = $subject->topics->pluck('id');

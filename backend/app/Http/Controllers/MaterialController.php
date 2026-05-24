@@ -20,6 +20,14 @@ class MaterialController extends Controller
         ]);
 
         $subject = Subject::findOrFail($validated['subject_id']);
+        $user = $request->user();
+
+        if ($user?->isTeacher() && (int) $user->subject_id !== (int) $subject->id) {
+            return response()->json([
+                'message' => 'O\'qituvchi faqat o\'z faniga material yuklay oladi',
+            ], 403);
+        }
+
         $file = $request->file('file');
 
         $result = $ragService->processFile(

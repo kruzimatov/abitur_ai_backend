@@ -19,9 +19,11 @@ const Progress = () => {
         progressService.getSubjectProgress(),
         progressService.getRecommendations(),
       ]);
-      setSubjects(subjectData);
-      setRecommendations(recommendationData);
-      setExpanded((prev) => prev ?? subjectData[0]?.subject_id ?? null);
+      const safeSubs = Array.isArray(subjectData) ? subjectData : [];
+      const safeRecs = Array.isArray(recommendationData) ? recommendationData : [];
+      setSubjects(safeSubs);
+      setRecommendations(safeRecs);
+      setExpanded((prev) => prev ?? safeSubs[0]?.subject_id ?? null);
     } catch {
       message.error('Progress ma\'lumotlari yuklanmadi');
     } finally {

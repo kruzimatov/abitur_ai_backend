@@ -10,9 +10,6 @@ import {
   IconTrophy,
   IconHistory,
   IconLogout,
-  IconUsers,
-  IconFileText,
-  IconServer,
 } from '@tabler/icons-react';
 import { message } from 'antd';
 import { useAuth } from '../../hooks/useAuth';
@@ -37,8 +34,8 @@ const sidebarMenuGroups: SidebarSection[] = [
       { title: "Dashboard", path: "/dashboard", icon: IconLayoutDashboard, roles: ['student'] },
       { title: "Dashboard", path: "/teacher-dashboard", icon: IconLayoutDashboard, roles: ['teacher'] },
       { title: "Dashboard", path: "/admin-dashboard", icon: IconLayoutDashboard, roles: ['admin'] },
-      { title: "Fanlar", path: "/subjects", icon: IconBooks, roles: ['student', 'admin'] },
-      { title: "Mavzular", path: "/topics", icon: IconClipboardList, roles: ['student', 'admin'] },
+      { title: "Fanlar", path: "/subjects", icon: IconBooks, roles: ['student', 'teacher', 'admin'] },
+      { title: "Mavzular", path: "/topics", icon: IconClipboardList, roles: ['student', 'teacher', 'admin'] },
     ],
   },
   {
@@ -46,29 +43,15 @@ const sidebarMenuGroups: SidebarSection[] = [
     items: [
       { title: "Mock testlar", path: "/mock-testlar", icon: IconClipboardCheck, roles: ['student'] },
       { title: "AI Tutor", path: "/ai-tutor", icon: IconBrain, roles: ['student', 'teacher'] },
-      { title: "Darsliklar", path: "/darsliklar", icon: IconBook, roles: ['student'] },
-    ],
-  },
-  {
-    sectionTitle: "O'QITUVCHI",
-    items: [
-      { title: "Talabalar", path: "/teacher-dashboard", icon: IconUsers, roles: ['teacher'] },
-      { title: "Kontent", path: "/teacher-dashboard", icon: IconFileText, roles: ['teacher'] },
-    ],
-  },
-  {
-    sectionTitle: "BOSHQARUV",
-    items: [
-      { title: "Foydalanuvchilar", path: "/admin-dashboard", icon: IconUsers, roles: ['admin'] },
-      { title: "Tizim", path: "/admin-dashboard", icon: IconServer, roles: ['admin'] },
+      { title: "Feynman usuli", path: "/darsliklar", icon: IconBook, roles: ['student'] },
     ],
   },
   {
     sectionTitle: "TAHLIL",
     items: [
       { title: "Progress", path: "/progress", icon: IconChartBar, roles: ['student'] },
-      { title: "Leaderboard", path: "/leaderboard", icon: IconTrophy, roles: ['student'] },
-      { title: "Tarix", path: "/history", icon: IconHistory, roles: ['student'] },
+      { title: "Natijalarim", path: "/leaderboard", icon: IconTrophy, roles: ['student'] },
+      { title: "Tarix", path: "/history", icon: IconHistory, roles: ['student', 'teacher'] },
     ],
   },
 ];
@@ -126,7 +109,10 @@ export const Aside = () => {
 
         {/* Menu */}
         <div className="flex flex-col gap-5" style={{ padding: '0 12px' }}>
-          {sidebarMenuGroups.map((group, groupIdx) => (
+          {sidebarMenuGroups.map((group, groupIdx) => {
+            const visibleItems = group.items.filter((item) => !item.roles || item.roles.includes(role));
+            if (visibleItems.length === 0) return null;
+            return (
             <div key={groupIdx}>
               <div
                 className="uppercase font-semibold"
@@ -140,7 +126,7 @@ export const Aside = () => {
                 {group.sectionTitle}
               </div>
               <div className="flex flex-col gap-0.5">
-                {group.items.filter((item) => !item.roles || item.roles.includes(role)).map((item) => {
+                {visibleItems.map((item) => {
                   const Icon = item.icon;
                   const isActive = location.pathname === item.path;
 
@@ -212,7 +198,8 @@ export const Aside = () => {
                 })}
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 

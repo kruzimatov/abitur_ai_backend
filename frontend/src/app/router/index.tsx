@@ -16,6 +16,7 @@ import Leaderboard from "../../pages/LeaderBoard";
 import History from "../../pages/History";
 import Auth from "../../pages/Auth";
 import RoleDashboardRedirect from "../../components/RoleDashboardRedirect";
+import RoleRoute from "../../components/RoleRoute";
 
 export const router = createBrowserRouter([
   {
@@ -35,17 +36,17 @@ export const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <RoleDashboardRedirect /> },
-      { path: "dashboard", element: <Dashboard /> },
-      { path: "teacher-dashboard", element: <TeacherDashboard /> },
-      { path: "admin-dashboard", element: <AdminDashboard /> },
-      { path: "subjects", element: <Subjects /> },
-      { path: "topics", element: <Topics /> },
-      { path: "mock-testlar", element: <MockTests /> },
+      { path: "dashboard", element: <RoleRoute roles={['student']}><Dashboard /></RoleRoute> },
+      { path: "teacher-dashboard", element: <RoleRoute roles={['teacher']}><TeacherDashboard /></RoleRoute> },
+      { path: "admin-dashboard", element: <RoleRoute roles={['admin']}><AdminDashboard /></RoleRoute> },
+      { path: "subjects", element: <RoleRoute roles={['student', 'teacher', 'admin']}><Subjects /></RoleRoute> },
+      { path: "topics", element: <RoleRoute roles={['student', 'teacher', 'admin']}><Topics /></RoleRoute> },
+      { path: "mock-testlar", element: <RoleRoute roles={['student']}><MockTests /></RoleRoute> },
       { path: "ai-tutor", element: <AITutor /> },
-      { path: "darsliklar", element: <Lessons /> },
-      { path: "progress", element: <Progress /> },
-      { path: "leaderboard", element: <Leaderboard /> },
-      { path: "history", element: <History /> }
+      { path: "darsliklar", element: <RoleRoute roles={['student']}><Lessons /></RoleRoute> },
+      { path: "progress", element: <RoleRoute roles={['student']}><Progress /></RoleRoute> },
+      { path: "leaderboard", element: <RoleRoute roles={['student']}><Leaderboard /></RoleRoute> },
+      { path: "history", element: <RoleRoute roles={['student']}><History /></RoleRoute> }
     ],
   },
   {

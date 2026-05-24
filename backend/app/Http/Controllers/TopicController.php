@@ -10,6 +10,20 @@ class TopicController extends Controller
     public function show($id)
     {
         $topic = Topic::with('subject:id,name')->findOrFail($id);
+        $user = request()->user();
+
+        if ($user && ! $user->isAdmin()) {
+            if ($user->isTeacher() && (int) $user->subject_id !== (int) $topic->subject_id) {
+                abort(403, 'Bu mavzu sizga biriktirilmagan');
+            }
+
+            if ($user->isStudent() && $user->field_id) {
+                $allowed = $user->field->subjects()->where('subjects.id', $topic->subject_id)->exists();
+                if (! $allowed) {
+                    abort(403, 'Bu mavzu sizning yo\'nalishingizga tegishli emas');
+                }
+            }
+        }
 
         return response()->json($topic);
     }

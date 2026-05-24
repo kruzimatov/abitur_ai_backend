@@ -83,7 +83,7 @@ export interface Question {
 }
 
 export interface QuizStartResponse {
-  topic: { id: number; title: string };
+  topic: { id: number; title: string; subject_id?: number; subject?: SubjectShort };
   questions: Question[];
 }
 
@@ -95,6 +95,7 @@ export interface QuizAnswer {
 export interface QuizSubmitPayload {
   topic_id: number;
   answers: QuizAnswer[];
+  with_diagnosis?: boolean;
 }
 
 export interface DiagnosisItem {
@@ -113,6 +114,17 @@ export interface QuizSubmitResponse {
   total: number;
   percentage: number;
   diagnosis: DiagnosisItem[] | null;
+  answers_review?: QuizAnswerReview[];
+}
+
+export interface QuizAnswerReview {
+  question_id: number;
+  question_text: string;
+  options: Record<'A' | 'B' | 'C' | 'D', string>;
+  selected_answer: 'A' | 'B' | 'C' | 'D';
+  correct_answer: 'A' | 'B' | 'C' | 'D';
+  is_correct: boolean;
+  explanation: string | null;
 }
 
 export interface QuizAttempt {

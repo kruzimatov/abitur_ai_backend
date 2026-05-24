@@ -15,14 +15,21 @@ class QuizController extends Controller
 {
     public function start($topicId)
     {
-        $topic = Topic::findOrFail($topicId);
+        $topic = Topic::with('subject:id,name')->findOrFail($topicId);
+        $this->authorizeTopicAccess(request(), $topic);
+
         $questions = $topic->questions()
             ->inRandomOrder()
             ->limit(10)
             ->get(['id', 'question_text', 'option_a', 'option_b', 'option_c', 'option_d', 'difficulty']);
 
         return response()->json([
-            'topic' => $topic->only('id', 'title'),
+            'topic' => [
+                'id' => $topic->id,
+                'title' => $topic->title,
+                'subject_id' => $topic->subject_id,
+                'subject' => $topic->subject,
+            ],
             'questions' => $questions,
         ]);
     }
@@ -34,13 +41,18 @@ class QuizController extends Controller
             'answers' => 'required|array|min:1',
             'answers.*.question_id' => 'required|exists:questions,id',
             'answers.*.selected_answer' => 'required|in:A,B,C,D',
+            'with_diagnosis' => 'sometimes|boolean',
         ]);
+
+        $topic = Topic::findOrFail($validated['topic_id']);
+        $this->authorizeTopicAccess($request, $topic);
 
         $questionIds = collect($validated['answers'])->pluck('question_id');
         $questions = Question::whereIn('id', $questionIds)->get()->keyBy('id');
 
         $score = 0;
         $wrongAnswers = [];
+        $answersReview = [];
 
         $attempt = QuizAttempt::create([
             'user_id' => $request->user()->id,
@@ -64,6 +76,21 @@ class QuizController extends Controller
                 ];
             }
 
+            $answersReview[] = [
+                'question_id' => $question->id,
+                'question_text' => $question->question_text,
+                'options' => [
+                    'A' => $question->option_a,
+                    'B' => $question->option_b,
+                    'C' => $question->option_c,
+                    'D' => $question->option_d,
+                ],
+                'selected_answer' => $answer['selected_answer'],
+                'correct_answer' => $question->correct_answer,
+                'is_correct' => $isCorrect,
+                'explanation' => $question->explanation,
+            ];
+
             QuizAnswer::create([
                 'quiz_attempt_id' => $attempt->id,
                 'question_id' => $answer['question_id'],
@@ -73,7 +100,7 @@ class QuizController extends Controller
         }
 
         $diagnosis = null;
-        if (! empty($wrongAnswers)) {
+        if (($validated['with_diagnosis'] ?? false) && ! empty($wrongAnswers)) {
             $diagnosis = $diagnosisService->diagnose($wrongAnswers);
         }
 
@@ -99,12 +126,8 @@ class QuizController extends Controller
             $progress->best_score = $scoreOutOf10;
         }
 
-        // Status: completed if scored 7+ out of 10
-        if ($scoreOutOf10 >= 7) {
-            $progress->status = 'completed';
-        } elseif ($progress->status === 'new') {
-            $progress->status = 'in_progress';
-        }
+        // A submitted test means the topic was worked through; best_score still keeps quality.
+        $progress->status = 'completed';
 
         $progress->save();
 
@@ -117,7 +140,30 @@ class QuizController extends Controller
             'total' => $total,
             'percentage' => $total > 0 ? round(($score / $total) * 100) : 0,
             'diagnosis' => $diagnosis,
+            'answers_review' => $answersReview,
         ]);
+    }
+
+    private function authorizeTopicAccess(Request $request, Topic $topic): void
+    {
+        $user = $request->user();
+
+        if (! $user || $user->isAdmin()) {
+            return;
+        }
+
+        if ($user->isTeacher() && (int) $user->subject_id === (int) $topic->subject_id) {
+            return;
+        }
+
+        if ($user->isStudent() && $user->field_id) {
+            $allowed = $user->field->subjects()->where('subjects.id', $topic->subject_id)->exists();
+            if ($allowed) {
+                return;
+            }
+        }
+
+        abort(403, 'Bu test sizga biriktirilmagan');
     }
 
     public function result($id)

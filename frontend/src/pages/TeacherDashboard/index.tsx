@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { message } from 'antd';
 import {
   IconUsers,
@@ -7,9 +7,13 @@ import {
   IconChartLine,
   IconTrophy,
   IconBrain,
+  IconUpload,
+  IconFile,
+  IconCheck,
 } from '@tabler/icons-react';
 import { teacherService, type TeacherDashboardData, type TeacherAnalytics } from '../../services/teacher';
 import { useAuth } from '../../hooks/useAuth';
+import type { UploadResult } from '../../services/admin';
 
 const TeacherDashboard = () => {
   const { user } = useAuth();
@@ -95,6 +99,19 @@ const TeacherDashboard = () => {
           })}
         </div>
 
+        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(320px, 0.8fr) minmax(0, 1.2fr)', gap: 20, marginBottom: 20 }}>
+          <TeacherMaterialUpload subject={dashboard.subject} />
+          <div style={{ background: 'var(--bg2)', border: '1px solid var(--border)', borderRadius: 'var(--r)', padding: 20 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+              <IconBrain size={18} style={{ color: 'var(--purple)' }} />
+              <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--text)' }}>AI kontent</div>
+            </div>
+            <div style={{ fontSize: 13, color: 'var(--text2)', lineHeight: 1.7 }}>
+              Yuklangan PDF, DOCX yoki TXT materiallar faqat <strong style={{ color: 'var(--teal)' }}>{dashboard.subject.name}</strong> fani uchun RAG bazasiga qo'shiladi. AI Tutor keyingi javoblarda shu materiallardan foydalanadi.
+            </div>
+          </div>
+        </div>
+
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
           {/* Topic Scores */}
           <div style={{ background: 'var(--bg2)', border: '1px solid var(--border)', borderRadius: 'var(--r)', overflow: 'hidden' }}>
@@ -102,10 +119,10 @@ const TeacherDashboard = () => {
               <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--text)' }}>Mavzular bo'yicha natijalar</div>
             </div>
             <div style={{ padding: '8px 0' }}>
-              {analytics?.topic_scores.length === 0 && (
+              {(!analytics?.topic_scores || analytics.topic_scores.length === 0) && (
                 <div style={{ padding: 20, textAlign: 'center', color: 'var(--text3)', fontSize: 13 }}>Hali test natijalari yo'q</div>
               )}
-              {analytics?.topic_scores.map((ts) => {
+              {(Array.isArray(analytics?.topic_scores) ? analytics.topic_scores : []).map((ts) => {
                 const scoreColor = ts.avg_score >= 70 ? 'var(--green)' : ts.avg_score >= 40 ? 'var(--amber)' : 'var(--red)';
                 return (
                   <div key={ts.topic_id} style={{ padding: '12px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--border)' }}>
@@ -129,10 +146,10 @@ const TeacherDashboard = () => {
               <IconTrophy size={18} style={{ color: 'var(--amber)' }} />
             </div>
             <div style={{ padding: '8px 0' }}>
-              {analytics?.student_rankings.length === 0 && (
+              {(!analytics?.student_rankings || analytics.student_rankings.length === 0) && (
                 <div style={{ padding: 20, textAlign: 'center', color: 'var(--text3)', fontSize: 13 }}>Hali natijalar yo'q</div>
               )}
-              {analytics?.student_rankings.map((sr, i) => (
+              {(Array.isArray(analytics?.student_rankings) ? analytics.student_rankings : []).map((sr, i) => (
                 <div key={sr.user_id} style={{ padding: '12px 20px', display: 'flex', alignItems: 'center', gap: 12, borderBottom: '1px solid var(--border)' }}>
                   <div style={{
                     width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, flexShrink: 0,
@@ -158,5 +175,84 @@ const TeacherDashboard = () => {
     </div>
   );
 };
+
+function TeacherMaterialUpload({ subject }: { subject: { id: number; name: string } }) {
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [title, setTitle] = useState('');
+  const [uploading, setUploading] = useState(false);
+  const [result, setResult] = useState<UploadResult | null>(null);
+
+  const handleUpload = async () => {
+    if (!selectedFile) {
+      message.warning('Fayl tanlang');
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const data = await teacherService.uploadMaterial(selectedFile, subject.id, title || undefined);
+      setResult(data);
+      setSelectedFile(null);
+      setTitle('');
+      if (fileRef.current) fileRef.current.value = '';
+      message.success('Material AI bazasiga yuklandi');
+    } catch {
+      message.error("Material yuklanmadi. RAG xizmati yoki fan ruxsatini tekshiring.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  return (
+    <div style={{ background: 'var(--bg2)', border: '1px solid var(--border)', borderRadius: 'var(--r)', overflow: 'hidden' }}>
+      <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: 10 }}>
+        <IconUpload size={18} style={{ color: 'var(--teal)' }} />
+        <div>
+          <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--text)' }}>Material yuklash</div>
+          <div style={{ fontSize: 11, color: 'var(--text3)', marginTop: 2 }}>{subject.name}</div>
+        </div>
+      </div>
+      <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <input
+          value={title}
+          onChange={(event) => setTitle(event.target.value)}
+          placeholder="Material nomi (ixtiyoriy)"
+          style={{ background: 'var(--bg3)', border: '1px solid var(--border)', borderRadius: 'var(--r-sm)', color: 'var(--text)', padding: '10px 12px', outline: 'none', fontSize: 13 }}
+        />
+        <input
+          ref={fileRef}
+          type="file"
+          accept=".pdf,.docx,.txt"
+          onChange={(event) => {
+            setSelectedFile(event.target.files?.[0] ?? null);
+            setResult(null);
+          }}
+          style={{ display: 'none' }}
+        />
+        <button
+          onClick={() => fileRef.current?.click()}
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, padding: '16px 20px', borderRadius: 'var(--r-sm)', border: '2px dashed var(--border2)', background: 'var(--bg3)', color: selectedFile ? 'var(--text)' : 'var(--text3)', cursor: 'pointer', fontSize: 13 }}
+        >
+          <IconFile size={18} />
+          {selectedFile ? `${selectedFile.name} (${(selectedFile.size / 1024).toFixed(0)} KB)` : 'PDF, DOCX yoki TXT tanlang'}
+        </button>
+        <button
+          onClick={handleUpload}
+          disabled={!selectedFile || uploading}
+          style={{ background: !selectedFile ? 'var(--bg3)' : 'var(--teal)', border: 'none', borderRadius: 'var(--r-sm)', padding: '12px 20px', fontSize: 14, fontWeight: 800, color: !selectedFile ? 'var(--text3)' : '#07090F', cursor: !selectedFile || uploading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+        >
+          <IconUpload size={16} /> {uploading ? 'Yuklanmoqda...' : 'AI bazaga yuklash'}
+        </button>
+        {result && (
+          <div style={{ padding: 12, background: 'var(--green-dim)', border: '1px solid rgba(52,211,153,0.3)', borderRadius: 'var(--r-sm)', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <IconCheck size={16} style={{ color: 'var(--green)', flexShrink: 0 }} />
+            <div style={{ fontSize: 12, color: 'var(--text2)' }}>{result.chunks} chunk, {result.characters} belgi qo'shildi</div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 export default TeacherDashboard;

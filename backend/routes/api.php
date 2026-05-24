@@ -63,9 +63,15 @@ Route::middleware(['auth:api', 'role:student,teacher,admin'])->group(function ()
     // Subject progress
     Route::get('/progress/subjects', function (\Illuminate\Http\Request $request) {
         $user = $request->user();
-        $subjects = $user->field_id
-            ? $user->field->subjects()->with('topics')->get()
-            : \App\Models\Subject::with('topics')->get();
+        $subjects = match ($user->role) {
+            'student' => $user->field_id
+                ? $user->field->subjects()->with('topics')->get()
+                : collect(),
+            'teacher' => $user->subject_id
+                ? \App\Models\Subject::whereKey($user->subject_id)->with('topics')->get()
+                : collect(),
+            default => \App\Models\Subject::with('topics')->get(),
+        };
 
         $progress = $subjects->map(function ($subject) use ($user) {
             $topicIds = $subject->topics->pluck('id');
@@ -107,9 +113,15 @@ Route::middleware(['auth:api', 'role:student,teacher,admin'])->group(function ()
     // Recommendations
     Route::get('/recommendations', function (\Illuminate\Http\Request $request) {
         $user = $request->user();
-        $subjects = $user->field_id
-            ? $user->field->subjects()->with('topics')->get()
-            : \App\Models\Subject::with('topics')->get();
+        $subjects = match ($user->role) {
+            'student' => $user->field_id
+                ? $user->field->subjects()->with('topics')->get()
+                : collect(),
+            'teacher' => $user->subject_id
+                ? \App\Models\Subject::whereKey($user->subject_id)->with('topics')->get()
+                : collect(),
+            default => \App\Models\Subject::with('topics')->get(),
+        };
 
         $allTopicIds = $subjects->flatMap(fn ($s) => $s->topics->pluck('id'));
         $progress = \App\Models\UserTopicProgress::where('user_id', $user->id)

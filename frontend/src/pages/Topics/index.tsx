@@ -30,13 +30,20 @@ const Topics = () => {
         subjectService.getSubjects(),
         progressService.getSubjectProgress(),
       ]);
-      setSubjects(subjectData);
-      setProgress(progressData);
+      const safeSubs = Array.isArray(subjectData) ? subjectData : [];
+      const safeProg = Array.isArray(progressData) ? progressData : [];
+      setSubjects(safeSubs);
+      setProgress(safeProg);
 
-      const subjectId = selectedSubjectId || subjectData[0]?.id;
+      const subjectId = safeSubs.some((subject) => subject.id === selectedSubjectId)
+        ? selectedSubjectId
+        : safeSubs[0]?.id;
       if (subjectId) {
         setSearchParams({ subject: String(subjectId) }, { replace: true });
-        setTopics(await subjectService.getSubjectTopics(subjectId));
+        const topicData = await subjectService.getSubjectTopics(subjectId);
+        setTopics(Array.isArray(topicData) ? topicData : []);
+      } else {
+        setTopics([]);
       }
     } catch {
       message.error('Mavzular yuklanmadi');
