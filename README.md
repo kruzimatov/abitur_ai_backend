@@ -393,7 +393,7 @@ Shriftlar:
 | Frontend (Vercel) | [abitur-ai-frontend.vercel.app](https://abitur-ai-frontend.vercel.app) |
 | Backend API | [abitur-api.khayrullo.uz](https://abitur-api.khayrullo.uz) |
 | Frontend Repo | [github.com/mukhammedaliametov/abitur_ai_frontend](https://github.com/mukhammedaliametov/abitur_ai_frontend) |
-| Backend Repo | [github.com/kruzimatov/abitur_ai_backend](https://github.com/kruzimatov/abitur_ai_backend) |
+| Backend Repo | [github.com/kruzimatov/abitur_ai](https://github.com/kruzimatov/abitur_ai) |
 
 ---
 
