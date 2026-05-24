@@ -10,6 +10,9 @@ import {
   IconTrophy,
   IconHistory,
   IconLogout,
+  IconUsers,
+  IconFileText,
+  IconServer,
 } from '@tabler/icons-react';
 import { message } from 'antd';
 import { useAuth } from '../../hooks/useAuth';
@@ -31,7 +34,9 @@ const sidebarMenuGroups: SidebarSection[] = [
   {
     sectionTitle: "ASOSIY",
     items: [
-      { title: "Dashboard", path: "/dashboard", icon: IconLayoutDashboard },
+      { title: "Dashboard", path: "/dashboard", icon: IconLayoutDashboard, roles: ['student'] },
+      { title: "Dashboard", path: "/teacher-dashboard", icon: IconLayoutDashboard, roles: ['teacher'] },
+      { title: "Dashboard", path: "/admin-dashboard", icon: IconLayoutDashboard, roles: ['admin'] },
       { title: "Fanlar", path: "/subjects", icon: IconBooks, roles: ['student', 'admin'] },
       { title: "Mavzular", path: "/topics", icon: IconClipboardList, roles: ['student', 'admin'] },
     ],
@@ -39,17 +44,31 @@ const sidebarMenuGroups: SidebarSection[] = [
   {
     sectionTitle: "O'QISH",
     items: [
-      { title: "Mock testlar", path: "/mock-testlar", icon: IconClipboardCheck, roles: ['student', 'admin'] },
-      { title: "AI Tutor", path: "/ai-tutor", icon: IconBrain },
-      { title: "Darsliklar", path: "/darsliklar", icon: IconBook },
+      { title: "Mock testlar", path: "/mock-testlar", icon: IconClipboardCheck, roles: ['student'] },
+      { title: "AI Tutor", path: "/ai-tutor", icon: IconBrain, roles: ['student', 'teacher'] },
+      { title: "Darsliklar", path: "/darsliklar", icon: IconBook, roles: ['student'] },
+    ],
+  },
+  {
+    sectionTitle: "O'QITUVCHI",
+    items: [
+      { title: "Talabalar", path: "/teacher-dashboard", icon: IconUsers, roles: ['teacher'] },
+      { title: "Kontent", path: "/teacher-dashboard", icon: IconFileText, roles: ['teacher'] },
+    ],
+  },
+  {
+    sectionTitle: "BOSHQARUV",
+    items: [
+      { title: "Foydalanuvchilar", path: "/admin-dashboard", icon: IconUsers, roles: ['admin'] },
+      { title: "Tizim", path: "/admin-dashboard", icon: IconServer, roles: ['admin'] },
     ],
   },
   {
     sectionTitle: "TAHLIL",
     items: [
-      { title: "Progress", path: "/progress", icon: IconChartBar, roles: ['student', 'admin'] },
-      { title: "Leaderboard", path: "/leaderboard", icon: IconTrophy, roles: ['student', 'admin'] },
-      { title: "Tarix", path: "/history", icon: IconHistory, roles: ['student', 'admin'] },
+      { title: "Progress", path: "/progress", icon: IconChartBar, roles: ['student'] },
+      { title: "Leaderboard", path: "/leaderboard", icon: IconTrophy, roles: ['student'] },
+      { title: "Tarix", path: "/history", icon: IconHistory, roles: ['student'] },
     ],
   },
 ];

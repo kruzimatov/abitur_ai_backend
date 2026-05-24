@@ -1,8 +1,10 @@
-import { createBrowserRouter, Navigate } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import PublicRoute from "../../pages/Auth/Public/PublicRoute";
 import PrivateRoute from "../../pages/Auth/Private/PrivateRoute";
 import MainLayout from "../../layouts/MainLayout";
 import Dashboard from "../../pages/Dashboard";
+import TeacherDashboard from "../../pages/TeacherDashboard";
+import AdminDashboard from "../../pages/AdminDashboard";
 import NotFound from "../../pages/NotFound";
 import Subjects from "../../pages/Subjects";
 import Topics from "../../pages/Topics";
@@ -13,12 +15,13 @@ import Progress from "../../pages/Progress";
 import Leaderboard from "../../pages/LeaderBoard";
 import History from "../../pages/History";
 import Auth from "../../pages/Auth";
+import RoleDashboardRedirect from "../../components/RoleDashboardRedirect";
 
 export const router = createBrowserRouter([
   {
     path: '/login',
     element: (
-      <PublicRoute> 
+      <PublicRoute>
         <Auth />
       </PublicRoute>
     )
@@ -31,8 +34,10 @@ export const router = createBrowserRouter([
       </PrivateRoute>
     ),
     children: [
-      { index: true, element: <Navigate to="/dashboard" replace /> },
+      { index: true, element: <RoleDashboardRedirect /> },
       { path: "dashboard", element: <Dashboard /> },
+      { path: "teacher-dashboard", element: <TeacherDashboard /> },
+      { path: "admin-dashboard", element: <AdminDashboard /> },
       { path: "subjects", element: <Subjects /> },
       { path: "topics", element: <Topics /> },
       { path: "mock-testlar", element: <MockTests /> },

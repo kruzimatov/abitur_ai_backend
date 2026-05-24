@@ -22,7 +22,7 @@ const Login = () => {
         password: formData.password,
       });
       message.success('Tizimga xush kelibsiz!');
-      navigate('/dashboard', { replace: true });
+      navigate('/', { replace: true });
     } catch {
       message.error('Email yoki parol xato!');
     } finally {
