@@ -7,6 +7,11 @@ backend/storage/logs/
 backend/bootstrap/cache/
 backend/database/database.sqlite
 
+# Frontend
+frontend/node_modules/
+frontend/.env.local
+frontend/dist/
+
 # Python RAG
 rag_service/__pycache__/
 rag_service/vectorstore/
@@ -23,3 +28,8 @@ vectorstore/
 
 # Claude
 .claude/
+snuggly-squishing-sky.md
+
+# OS
+Thumbs.db
+*.log

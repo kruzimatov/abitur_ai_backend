@@ -8,6 +8,9 @@ import {
   IconFlame,
   IconArrowRight,
   IconCheck,
+  IconX,
+  IconStar,
+  IconCrown,
 } from '@tabler/icons-react';
 
 const features = [
@@ -60,6 +63,70 @@ const steps = [
   { num: '02', title: "Fan tanlang", desc: "DTM yo'nalishingizga mos fanlarni tanlang" },
   { num: '03', title: "Mavzularni o'rganing", desc: "Har bir mavzuni AI yordam bilan chuqur o'rganing" },
   { num: '04', title: "Test yeching", desc: "Mock testlar bilan bilimingizni sinab, AI tahlil oling" },
+];
+
+const plans = [
+  {
+    name: 'Bepul',
+    price: '0',
+    period: "oyiga",
+    desc: "Platformani sinab ko'rish uchun",
+    icon: IconStar,
+    color: 'var(--text2)',
+    borderColor: 'var(--border)',
+    bg: 'var(--bg2)',
+    features: [
+      { text: "Kuniga 5 ta AI savol", included: true },
+      { text: "2 ta fan", included: true },
+      { text: "Kuniga 1 ta mock test", included: true },
+      { text: "Asosiy mavzular", included: true },
+      { text: "AI diagnostika", included: false },
+      { text: "Feynman tekshiruvi", included: false },
+      { text: "Cheksiz AI chat", included: false },
+      { text: "Barcha fanlar", included: false },
+    ],
+  },
+  {
+    name: 'Pro',
+    price: "49,000",
+    period: "oyiga",
+    desc: "Jiddiy tayyorgarlik uchun",
+    icon: IconCrown,
+    color: 'var(--teal)',
+    borderColor: 'var(--teal)',
+    bg: 'var(--bg2)',
+    popular: true,
+    features: [
+      { text: "Cheksiz AI savol", included: true },
+      { text: "Barcha fanlar", included: true },
+      { text: "Cheksiz mock testlar", included: true },
+      { text: "Barcha mavzular + kontent", included: true },
+      { text: "AI diagnostika + tahlil", included: true },
+      { text: "Feynman usuli", included: true },
+      { text: "Progress tracking", included: true },
+      { text: "Ustuvor yordam", included: false },
+    ],
+  },
+  {
+    name: 'Premium',
+    price: "99,000",
+    period: "oyiga",
+    desc: "Maksimal natija uchun",
+    icon: IconCrown,
+    color: 'var(--purple)',
+    borderColor: 'var(--purple)',
+    bg: 'var(--bg2)',
+    features: [
+      { text: "Pro rejadagi hamma narsa", included: true },
+      { text: "Shaxsiy AI o'quv rejasi", included: true },
+      { text: "Haftalik AI hisobotlar", included: true },
+      { text: "Ustuvor yordam 24/7", included: true },
+      { text: "Guruh reytingi", included: true },
+      { text: "PDF yuklab olish", included: true },
+      { text: "Oilaviy tarif (3 foydalanuvchi)", included: true },
+      { text: "Yangi funksiyalarga erta kirish", included: true },
+    ],
+  },
 ];
 
 const Landing = () => {
@@ -234,6 +301,88 @@ const Landing = () => {
                 Logarifm — bu daraja ko'rsatkichini topish amali. Masalan: 2 ning qanday darajasi 8 ga teng? Javob: 3, chunki 2^3 = 8. Buni log_2(8) = 3 deb yozamiz...
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing */}
+      <section style={{ padding: '80px 40px', background: 'var(--bg2)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: 60 }}>
+            <h2 style={{ fontSize: 36, fontWeight: 800, fontFamily: "'DM Serif Display', serif", marginBottom: 12 }}>
+              Tariflar
+            </h2>
+            <p style={{ fontSize: 16, color: 'var(--text2)', maxWidth: 500, margin: '0 auto' }}>
+              O'zingizga mos rejani tanlang. Istalgan vaqtda yangilash mumkin.
+            </p>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, alignItems: 'stretch' }}>
+            {plans.map((plan) => {
+              const PlanIcon = plan.icon;
+              return (
+                <div key={plan.name} style={{
+                  background: plan.bg,
+                  border: `1.5px solid ${plan.popular ? plan.borderColor : 'var(--border)'}`,
+                  borderRadius: 'var(--r)',
+                  padding: 32,
+                  display: 'flex', flexDirection: 'column',
+                  position: 'relative',
+                  boxShadow: plan.popular ? '0 0 40px rgba(0,196,154,0.08)' : 'none',
+                }}>
+                  {plan.popular && (
+                    <div style={{
+                      position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)',
+                      background: 'var(--teal)', color: '#07090F',
+                      padding: '4px 16px', borderRadius: 20,
+                      fontSize: 11, fontWeight: 800, textTransform: 'uppercase',
+                      letterSpacing: '0.5px',
+                    }}>
+                      Mashhur
+                    </div>
+                  )}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+                    <PlanIcon size={20} style={{ color: plan.color }} />
+                    <span style={{ fontSize: 18, fontWeight: 700, color: 'var(--text)' }}>{plan.name}</span>
+                  </div>
+                  <div style={{ fontSize: 13, color: 'var(--text3)', marginBottom: 20 }}>{plan.desc}</div>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 24 }}>
+                    <span style={{ fontSize: 40, fontWeight: 800, color: plan.color === 'var(--text2)' ? 'var(--text)' : plan.color }}>
+                      {plan.price}
+                    </span>
+                    <span style={{ fontSize: 14, color: 'var(--text3)' }}>
+                      {plan.price === '0' ? '' : "so'm"} / {plan.period}
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10, flex: 1, marginBottom: 24 }}>
+                    {plan.features.map((f) => (
+                      <div key={f.text} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13, color: f.included ? 'var(--text2)' : 'var(--text3)' }}>
+                        {f.included
+                          ? <IconCheck size={15} style={{ color: plan.color === 'var(--text2)' ? 'var(--teal)' : plan.color, flexShrink: 0 }} />
+                          : <IconX size={15} style={{ color: 'var(--text3)', opacity: 0.5, flexShrink: 0 }} />
+                        }
+                        <span style={{ opacity: f.included ? 1 : 0.6 }}>{f.text}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <Link to="/login" style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                    padding: '12px 24px', fontSize: 14, fontWeight: 700,
+                    background: plan.popular ? 'var(--teal)' : 'transparent',
+                    color: plan.popular ? '#07090F' : 'var(--text)',
+                    border: plan.popular ? 'none' : '1px solid var(--border)',
+                    borderRadius: 'var(--r-sm)',
+                    textDecoration: 'none',
+                    transition: 'all 0.2s',
+                  }}>
+                    {plan.price === '0' ? 'Bepul boshlash' : 'Tanlash'}
+                    <IconArrowRight size={15} />
+                  </Link>
+                </div>
+              );
+            })}
+          </div>
+          <div style={{ textAlign: 'center', marginTop: 32, fontSize: 13, color: 'var(--text3)' }}>
+            * Barcha narxlar UZS da. Payme, Click va karta orqali to'lash mumkin.
           </div>
         </div>
       </section>

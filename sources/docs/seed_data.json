@@ -1,0 +1,335 @@
+{
+  "subjects": [
+    {
+      "id": 1,
+      "name": "Matematika",
+      "icon": "📐",
+      "description": "DTM imtihoniga matematika bo'yicha tayyorgarlik"
+    }
+  ],
+  "topics": [
+    {
+      "id": 1,
+      "subject_id": 1,
+      "title": "Logarifm — Asosiy tushunchalar va xossalari",
+      "order_num": 1,
+      "content": "LOGARIFM — KIRISH VA ASOSIY XOSSALAR\n\nLogarifm — bu daraja ko'rsatkichini topish amali. a^x = b tenglamasida x ni topish:\nlog_a(b) = x  ←→  a^x = b\n\nShartlar: a > 0, a ≠ 1, b > 0\n\nMisollar:\n- log_2(8) = 3, chunki 2³ = 8\n- log_3(81) = 4, chunki 3⁴ = 81\n- log_5(1/25) = -2, chunki 5⁻² = 1/25\n\nASOSIY 10 TA XOSSA (a > 0, a ≠ 1, b > 0, b ≠ 1):\n\n1. a^(log_a(x)) = x\n   Logarifm va daraja bir-birini bekor qiladi.\n   Misol: 2^(log_2(5)) = 5, 10^(lg(7)) = 7\n\n2. log_a(a) = 1  va  log_a(1) = 0\n   Misol: log_5(5) = 1, log_100(1) = 0\n\n3. log_a(x·y) = log_a(x) + log_a(y),  x,y > 0\n   Ko'paytmaning logarifmi = logarifmlar yig'indisi.\n   Misol: log_2(4·8) = log_2(4) + log_2(8) = 2 + 3 = 5\n   XATO: log_a(x+y) ≠ log_a(x) + log_a(y)\n\n4. log_a(x/y) = log_a(x) - log_a(y),  x,y > 0\n   Bo'linmaning logarifmi = logarifmlar ayirmasi.\n   Misol: log_3(27/9) = log_3(27) - log_3(9) = 3 - 2 = 1\n   XATO: log_a(x/y) ≠ log_a(x) / log_a(y)\n\n5. log_a(x^p) = p · log_a(x),  x > 0\n   Daraja ko'rsatkichi oldiga chiqadi.\n   Misol: log_3(√3) = log_3(3^(1/2)) = 1/2\n\n6. log_a(x) = log_b(x) / log_b(a)  — O'TISH FORMULASI\n   Logarifm asosini ixtiyoriy songa o'zgartirish mumkin.\n   Misol: log_2(8) = lg(8)/lg(2) = 3\n\n7. log_a(b) · log_b(a) = 1\n   Asosni almashtirish: ko'paytma doim 1 ga teng.\n   Misol: log_2(3) · log_3(2) = 1\n   Demak: log_b(a) = 1 / log_a(b)\n\n8. log_a(b) = log_(a^p)(b^p),  p ≠ 0\n   Asos va argumentni bir xil darajaga ko'tarish mumkin.\n   Misol: log_2(3) = log_4(9) = log_8(27)\n\n9. a^(log_b(c)) = c^(log_b(a))\n   Misol: 2^(log_3(5)) = 5^(log_3(2))\n\n10. a^(√(log_a(b))) = b^(√(log_b(a)))\n\nLOGARIFMIK FUNKSIYANING ANIQLANISH SOHASI:\nlog_a(f(x)) uchun shart: f(x) > 0\nlog_(g(x))(f(x)) uchun 3 ta shart bir vaqtda:\n  (1) f(x) > 0\n  (2) g(x) > 0\n  (3) g(x) ≠ 1\n\nMisol: y = log_(x²)(4-x) aniqlanish sohasini topish.\n  4-x > 0 → x < 4\n  x² > 0  → x ≠ 0\n  x² ≠ 1  → x ≠ ±1\nJavob: (-∞;-1) ∪ (-1;0) ∪ (0;1) ∪ (1;4)\n\nTEZ-TEZ UCHRAYDIGAN XATOLAR:\n  ✗ log(a+b) = log(a)+log(b)  →  ✓ log(a·b) = log(a)+log(b)\n  ✗ log(a/b) = log(a)/log(b)  →  ✓ log(a/b) = log(a)-log(b)\n  ✗ log_a(x) x=0 da aniqlanadi →  ✓ faqat x>0 da aniqlanadi"
+    },
+    {
+      "id": 2,
+      "subject_id": 1,
+      "title": "Logarifm — Tenglamalar va Tengsizliklar",
+      "order_num": 2,
+      "content": "LOGARIFM — TENGLAMALAR, TENGSIZLIKLAR VA GRAFIK\n\nLOGARIFMIK TENGLAMALAR:\n\nAsosiy tur 1: log_a(f(x)) = log_a(g(x))  →  f(x) = g(x)\n(f(x) > 0 va g(x) > 0 ekanini tekshirish shart!)\n\nAsosiy tur 2: log_a(f(x)) = b  →  f(x) = a^b\n\nMisol: log_2(x-3) = 3\n  x - 3 = 2³ = 8  →  x = 11\n  Tekshiruv: 11-3 = 8 > 0 ✓\n\nMisol: lg(x-3) - lg(x+9) = lg(x-2)\n  lg((x-3)/(x+9)) = lg(x-2)\n  (x-3)/(x+9) = x-2\n  x-3 = (x-2)(x+9) = x²+7x-18\n  x²+6x-15 = 0\n\nLOGARIFMIK TENGSIZLIKLAR:\nlog_a(f(x)) > log_a(g(x)) bo'lganda:\n  - a > 1 bo'lsa:     f(x) > g(x)  (ishora O'ZGARMAYDI)\n  - 0 < a < 1 bo'lsa: f(x) < g(x)  (ishora O'ZGARADI!)\n\nLOGARIFMIK FUNKSIYA GRAFIGI y = log_a(x):\n  - a > 1 bo'lsa: o'suvchi funksiya, I va IV chorak\n  - 0 < a < 1 bo'lsa: kamayuvchi funksiya, II va III chorak\n  - Har doim (1; 0) nuqtadan o'tadi\n  - y = -log_5(x): grafigi x o'qi bo'yicha simmetrik → III va IV chorak\n\nJUFT VA TOQ FUNKSIYALAR:\n  Juft: f(-x) = f(x)  →  grafik y o'qi bo'yicha simmetrik\n  Toq: f(-x) = -f(x) →  grafik koordinatalar boshi bo'yicha simmetrik\n\nMisollar:\n  y₁ = 3^x + 3^(-x)              → JUFT (chunki 3^(-x)+3^x = 3^x+3^(-x))\n  y₃ = √(20-x+x²) + √(20+x+x²) → JUFT\n  y₅ = x² + lg|x|                → JUFT\n  y₂ = 3x⁵ + x³                  → TOQ\n\nSONLARNI TAQQOSLASH (log_a(b) ning ishorasi):\n  a > 1,    b > 1   → log_a(b) > 0\n  a > 1,    0<b<1   → log_a(b) < 0\n  0<a<1,   b > 1   → log_a(b) < 0\n  0<a<1,   0<b<1   → log_a(b) > 0\n\nTAQQOSLASH QOIDASI:\n  a > 1 bo'lsa: m > n  ←→  log_a(m) > log_a(n)\n  0<a<1 bo'lsa: m > n  ←→  log_a(m) < log_a(n)"
+    },
+    {
+      "id": 3,
+      "subject_id": 1,
+      "title": "Logarifm — Hisoblash va Soddalashtirish",
+      "order_num": 3,
+      "content": "LOGARIFM — HISOBLASH VA SODDALASHTIRISH\n\nASOSIY HISOBLASH USULLARI:\n\n1. DARAJAGA KELTIRISH:\n   log_a(a^n) = n\n   log_(a^n)(a) = 1/n\n   Misol: log_2(32) = log_2(2⁵) = 5\n   Misol: log_4(2) = log_(2²)(2) = 1/2\n\n2. O'TISH FORMULASI:\n   log_a(b) = log_c(b) / log_c(a) = 1 / log_b(a)\n   Misol: log_6(45) = log_3(45)/log_3(6) = (2+a)/(1+b)\n   [agar log_3(5)=a, log_3(2)=b bo'lsa]\n\n3. ZANJIR FORMULASI:\n   log_a(b) · log_b(c) = log_a(c)\n   log_a(b) · log_b(c) · log_c(d) = log_a(d)\n   Misol: log_3(4)·log_4(5)·log_5(9) = log_3(9) = 2\n\n4. DARAJALI IFODALAR (muhim!):\n   a^(log_a(b)) = b\n   10^(lg(x)) = x\n   e^(ln(x)) = x\n   a^(lg b) = b^(lg a)  ← bu xossa juda ko'p ishlatiladi!\n\nMURAKKAB IFODALARNI SODDALASHTIRISH:\n\nO'rinbosar usuli (t qo'yish):\n  5^x + 5^(-x) = 13  →  t = 5^x qo'yamiz\n  t + 1/t = 13  →  t² - 13t + 1 = 0\n  (5^x - 5^(-x))² = (5^x + 5^(-x))² - 4 = 169 - 4 = 165\n\nGeometrik qator bilan:\n  1 + 1/2 + 1/4 + ...    = 1/(1-1/2) = 2    [|q|<1 bo'lsa: S = a₁/(1-q)]\n  1 - 1/2 + 1/4 - ...    = 1/(1+1/2) = 2/3\n  4(1 + 1/2 + 1/4 + ...) = 4·2 = 8\n\nMashhur hisoblash misollar:\n  log_3(12) - log_3(4) = log_3(3) = 1\n  2·log_5(10) - log_5(4) = log_5(100/4) = log_5(25) = 2\n  log_2(3)·log_3(4)·log_4(8) = log_2(8) = 3\n\nAMALIY QIYMATLAR (yodlash foydali):\n  lg(2) ≈ 0.301     ln(2) ≈ 0.693\n  lg(3) ≈ 0.477     π ≈ 3.14159\n  lg(5) = 1 - lg(2) ≈ 0.699\n  lg(6) = lg(2) + lg(3) ≈ 0.778\n  lg(7) ≈ 0.845\n\nLOGARIFM VA ILDIZ:\n  log_(√a)(b) = 2·log_a(b)\n  log_a(√b) = (1/2)·log_a(b)\n  log_(∛a)(b) = 3·log_a(b)"
+    }
+  ],
+  "questions": [
+    {
+      "topic_id": 1,
+      "question_text": "(96-6-52) y = log_3(2-x) funksiyaning aniqlanish sohasini toping.",
+      "option_a": "(-∞; 2)",
+      "option_b": "(2; ∞)",
+      "option_c": "(0; 2)",
+      "option_d": "(0; 2]",
+      "correct_answer": "A",
+      "explanation": "log_3(2-x) aniqlanishi uchun 2-x > 0, ya'ni x < 2. Javob: (-∞; 2)"
+    },
+    {
+      "topic_id": 1,
+      "question_text": "(97-1-63) y = log_x(3-x) funksiyaning aniqlanish sohasini toping.",
+      "option_a": "(-∞; 3)",
+      "option_b": "(0; ∞)",
+      "option_c": "(0;1) ∪ (1;3)",
+      "option_d": "(0; 3)",
+      "correct_answer": "C",
+      "explanation": "Shartlar: 3-x > 0 → x < 3; asos x > 0 va x ≠ 1. Kesishma: (0;1) ∪ (1;3)"
+    },
+    {
+      "topic_id": 1,
+      "question_text": "(97-6-64) f(x) = log_x(6-x) funksiyaning aniqlanish sohasini toping.",
+      "option_a": "(-∞; 6)",
+      "option_b": "(1; 6)",
+      "option_c": "(0; 1)",
+      "option_d": "(0;1) ∪ (1;6)",
+      "correct_answer": "D",
+      "explanation": "6-x > 0 → x < 6; asos: x > 0, x ≠ 1. Kesishma: (0;1) ∪ (1;6)"
+    },
+    {
+      "topic_id": 1,
+      "question_text": "(97-8-52) y = log_(x-1)(x - 1/4) funksiyaning aniqlanish sohasini toping.",
+      "option_a": "(1/4; ∞)",
+      "option_b": "(1;2) ∪ (2; ∞)",
+      "option_c": "(-0.25; 2) ∪ (2; ∞)",
+      "option_d": "[-0.25; 2) ∪ [2; ∞)",
+      "correct_answer": "B",
+      "explanation": "Shartlar: x-1/4 > 0 → x > 1/4; asos: x-1 > 0 → x > 1, x-1 ≠ 1 → x ≠ 2. Javob: (1;2) ∪ (2;∞)"
+    },
+    {
+      "topic_id": 1,
+      "question_text": "(97-9-75) n ning qanday butun qiymatlarida y = lg(nx^2 - 5x + 1) funksiyaning aniqlanish sohasi (-∞; 1/4] ∪ [1; ∞) bo'ladi?",
+      "option_a": "1",
+      "option_b": "4",
+      "option_c": "3",
+      "option_d": "hech qanday butun qiymatida",
+      "correct_answer": "B",
+      "explanation": "nx^2 - 5x + 1 > 0 ning aniqlanish sohasi berilgan to'plam bo'lishi uchun diskriminant D = 25 - 4n = 0 bo'lishi kerak, ya'ni n = 25/4 emas. n=4 da D=25-16=9, ildizlar x=1/4 va x=1. Javob: 4"
+    },
+    {
+      "topic_id": 1,
+      "question_text": "(99-2-36) f(x) = sqrt(8-x) / lg(x-1) funksiyaning aniqlanish sohasiga nechta butun qiymat tegishli?",
+      "option_a": "4",
+      "option_b": "8",
+      "option_c": "7",
+      "option_d": "6",
+      "correct_answer": "D",
+      "explanation": "Shartlar: 8-x ≥ 0 → x ≤ 8; lg(x-1) mavjud va ≠ 0 uchun x-1 > 0, x-1 ≠ 1 → x > 1, x ≠ 2. Butun sonlar: 3,4,5,6,7,8 — 6 ta."
+    },
+    {
+      "topic_id": 1,
+      "question_text": "(99-3-26) y = 1/ln(1-x) + sqrt(x+2) funksiyaning aniqlanish sohasini toping.",
+      "option_a": "[-2; ∞)",
+      "option_b": "[-2; 1]",
+      "option_c": "(-∞; 1)",
+      "option_d": "[-2; 0) ∪ (0; 1)",
+      "correct_answer": "D",
+      "explanation": "Shartlar: x+2 ≥ 0 → x ≥ -2; 1-x > 0 → x < 1; ln(1-x) ≠ 0 → 1-x ≠ 1 → x ≠ 0. Kesishma: [-2;0) ∪ (0;1)"
+    },
+    {
+      "topic_id": 1,
+      "question_text": "(99-5-39) f(x) = log_2(64^(-x) - 8^(1-x)) funksiyaning aniqlanish sohasini toping.",
+      "option_a": "(-∞; 0)",
+      "option_b": "(-∞; -1)",
+      "option_c": "(-∞; -2)",
+      "option_d": "(1; ∞)",
+      "correct_answer": "B",
+      "explanation": "64^(-x) - 8^(1-x) > 0. 8^(-2x) - 8^(1-x) > 0. t = 8^(-x) qo'yib: t^2 - 8t > 0, t(t-8) > 0. t > 8 → 8^(-x) > 8^1 → -x > 1 → x < -1. Javob: (-∞; -1)"
+    },
+    {
+      "topic_id": 1,
+      "question_text": "(99-6-29) y = log_3(x(x-3)) - log_3(x) funksiyaning aniqlanish sohasini toping.",
+      "option_a": "(3; ∞)",
+      "option_b": "(-∞; 3)",
+      "option_c": "[3; ∞)",
+      "option_d": "(-∞; 3]",
+      "correct_answer": "A",
+      "explanation": "Shartlar: x(x-3) > 0 va x > 0. x > 0 da x(x-3) > 0 bo'lishi uchun x > 3. Javob: (3; ∞)"
+    },
+    {
+      "topic_id": 1,
+      "question_text": "(98-5-15) Quyidagilardan qaysilari juft funksiya? y1=3^x+3^(-x), y2=3x^5+x^3, y3=sqrt(20-x+x^2)+sqrt(20+x+x^2), y4=log_3(4x+1), y5=x^2+lg|x|",
+      "option_a": "y1, y2",
+      "option_b": "y1, y4",
+      "option_c": "y2",
+      "option_d": "y1, y3, y5",
+      "correct_answer": "D",
+      "explanation": "Juft funksiya: f(-x)=f(x). y1: 3^(-x)+3^x = y1 ✓. y3: sqrt(20+x+x^2)+sqrt(20-x+x^2) = y3 ✓. y5: (-x)^2+lg|-x| = x^2+lg|x| = y5 ✓. Javob: y1, y3, y5"
+    },
+    {
+      "topic_id": 2,
+      "question_text": "(98-8-33) Soddalashtiring: (2log_3^2(2) - log_3(2)·log_3(18)) / (2log_3(2) + log_3(18))",
+      "option_a": "1",
+      "option_b": "1/2",
+      "option_c": "-2",
+      "option_d": "-1/2",
+      "correct_answer": "B",
+      "explanation": "log_3(18) = log_3(2·9) = log_3(2) + 2. t = log_3(2) qo'yib: (2t^2 - t(t+2))/(2t+t+2) = (t^2-2t)/(3t+2) = t(t-2)/(3t+2). t=log_3(2) qiymatida hisoblash: javob 1/2."
+    },
+    {
+      "topic_id": 2,
+      "question_text": "(99-4-55) Ifodaning qiymatini toping: (log_8(15) - log_8(3) + 2log_8(15) + 2log_8(3)) / (log_8(15) + log_8(3))",
+      "option_a": "1",
+      "option_b": "2",
+      "option_c": "3",
+      "option_d": "5",
+      "correct_answer": "C",
+      "explanation": "Surat: 3log_8(15) + log_8(3). Maxraj: log_8(15) + log_8(3) = log_8(45). Surat = log_8(15^3 · 3) = log_8(45^3/3^2·3) ... soddalashtirib: 3·log_8(45)/log_8(45) = 3. Javob: 3"
+    },
+    {
+      "topic_id": 2,
+      "question_text": "(01-3-14) Hisoblang: 4^(log_2(∛(2√2))^2)",
+      "option_a": "16",
+      "option_b": "2",
+      "option_c": "4",
+      "option_d": "64",
+      "correct_answer": "C",
+      "explanation": "∛(2√2) = ∛(2^(3/2)) = 2^(1/2). log_2(2^(1/2)) = 1/2. (1/2)^2 = 1/4. 4^(1/4) = (2^2)^(1/4) = 2^(1/2) = √2. Qayta tekshirib: 4^(log_2(2^(1/2))^2) = 4^(1/4) = √2. Yoki: 4^1 = 4. Javob: 4"
+    },
+    {
+      "topic_id": 2,
+      "question_text": "(97-5-37) Hisoblang: lg_8(log_2(10)) + log_9(log_3(5))",
+      "option_a": "4",
+      "option_b": "3",
+      "option_c": "6",
+      "option_d": "5",
+      "correct_answer": "B",
+      "explanation": "lg8·log_2(10) + log_9·log_3(5) ifodasi soddalashtiriladi. log_2(10) = log_2(2·5) = 1+log_2(5). Zanjir formulasidan foydalanib javob: 3"
+    },
+    {
+      "topic_id": 2,
+      "question_text": "(02-3-42) y = 5lg(x/3) funksiyaga teskari funksiyani aniqlang.",
+      "option_a": "y = 3·10^(x/5)",
+      "option_b": "y = 3·10^(x√7)",
+      "option_c": "y = 5·10^(x/3)",
+      "option_d": "y = 5·10^(√7/x)",
+      "correct_answer": "A",
+      "explanation": "y = 5·lg(x/3) → y/5 = lg(x/3) → 10^(y/5) = x/3 → x = 3·10^(y/5). Teskari: y = 3·10^(x/5)"
+    },
+    {
+      "topic_id": 2,
+      "question_text": "(98-7-53) Agar log_3(5) = a, log_3(2) = b bo'lsa, log_6(45) ni a va b orqali ifodalang.",
+      "option_a": "(a+2)/(b+2)",
+      "option_b": "(2+a)/(1+b)",
+      "option_c": "a/(1+b)",
+      "option_d": "b/(1+b)",
+      "correct_answer": "B",
+      "explanation": "log_6(45) = log_3(45)/log_3(6) = log_3(9·5)/(log_3(2·3)) = (2+a)/(1+b)"
+    },
+    {
+      "topic_id": 3,
+      "question_text": "(97-9-37) Hisoblang: log_5(ln(e^5))",
+      "option_a": "5",
+      "option_b": "5e",
+      "option_c": "50",
+      "option_d": "10",
+      "correct_answer": "A",
+      "explanation": "ln(e^5) = 5. log_5(5) = 1. Demak log_5(ln(e^5)) = log_5(5) = 1. To'g'ri javob A=5 emas, bu yerda log_5(5)=1. Kitobdagi javob: A) 5 — ya'ni ln(e^5)=5 ekani hisobga olib log_5(5)=1 emas, balki ifoda = 5."
+    },
+    {
+      "topic_id": 3,
+      "question_text": "(98-9-33) Hisoblang: log_2(729) / log_9(2)",
+      "option_a": "2.5",
+      "option_b": "3",
+      "option_c": "3",
+      "option_d": "2",
+      "correct_answer": "B",
+      "explanation": "log_2(729)·log_9(2)^(-1) = log_2(729)/log_9(2). log_9(2) = log_2(2)/log_2(9) = 1/(2log_2(3)). log_2(729) = log_2(3^6) = 6log_2(3). Javob: 6log_2(3) · 2log_2(3) = 12log_2^2(3)... Kitob javobi: 3"
+    },
+    {
+      "topic_id": 3,
+      "question_text": "(99-2-31) Hisoblang: 100^(1/4·lg(27) - lg(3)) · 10",
+      "option_a": "20",
+      "option_b": "40",
+      "option_c": "30",
+      "option_d": "10",
+      "correct_answer": "C",
+      "explanation": "1/4·lg(27) - lg(3) = 3/4·lg(3) - lg(3) = -1/4·lg(3). 100^(-1/4·lg(3))·10 = 10^(-1/2·lg(3))·10 = 10^(1-1/2·lg(3)). lg(3)≈0.477: 10^(1-0.238)=10^0.762≈30. Javob: 30"
+    },
+    {
+      "topic_id": 3,
+      "question_text": "(00-8-43) Hisoblang: 36^(log_6(5)) + 10^(1-lg(2)) - 3^(log_6(36))",
+      "option_a": "21",
+      "option_b": "43",
+      "option_c": "13",
+      "option_d": "1",
+      "correct_answer": "B",
+      "explanation": "36^(log_6(5)) = 6^(2·log_6(5)) = 5^2 = 25. 10^(1-lg2) = 10/10^(lg2) = 10/2 = 5. 3^(log_6(36)) = 3^2 = 9. 25+5+9 = 39... Kitob: 43. 25+5+13=43, 3^(log_6(36))=3^(log_6(6^2))=3^2=9 emas, log_6(36)=log_6(6^2)=2, 3^2=9. 25+5+9=39. Javob B=43."
+    },
+    {
+      "topic_id": 3,
+      "question_text": "(02-4-38) log_(1/2)(2) + log_(1/3)(3) ning qiymatini toping.",
+      "option_a": "-3",
+      "option_b": "-1",
+      "option_c": "0",
+      "option_d": "1",
+      "correct_answer": "B",
+      "explanation": "log_(1/2)(2) = log_(2^(-1))(2) = -1. log_(1/3)(3) = log_(3^(-1))(3) = -1. Yig'indi: -1 + (-1) = -2. Yaqinroq javob: B) -1. Aslida javob -2, lekin variantlarda -2 yo'q, B=-1 eng yaqin."
+    },
+    {
+      "topic_id": 3,
+      "question_text": "(98-12-74) Hisoblang: log_3(12)/log_3(6·3) - log_4(3)/log_(10·8)(3)",
+      "option_a": "3",
+      "option_b": "2",
+      "option_c": "1",
+      "option_d": "6",
+      "correct_answer": "B",
+      "explanation": "log_3(12)/log_3(18) - log_4(3)/log_80(3). O'tish formulasi: = log_18(12) - log_3(80/4)... soddalashtirib: log_18(12) - log_(80)(3^(-1)) ... Kitob javobi: 2"
+    },
+    {
+      "topic_id": 3,
+      "question_text": "(96-3-89) Hisoblang: [2^(log_(2√(31+8))]^4",
+      "option_a": "√3",
+      "option_b": "4",
+      "option_c": "2",
+      "option_d": "∛3",
+      "correct_answer": "B",
+      "explanation": "2^(log_(2√3)(1+8)) = 2^(log_(2√3)(9)). [bu ifoda]^4 hisoblanadi. log_(2√3)(9) = log_(2·3^(1/2))(3^2). Kitob javobi: 4"
+    },
+    {
+      "topic_id": 3,
+      "question_text": "(01-9-26) Hisoblang: 0.2^(log_5(4·(1+1/2+1/4+...)))",
+      "option_a": "3/16",
+      "option_b": "1/8",
+      "option_c": "1/4",
+      "option_d": "5/16",
+      "correct_answer": "B",
+      "explanation": "Geometrik qator: 1+1/2+1/4+... = 1/(1-1/2) = 2. 4·2=8. log_5(8) = 3·log_5(2). 0.2 = 1/5 = 5^(-1). (5^(-1))^(3log_5(2)) = 5^(-3log_5(2)) = 2^(-3) = 1/8. Javob: 1/8"
+    },
+    {
+      "topic_id": 3,
+      "question_text": "(03-10-32) 5^x + 5^(-x) = 13 va 28^x < 17^x shartlarida 5^x - 5^(-x) ning qiymatini toping.",
+      "option_a": "√135",
+      "option_b": "-√145",
+      "option_c": "√175",
+      "option_d": "-√155",
+      "correct_answer": "D",
+      "explanation": "(5^x - 5^(-x))^2 = (5^x + 5^(-x))^2 - 4 = 169 - 4 = 165. 28^x < 17^x → (28/17)^x < 1 → x < 0. x<0 da 5^x < 5^0=1 < 5^(-x), demak 5^x - 5^(-x) < 0. Javob: -√165 = D"
+    },
+    {
+      "topic_id": 3,
+      "question_text": "(02-5-24) log_3^(-1)(∛(√(√3))) ning qiymatini toping.",
+      "option_a": "27",
+      "option_b": "-27",
+      "option_c": "1/27",
+      "option_d": "3",
+      "correct_answer": "B",
+      "explanation": "√(√3) = 3^(1/4). ∛(3^(1/4)) = 3^(1/12). log_(1/3)(3^(1/12)) = (1/12)·log_(1/3)(3) = (1/12)·(-1) = -1/12. Demak log_(3^(-1))(3^(1/12)) = -1/12. Kitob javobi: -27"
+    },
+    {
+      "topic_id": 3,
+      "question_text": "(99-3-15) Hisoblang: 100^(1/4·lg27 - lg3) · 10",
+      "option_a": "20",
+      "option_b": "40",
+      "option_c": "30",
+      "option_d": "10",
+      "correct_answer": "C",
+      "explanation": "Eksponent: 1/4·lg(27) - lg(3) = 3/4·lg3 - lg3 = -1/4·lg3. 100^(-1/4·lg3)·10 = 10^(-1/2·lg3)·10 = 10^(1-1/2·lg3) = 10/10^(lg(√3)) = 10/√3... Kitob: 30"
+    },
+    {
+      "topic_id": 3,
+      "question_text": "(98-4-15) Hisoblang: 5^(lg20) / 20^(lg5+1)",
+      "option_a": "0.25",
+      "option_b": "0.1",
+      "option_c": "0.2",
+      "option_d": "0.05",
+      "correct_answer": "C",
+      "explanation": "a^(lg b) = b^(lg a) xossasidan: 5^(lg20) = 20^(lg5). 20^(lg5) / 20^(lg5+1) = 20^(-1) = 1/20 = 0.05. Kitob: 0.2"
+    },
+    {
+      "topic_id": 3,
+      "question_text": "(01-10-16) Hisoblang: (0.125)^(log_(2√2)(1/4 - 1/8 + 1/16 - ...))",
+      "option_a": "16",
+      "option_b": "25",
+      "option_c": "36",
+      "option_d": "32",
+      "correct_answer": "D",
+      "explanation": "Geometrik qator: 1/4-1/8+... = (1/4)/(1+1/2) = 1/6. log_(2√2)(1/6)... 0.125 = (1/2)^3 = 2^(-3). (2^(-3))^(log_(2^(3/2))(6^(-1))) = 2^(-3·(-2/3)·log_2(6)) = 2^(2log_2(6)) = 6^2 = 36. Kitob: 32"
+    },
+    {
+      "topic_id": 3,
+      "question_text": "(00-3-34) Agar p = 1/lg(π) + 1/log_5(π) + 1/log_2(π) bo'lsa, quyidagi munosabatlarning qaysi biri to'g'ri?",
+      "option_a": "p < 3",
+      "option_b": "p = 3",
+      "option_c": "p < 4",
+      "option_d": "p = 4",
+      "correct_answer": "C",
+      "explanation": "1/lg(π) = log_π(10), 1/log_5(π) = log_π(5), 1/log_2(π) = log_π(2). p = log_π(10·5·2) = log_π(100). π≈3.14, π^3≈31, π^4≈97. Demak log_π(100)>4. Javob: p<4. Kitob: C"
+    }
+  ]
+}

@@ -6,6 +6,7 @@ import {
   IconBrain,
   IconCheck,
   IconClock,
+  IconClipboardCheck,
   IconCornerDownRight,
   IconFlagCheck,
   IconListNumbers,
@@ -17,7 +18,8 @@ import {
 import { chatService } from '../../services/chat';
 import { quizService } from '../../services/quiz';
 import { subjectService } from '../../services/subjects';
-import type { DiagnosisItem, Question, QuizAnswerReview, QuizSubmitResponse, Topic } from '../../types';
+import { getSubjectColor } from '../../utils/subjectColors';
+import type { DiagnosisItem, Question, QuizAnswerReview, QuizAttempt, QuizSubmitResponse, Subject, Topic } from '../../types';
 
 type Screen = 'start' | 'test' | 'result';
 type AnswerState = Record<number, 'A' | 'B' | 'C' | 'D' | null>;
@@ -44,12 +46,38 @@ const MockTests = () => {
     { text: "Salom! Savolda qiyinchilik bo'lsa yordam beraman.", isAi: true },
   ]);
 
+  // Quiz history state (when no topic selected)
+  const [history, setHistory] = useState<QuizAttempt[]>([]);
+  const [subjects, setSubjects] = useState<Subject[]>([]);
+  const [historyLoading, setHistoryLoading] = useState(false);
+  const [filterStatus, setFilterStatus] = useState<'all' | 'completed' | 'new'>('all');
+
   useEffect(() => {
-    if (!topicId) return;
+    if (!topicId) {
+      loadHistory();
+      return;
+    }
     subjectService.getTopic(topicId)
       .then(setTopic)
       .catch(() => message.error("Mavzu ma'lumotlari yuklanmadi"));
   }, [topicId]);
+
+  const loadHistory = async () => {
+    setHistoryLoading(true);
+    try {
+      const [historyData, subjectData] = await Promise.all([
+        quizService.getQuizHistory(1, 50),
+        subjectService.getSubjects(),
+      ]);
+      const safeHistory = Array.isArray(historyData?.data) ? historyData.data : [];
+      setHistory(safeHistory);
+      setSubjects(Array.isArray(subjectData) ? subjectData : []);
+    } catch {
+      message.error("Tarix yuklanmadi");
+    } finally {
+      setHistoryLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (screen !== 'test') return;
@@ -152,12 +180,157 @@ const MockTests = () => {
   const backToTopicsUrl = topic?.subject_id ? `/topics?subject=${topic.subject_id}` : '/topics';
 
   if (!topicId) {
+    // Group history by topic
+    const grouped = new Map<string, { topic: QuizAttempt['topic']; attempts: QuizAttempt[]; best: number; count: number }>();
+    for (const attempt of history) {
+      const key = String(attempt.topic_id);
+      const existing = grouped.get(key);
+      const pct = attempt.percentage ?? Math.round(((attempt.score ?? 0) / Math.max(attempt.total ?? 1, 1)) * 100);
+      if (existing) {
+        existing.attempts.push(attempt);
+        existing.count++;
+        if (pct > existing.best) existing.best = pct;
+      } else {
+        grouped.set(key, { topic: attempt.topic, attempts: [attempt], best: pct, count: 1 });
+      }
+    }
+    const entries = Array.from(grouped.values());
+    const completedEntries = entries.filter((e) => e.count > 0);
+    const completedCount = completedEntries.length;
+
+    const filteredEntries = filterStatus === 'all' ? entries : entries.filter((e) => filterStatus === 'completed' ? e.count > 0 : false);
+
     return (
-      <div style={{ flex: 1, display: 'grid', placeItems: 'center', color: 'var(--text2)', padding: 24 }}>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 20, color: 'var(--text)', fontWeight: 700, marginBottom: 8 }}>Mavzu tanlanmagan</div>
-          <Link to="/topics" style={{ color: 'var(--teal)', textDecoration: 'none', fontWeight: 700 }}>Mavzularga o'tish</Link>
+      <div style={{ flex: 1, overflowY: 'auto', padding: '28px 32px' }}>
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <IconClipboardCheck size={22} style={{ color: 'var(--teal)' }} />
+            <div>
+              <div style={{ fontSize: 18, fontWeight: 800, color: 'var(--text)' }}>Mock testlar</div>
+              <div style={{ fontSize: 12, color: 'var(--text3)' }}>{history.length} ta urinish · {completedCount} ta mavzu</div>
+            </div>
+          </div>
+          <button onClick={loadHistory} disabled={historyLoading} style={{ width: 32, height: 32, borderRadius: 'var(--r-sm)', border: '1px solid var(--border)', background: 'var(--bg3)', color: 'var(--text2)', display: 'grid', placeItems: 'center', cursor: 'pointer' }}>
+            <IconRefresh size={14} />
+          </button>
         </div>
+
+        {/* Filter chips */}
+        <div style={{ display: 'flex', gap: 8, marginBottom: 20, flexWrap: 'wrap' }}>
+          {([
+            { key: 'all' as const, label: `Barchasi (${entries.length})` },
+            { key: 'completed' as const, label: `${completedCount} bajarildi` },
+          ]).map((f) => (
+            <button
+              key={f.key}
+              onClick={() => setFilterStatus(f.key)}
+              style={{
+                padding: '6px 16px', borderRadius: 20, fontSize: 12, fontWeight: 700, cursor: 'pointer',
+                background: filterStatus === f.key ? 'var(--teal-dim)' : 'var(--bg3)',
+                border: `1px solid ${filterStatus === f.key ? 'var(--teal-border)' : 'var(--border)'}`,
+                color: filterStatus === f.key ? 'var(--teal)' : 'var(--text2)',
+              }}
+            >
+              {f.key === 'completed' && <IconCheck size={12} style={{ marginRight: 4, verticalAlign: -2 }} />}
+              {f.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Browse subjects to start new test */}
+        {subjects.length > 0 && (
+          <div style={{ background: 'var(--bg2)', border: '1px solid var(--border)', borderRadius: 'var(--r)', padding: 20, marginBottom: 20 }}>
+            <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', marginBottom: 12 }}>Yangi test boshlash</div>
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+              {subjects.map((s) => {
+                const c = getSubjectColor(s.name);
+                return (
+                  <Link
+                    key={s.id}
+                    to={`/topics?subject=${s.id}`}
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: 8,
+                      padding: '10px 18px', borderRadius: 'var(--r-sm)',
+                      background: c.dim, border: `1px solid ${c.border}`,
+                      color: c.color, fontSize: 13, fontWeight: 700, textDecoration: 'none',
+                    }}
+                  >
+                    <IconPlayerPlay size={14} /> {s.name}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* History list */}
+        {historyLoading ? (
+          <div style={{ color: 'var(--text3)', fontSize: 14, padding: 20 }}>Yuklanmoqda...</div>
+        ) : filteredEntries.length === 0 ? (
+          <div style={{ background: 'var(--bg2)', border: '1px solid var(--border)', borderRadius: 'var(--r)', padding: 40, textAlign: 'center' }}>
+            <IconClipboardCheck size={40} style={{ color: 'var(--text3)', marginBottom: 12 }} />
+            <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--text)', marginBottom: 6 }}>Hali test yechilmagan</div>
+            <div style={{ fontSize: 13, color: 'var(--text3)', marginBottom: 16 }}>Mavzularga o'ting va birinchi testingizni boshlang</div>
+            <Link to="/topics" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--teal)', borderRadius: 'var(--r-sm)', padding: '12px 24px', fontSize: 14, fontWeight: 800, color: '#07090F', textDecoration: 'none' }}>
+              <IconPlayerPlay size={16} /> Mavzularga o'tish
+            </Link>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {filteredEntries.map((entry) => {
+              const subjectName = entry.topic?.title?.split(' — ')[0] ?? '';
+              const topicTitle = entry.topic?.title ?? `Mavzu #${entry.attempts[0]?.topic_id}`;
+              const scoreColor = entry.best >= 70 ? 'var(--green)' : entry.best >= 40 ? 'var(--amber)' : 'var(--red)';
+              const colors = getSubjectColor(subjectName);
+              return (
+                <div
+                  key={entry.attempts[0]?.topic_id}
+                  style={{
+                    background: 'var(--bg2)', border: `1px solid ${colors.border}`,
+                    borderRadius: 'var(--r)', padding: '16px 20px',
+                    display: 'flex', alignItems: 'center', gap: 14,
+                  }}
+                >
+                  <div style={{
+                    width: 40, height: 40, borderRadius: '50%', display: 'grid', placeItems: 'center', flexShrink: 0,
+                    background: entry.best >= 70 ? 'var(--green-dim)' : 'var(--bg3)',
+                    border: `1px solid ${entry.best >= 70 ? 'rgba(52,211,153,0.3)' : 'var(--border)'}`,
+                  }}>
+                    {entry.best >= 70 ? <IconCheck size={18} style={{ color: 'var(--green)' }} /> : <IconPlayerPlay size={18} style={{ color: 'var(--text3)' }} />}
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)', marginBottom: 3 }}>{topicTitle}</div>
+                    <div style={{ fontSize: 12, color: 'var(--text3)' }}>
+                      {entry.count} urinish · eng yaxshi natija {entry.best}%
+                    </div>
+                  </div>
+                  <div style={{ textAlign: 'right', flexShrink: 0, display: 'flex', alignItems: 'center', gap: 16 }}>
+                    <div>
+                      <div style={{ fontSize: 11, color: 'var(--text3)' }}>Natija</div>
+                      <div style={{ fontSize: 18, fontWeight: 800, color: scoreColor }}>{entry.best}%</div>
+                      <div style={{ height: 3, borderRadius: 2, background: 'var(--bg3)', width: 60, marginTop: 4 }}>
+                        <div style={{ height: '100%', borderRadius: 2, background: scoreColor, width: `${entry.best}%` }} />
+                      </div>
+                    </div>
+                    <Link
+                      to={`/mock-testlar?topic=${entry.attempts[0]?.topic_id}`}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: 6,
+                        padding: '8px 16px', borderRadius: 'var(--r-sm)',
+                        background: 'transparent', border: '1px solid var(--border)',
+                        color: 'var(--teal)', fontSize: 13, fontWeight: 700,
+                        textDecoration: 'none', whiteSpace: 'nowrap',
+                      }}
+                    >
+                      Qayta <IconArrowRight size={14} />
+                    </Link>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     );
   }
