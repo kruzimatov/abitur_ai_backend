@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Http;
 class GeminiService
 {
     private string $apiKey;
-    private string $model = 'gemini-2.0-flash';
+    private string $model = 'gemini-2.5-flash';
 
     public function __construct()
     {
