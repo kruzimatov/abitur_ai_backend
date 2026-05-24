@@ -3,6 +3,18 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 
+const inputStyle: React.CSSProperties = {
+  width: '100%',
+  padding: '12px 14px',
+  background: 'var(--bg3)',
+  border: '1px solid var(--border)',
+  borderRadius: 'var(--r-sm)',
+  color: 'var(--text)',
+  fontSize: 14,
+  outline: 'none',
+  transition: 'border-color 0.2s',
+};
+
 const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -31,35 +43,57 @@ const Login = () => {
   };
 
   return (
-    <form onSubmit={handleLogin} className="space-y-3">
-      <h2 className="text-2xl font-bold">Kirish</h2>
+    <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <div>
+        <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--text)', marginBottom: 4 }}>Kirish</div>
+        <div style={{ fontSize: 13, color: 'var(--text3)' }}>AbiturAI hisobingizga kiring</div>
+      </div>
 
-      <input
-        type="email"
-        placeholder="Email"
-        value={formData.email}
-        className="w-full p-3 bg-transparent border border-gray-700 rounded-lg outline-none focus:border-blue-500 transition"
-        onChange={(e) =>
-          setFormData({ ...formData, email: e.target.value })
-        }
-        required
-      />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        <label style={{ fontSize: 13, color: 'var(--text2)', fontWeight: 500 }}>Email</label>
+        <input
+          type="email"
+          placeholder="sizning@email.com"
+          value={formData.email}
+          style={inputStyle}
+          onFocus={(e) => { e.currentTarget.style.borderColor = 'var(--teal)'; }}
+          onBlur={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; }}
+          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+          required
+        />
+      </div>
 
-      <input
-        type="password"
-        placeholder="Parol"
-        value={formData.password}
-        className="w-full p-3 bg-transparent border border-gray-700 rounded-lg outline-none focus:border-blue-500 transition"
-        onChange={(e) =>
-          setFormData({ ...formData, password: e.target.value })
-        }
-        required
-      />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        <label style={{ fontSize: 13, color: 'var(--text2)', fontWeight: 500 }}>Parol</label>
+        <input
+          type="password"
+          placeholder="Parolingiz"
+          value={formData.password}
+          style={inputStyle}
+          onFocus={(e) => { e.currentTarget.style.borderColor = 'var(--teal)'; }}
+          onBlur={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; }}
+          onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+          required
+        />
+      </div>
 
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full p-3 bg-blue-600 rounded cursor-pointer text-white font-semibold hover:bg-blue-700 transition disabled:opacity-60 disabled:cursor-not-allowed"
+        style={{
+          width: '100%',
+          padding: '12px 0',
+          background: 'var(--teal)',
+          color: '#07090F',
+          fontSize: 14,
+          fontWeight: 700,
+          border: 'none',
+          borderRadius: 'var(--r-sm)',
+          cursor: isSubmitting ? 'not-allowed' : 'pointer',
+          opacity: isSubmitting ? 0.6 : 1,
+          transition: 'opacity 0.2s',
+          marginTop: 4,
+        }}
       >
         {isSubmitting ? 'Kirilmoqda...' : 'Kirish'}
       </button>

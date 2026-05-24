@@ -39,6 +39,7 @@ const MockTests = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hintInput, setHintInput] = useState('');
+  const [hintLoading, setHintLoading] = useState(false);
   const [hintMessages, setHintMessages] = useState<{ text: string; isAi: boolean }[]>([
     { text: "Salom! Savolda qiyinchilik bo'lsa yordam beraman.", isAi: true },
   ]);
@@ -119,16 +120,20 @@ const MockTests = () => {
 
   const sendHint = async () => {
     const questionText = hintInput.trim();
-    if (!questionText) return;
+    if (!questionText || hintLoading) return;
 
     setHintMessages((prev) => [...prev, { text: questionText, isAi: false }]);
     setHintInput('');
+    setHintLoading(true);
     try {
       const activeQuestion = questions[current];
-      const response = await chatService.askTutor(`${activeQuestion?.question_text ?? ''}\n\n${questionText}`, topic?.subject?.name);
+      const subjectName = topic?.subject?.name ?? topic?.title?.split(' — ')[0];
+      const response = await chatService.askTutor(`${activeQuestion?.question_text ?? ''}\n\n${questionText}`, subjectName);
       setHintMessages((prev) => [...prev, { text: response.answer, isAi: true }]);
     } catch {
       setHintMessages((prev) => [...prev, { text: "Hozir javob bera olmadim. Keyinroq qayta urinib ko'ring.", isAi: true }]);
+    } finally {
+      setHintLoading(false);
     }
   };
 
@@ -253,10 +258,17 @@ const MockTests = () => {
                   {item.text}
                 </div>
               ))}
+              {hintLoading && (
+                <div style={{ background: 'var(--bg3)', border: '1px solid var(--border)', borderRadius: 'var(--r-sm)', padding: 12, fontSize: 12, color: 'var(--text3)', marginBottom: 10, borderLeft: '2px solid var(--purple)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span style={{ animation: 'pulse-dot 1.2s infinite' }}>●</span>
+                  <span style={{ animation: 'pulse-dot 1.2s infinite 0.2s' }}>●</span>
+                  <span style={{ animation: 'pulse-dot 1.2s infinite 0.4s' }}>●</span>
+                </div>
+              )}
             </div>
             <div style={{ padding: 12, borderTop: '1px solid var(--border)', display: 'flex', gap: 8 }}>
-              <input value={hintInput} onChange={(event) => setHintInput(event.target.value)} onKeyDown={(event) => event.key === 'Enter' && sendHint()} placeholder="Savol bering..." style={{ flex: 1, background: 'var(--bg3)', border: '1px solid var(--border)', borderRadius: 'var(--r-sm)', padding: '8px 10px', fontSize: 12, color: 'var(--text)', outline: 'none' }} />
-              <button onClick={sendHint} style={{ width: 32, height: 32, borderRadius: 'var(--r-sm)', background: 'var(--purple)', border: 'none', display: 'grid', placeItems: 'center', cursor: 'pointer' }}>
+              <input value={hintInput} onChange={(event) => setHintInput(event.target.value)} onKeyDown={(event) => event.key === 'Enter' && sendHint()} placeholder={hintLoading ? 'Javob kutilmoqda...' : 'Savol bering...'} disabled={hintLoading} style={{ flex: 1, background: 'var(--bg3)', border: '1px solid var(--border)', borderRadius: 'var(--r-sm)', padding: '8px 10px', fontSize: 12, color: 'var(--text)', outline: 'none', opacity: hintLoading ? 0.5 : 1 }} />
+              <button onClick={sendHint} disabled={hintLoading} style={{ width: 32, height: 32, borderRadius: 'var(--r-sm)', background: hintLoading ? 'var(--bg3)' : 'var(--purple)', border: 'none', display: 'grid', placeItems: 'center', cursor: hintLoading ? 'not-allowed' : 'pointer' }}>
                 <IconSend size={14} style={{ color: '#fff' }} />
               </button>
             </div>
